@@ -13,25 +13,17 @@ OpenHomeOS is an open-source platform designed to simplify home management. It p
 - **User Roles & Permissions**
   - Home Admin: Full control of the home and all features
   - Standard Member: Regular access to features with limited administrative capabilities
-  
-- **User Profiles**
-  - Profile picture
-  - Contact information
-  - Notification preferences
-  - Payment information for expense sharing (ie. e-transfer, Zelle, Venmo, etc. These should be configurable with a few preset options)
 
 ### 2. Home Management
 
 - **Home Creation & Setup**
   - Create a new home with basic information (name, address, description)
   - Upload photos of the home
-  - Define rooms and areas within the home
-  
+
 - **Member Management**
   - Invite new members via email or shareable link
-  - Approve/deny membership requests
   - Assign roles and permissions to members
-  - Remove members and handle membership transitions
+  - Remove members
   
 - **House Rules & Information**
   - Important information repository (WiFi passwords, emergency contacts, etc.)
@@ -52,7 +44,6 @@ OpenHomeOS is an open-source platform designed to simplify home management. It p
 
 - **Expense Tracking**
   - Add expenses with details (amount, category, receipt photo, date)
-  - Recurring expenses handling (rent, utilities, subscriptions)
   - Split expenses between members (equal, percentage, or custom amounts)
   
 - **Payment Processing**
@@ -61,29 +52,7 @@ OpenHomeOS is an open-source platform designed to simplify home management. It p
 - **Financial Reporting**
   - Monthly expense summaries
   - Individual balance reports
-  - Expense categorization and analysis
-  - Export functionality for record-keeping
-s
-## Implementation Phases
-
-### Phase 1: Core Functionality
-- User authentication system
-- Basic home creation and member management
-- Simplified inventory system
-- Basic expense tracking
-
-### Phase 2: Enhanced Features
-- Advanced inventory management
-- Complete expense management with payment integration
-- Task and chore management
-- Mobile application development
-
-### Phase 3: Advanced Features
-- Reporting and analytics
-- Smart home integration
-- AI recommendations for expense optimization
-- Advanced sharing economy features
-
+  
 ## Development Considerations
 
 ### Documentation

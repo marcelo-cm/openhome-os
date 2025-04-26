@@ -9,6 +9,7 @@
 ## Homes
 - Name
 - Address
+- Information (JSONB)
 
 ## Items
 - Name

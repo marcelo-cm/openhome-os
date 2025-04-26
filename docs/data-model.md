@@ -10,10 +10,6 @@
 - Name
 - Address
 
-## Rooms
-- Home ID
-- Description
-
 ## Items
 - Name
 - Description
@@ -22,7 +18,6 @@
 - Purchased Price
 - Owner ID (If house owns it, it's considered shared)
 - Owner Type (User, or house)
-- Location (room)
 - Extra information (JSONB)
 
 ## Users
@@ -37,8 +32,7 @@
 ## Photos
 - URL
 - Attachable ID
-- Attachable Type (Can belong to a home, room, expense, or item)
-- Description
+- Attachable Type (Can belong to a expense, or item)
 
 ## Expenses
 - Description
@@ -53,7 +47,6 @@
 - User ID (who owes this portion)
 - Amount
 - Payment ID (foreign key to Payments, nullable - populated when paid)
-- Receipt URL
 
 ## Payments
 - From User ID (payer)

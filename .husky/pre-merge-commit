@@ -1,0 +1,37 @@
+# Define color and style variables
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+# Print header
+echo "${BLUE}${BOLD}===================================="
+echo "Starting pre-merge-commit checks..."
+echo "====================================${NC}"
+
+# Run linting and type checking
+echo "${YELLOW}Running pnpm lint...${NC}"
+pnpm lint || { echo "${RED}Lint failed${NC}"; exit 1; }
+
+echo "${YELLOW}Running pnpm lint:type...${NC}"
+pnpm lint:type || { echo "${RED}Type check failed${NC}"; exit 1; }
+
+# Get the current branch name
+current_branch=$(git rev-parse --abbrev-ref HEAD)
+echo "${BLUE}Current branch: ${BOLD}$current_branch${NC}"
+
+# If merging into dev or main, run build command
+if [ "$current_branch" = "dev" ] || [ "$current_branch" = "main" ]; then
+  echo "${GREEN}Merging into '$current_branch'. Running pnpm build...${NC}"
+  pnpm build || { echo "${RED}Build failed${NC}"; exit 1; }
+else
+  echo "${YELLOW}Not merging into dev/main branch (current: '$current_branch'); skipping build.${NC}"
+fi
+
+# Run tests
+echo "${YELLOW}Running pnpm test...${NC}"
+pnpm test || { echo "${RED}Tests failed${NC}"; exit 1; }
+
+echo "${GREEN}${BOLD}All pre-merge-commit checks passed successfully!${NC}" 

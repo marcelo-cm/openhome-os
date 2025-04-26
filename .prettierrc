@@ -1,0 +1,20 @@
+{
+  "plugins": [
+    "@trivago/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "tailwindFunctions": ["clsx", "tw"],
+  "singleQuote": true,
+  "importOrder": [
+    "^react$|^react/(.*)$",
+    "^@radix-ui/react-icons|^lucide-react",
+    "^@?\\w",
+    "^(.*)/(ui|components)/(.*)$",
+    "^(.*)/hooks/(.*)$",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSortSpecifiers": true,
+  "importOrderSeparation": true,
+  "importOrderGroupNamespaceSpecifiers": true
+}

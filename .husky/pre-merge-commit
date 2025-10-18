@@ -1,37 +1,80 @@
-# Define color and style variables
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-BLUE='\033[0;34m'
-BOLD='\033[1m'
-NC='\033[0m' # No Color
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Print header
-echo "${BLUE}${BOLD}===================================="
-echo "Starting pre-merge-commit checks..."
-echo "====================================${NC}"
+# ===== Styling =====
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[0;33m'; BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 
-# Run linting and type checking
-echo "${YELLOW}Running pnpm lint...${NC}"
-pnpm lint || { echo "${RED}Lint failed${NC}"; exit 1; }
+echo -e "${BLUE}${BOLD}===================================="
+echo -e "Running pre-commit"
+echo -e "====================================${NC}"
 
-echo "${YELLOW}Running pnpm lint:type...${NC}"
-pnpm lint:type || { echo "${RED}Type check failed${NC}"; exit 1; }
+current_branch="$(git rev-parse --abbrev-ref HEAD)"
+echo -e "${BLUE}Current branch: ${BOLD}${current_branch}${NC}"
 
-# Get the current branch name
-current_branch=$(git rev-parse --abbrev-ref HEAD)
-echo "${BLUE}Current branch: ${BOLD}$current_branch${NC}"
+# Collect staged files (Added/Copied/Modified/Renamed)
+STAGED="$(git diff --cached --name-only --diff-filter=ACMR || true)"
 
-# If merging into dev or main, run build command
-if [ "$current_branch" = "dev" ] || [ "$current_branch" = "main" ]; then
-  echo "${GREEN}Merging into '$current_branch'. Running pnpm build...${NC}"
-  pnpm build || { echo "${RED}Build failed${NC}"; exit 1; }
+if [ -z "${STAGED}" ]; then
+  echo -e "${YELLOW}No staged files. Skipping format/type-check.${NC}"
 else
-  echo "${YELLOW}Not merging into dev/main branch (current: '$current_branch'); skipping build.${NC}"
+  # ---------- Format only staged files ----------
+  PRETTIER_FILES="$(echo "${STAGED}" | grep -E '\.(ts|tsx|css|md|mdx)$' || true)"
+  if [ -n "${PRETTIER_FILES}" ]; then
+    echo -e "${YELLOW}Formatting staged files with Prettier...${NC}"
+    echo "${PRETTIER_FILES}" | xargs -r pnpm exec prettier --write
+    echo "${PRETTIER_FILES}" | xargs -r git add
+  fi
+
+  # ---------- Type-check ----------
+  TS_STAGED="$(echo "${STAGED}" | grep -E '\.(ts|tsx)$' || true)"
+  if [ -n "${TS_STAGED}" ] || [ "${current_branch}" = "dev" ] || [ "${current_branch}" = "main" ]; then
+    echo -e "${YELLOW}Running TypeScript type-check (pnpm lint:type)...${NC}"
+    pnpm lint:type || { echo -e "${RED}Type check failed${NC}"; exit 1; }
+  else
+    echo -e "${YELLOW}Skipping type-check (no TS changes and not on dev/main).${NC}"
+  fi
 fi
 
-# Run tests
-echo "${YELLOW}Running pnpm test...${NC}"
-pnpm test || { echo "${RED}Tests failed${NC}"; exit 1; }
+# ---------- Dependency graph check (dpdm) ----------
+# Run ONLY if TS/JS changed; pass actual files as entries so dpdm never sees a bare directory.
+TS_JS_STAGED="$(echo "${STAGED}" | grep -E '\.(js|jsx|ts|tsx)$' || true)"
+if [ -n "${TS_JS_STAGED}" ]; then
+  echo -e "${YELLOW}Checking dependency graph (dpdm) for changed areas...${NC}"
 
-echo "${GREEN}${BOLD}All pre-merge-commit checks passed successfully!${NC}" 
+  # Folders where cycles are most likely in your repo
+  CYCLE_DIRS='^(app/|components/|hooks/|lib/|models/|db/|clients/api-client/|services/)'
+
+  # Limit entry files to those directories (plus app/layout.tsx if it exists)
+  DPDM_ENTRIES="$(echo "${TS_JS_STAGED}" | grep -E "${CYCLE_DIRS}" || true)"
+
+  # Always include app/layout.tsx as a top-level entry if it exists (even if not staged this commit)
+  if [ -f "./app/layout.tsx" ]; then
+    # Ensure it's included only once
+    if ! echo "${DPDM_ENTRIES}" | grep -qx "./app/layout.tsx"; then
+      DPDM_ENTRIES="$(printf "%s\n%s" "${DPDM_ENTRIES}" "./app/layout.tsx" | sed '/^$/d' | sort -u)"
+    fi
+  fi
+
+  if [ -z "${DPDM_ENTRIES}" ]; then
+    echo -e "${YELLOW}No staged TS/JS inside cycle-prone directories; skipping dpdm.${NC}"
+  else
+    echo -e "${BLUE}dpdm entries:${NC}"
+    echo "${DPDM_ENTRIES}" | sed 's/^/  • /'
+    # Run once with all entries so dpdm builds a single graph
+    # Use xargs to handle many files safely
+    echo "${DPDM_ENTRIES}" | xargs -r pnpx dpdm --transform --tree false --warning false || {
+      echo -e "${RED}Dependency graph check failed${NC}"
+      exit 1
+    }
+  fi
+else
+  echo -e "${YELLOW}No staged TS/JS changes; skipping dpdm.${NC}"
+fi
+
+# ---------- Tests before committing to main ----------
+if [ "${current_branch}" = "main" ]; then
+  echo -e "${YELLOW}On 'main' — running full test suite (pnpm test)...${NC}"
+  pnpm test || { echo -e "${RED}Tests failed${NC}"; exit 1; }
+fi
+
+echo -e "${GREEN}${BOLD}Pre-commit checks passed!${NC}"

@@ -3,7 +3,6 @@
     "@trivago/prettier-plugin-sort-imports",
     "prettier-plugin-tailwindcss"
   ],
-  "tailwindFunctions": ["clsx", "tw"],
   "singleQuote": true,
   "importOrder": [
     "^react$|^react/(.*)$",
@@ -16,5 +15,6 @@
   ],
   "importOrderSortSpecifiers": true,
   "importOrderSeparation": true,
-  "importOrderGroupNamespaceSpecifiers": true
+  "importOrderGroupNamespaceSpecifiers": true,
+  "tailwindFunctions": ["clsx", "tw", "cva", "cn"]
 }

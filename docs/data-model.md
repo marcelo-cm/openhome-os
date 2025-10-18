@@ -1,17 +1,20 @@
 # Data Model
 
 ## Base Model
+
 - ID
 - Created At
 - Updated At
 - Deleted At (Soft delete)
 
 ## Homes
+
 - Name
 - Address
 - Information (JSONB)
 
 ## Items
+
 - Name
 - Description
 - Category
@@ -22,6 +25,7 @@
 - Extra information (JSONB)
 
 ## Users
+
 - Name
 - Email
 - Profile picture
@@ -31,11 +35,13 @@
 - Role
 
 ## Photos
+
 - URL
 - Attachable ID
 - Attachable Type (Can belong to a expense, or item)
 
 ## Expenses
+
 - Description
 - Amount
 - Date
@@ -44,21 +50,25 @@
 - Payer ID
 
 ## Expense Splits
+
 - Expense ID
 - User ID (who owes this portion)
 - Amount
 - Payment ID (foreign key to Payments, nullable - populated when paid)
 
 ## Payments
+
 - From User ID (payer)
 - To User ID (payee)
 - Amount
 - Payment method
 
 ## Item Categories
+
 - Category Name
 - House ID
 
 ## Vendors
+
 - Location
 - House ID

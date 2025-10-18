@@ -19,7 +19,11 @@ const ProjectService = {
    * @param project - The project to create
    * @returns The created project
    */
-  createProject: async (project: TCreateProject): Promise<TProject[]> => {
+  createProject: async ({
+    project,
+  }: {
+    project: TCreateProject;
+  }): Promise<TProject[]> => {
     return db.insert(projects).values(project).returning();
   },
   /**
@@ -27,7 +31,7 @@ const ProjectService = {
    * @param id - The ID of the project to get
    * @returns The project with the given ID
    */
-  getProject: async (id: string): Promise<TProject | undefined> => {
+  getProject: async ({ id }: { id: string }): Promise<TProject | undefined> => {
     return db.query.projects.findFirst({
       where: eq(projects.id, id),
     });
@@ -37,9 +41,11 @@ const ProjectService = {
    * @param id — The ID of the organization whose projects to get
    * @returns The projects belonging to the given organization
    */
-  getProjectsByOrganization: async (
-    id: string,
-  ): Promise<TProject[] | undefined> => {
+  getProjectsByOrganization: async ({
+    id,
+  }: {
+    id: string;
+  }): Promise<TProject[] | undefined> => {
     return db.query.projects.findMany({
       where: eq(projects.organization_id, id),
     });
@@ -57,10 +63,13 @@ const ProjectService = {
    * @param project - The project to update
    * @returns The updated project
    */
-  updateProject: async (
-    id: string,
-    project: TUpdateProject,
-  ): Promise<TProject[]> => {
+  updateProject: async ({
+    id,
+    project,
+  }: {
+    id: string;
+    project: TUpdateProject;
+  }): Promise<TProject[]> => {
     return db
       .update(projects)
       .set(project)
@@ -72,23 +81,38 @@ const ProjectService = {
    * @param id - The ID of the project to delete
    * @returns The deleted project
    */
-  deleteProject: async (id: string): Promise<TProject[]> => {
+  deleteProject: async ({ id }: { id: string }): Promise<TProject[]> => {
     return db.delete(projects).where(eq(projects.id, id)).returning();
   },
-  addMemberToProject: async (projectId: string, userId: string) => {
+  addMemberToProject: async ({
+    projectId,
+    principalId,
+    userId,
+  }: {
+    projectId: string;
+    principalId: string;
+    userId: string;
+  }): Promise<TProjectMembership[]> => {
     return db.insert(projectMemberships).values({
+      principal_id: principalId,
       project_id: projectId,
       user_id: userId,
       rbac_role: RbacRole.MEMBER,
     });
   },
-  addAdminToProject: async (
-    projectId: string,
-    userId: string,
-  ): Promise<TProjectMembership[]> => {
+  addAdminToProject: async ({
+    projectId,
+    principalId,
+    userId,
+  }: {
+    projectId: string;
+    principalId: string;
+    userId: string;
+  }): Promise<TProjectMembership[]> => {
     return db
       .insert(projectMemberships)
       .values({
+        principal_id: principalId,
         project_id: projectId,
         user_id: userId,
         rbac_role: RbacRole.ADMIN,

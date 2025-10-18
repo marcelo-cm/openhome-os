@@ -1,15 +1,30 @@
 import * as React from 'react';
 
+import { VariantProps, cva } from 'class-variance-authority';
+
 import { cn } from '@/lib/utils';
 
-function Card({ className, ...props }: React.ComponentProps<'div'>) {
+const cardVariants = cva(
+  'bg-card text-card-foreground relative flex flex-col gap-6 rounded-2xl border bg-clip-padding py-6 shadow-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:bg-clip-border dark:before:shadow-[0_-1px_--theme(--color-white/8%)]',
+  {
+    variants: {
+      variant: {
+        default: '',
+        ring: 'bg-muted/50 after:border-border/50 dark:after:bg-background/72 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_2px_1px_--theme(--color-black/4%)] after:pointer-events-none after:absolute after:-inset-[5px] after:-z-1 after:rounded-[calc(var(--radius-2xl)+4px)] after:border after:bg-clip-padding',
+      },
+    },
+  },
+);
+
+interface CardProps extends React.ComponentProps<'div'> {
+  variant?: VariantProps<typeof cardVariants>['variant'];
+}
+
+function Card({ className, variant, ...props }: CardProps) {
   return (
     <div
       data-slot="card"
-      className={cn(
-        'bg-card text-card-foreground relative flex flex-col gap-6 rounded-2xl border bg-clip-padding py-6 shadow-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:bg-clip-border dark:before:shadow-[0_-1px_--theme(--color-white/8%)]',
-        className,
-      )}
+      className={cardVariants({ className, variant })}
       {...props}
     />
   );

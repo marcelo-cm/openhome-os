@@ -19,9 +19,11 @@ const OrganizationService = {
    * @param organization - The organization to create
    * @returns The created organization
    */
-  createOrganization: async (
-    organization: TCreateOrganization,
-  ): Promise<TOrganization[]> => {
+  createOrganization: async ({
+    organization,
+  }: {
+    organization: TCreateOrganization;
+  }): Promise<TOrganization[]> => {
     return db.insert(organizations).values(organization).returning();
   },
   /**
@@ -29,7 +31,11 @@ const OrganizationService = {
    * @param id - The ID of the organization to get
    * @returns The organization with the given ID
    */
-  getOrganization: async (id: string): Promise<TOrganization | undefined> => {
+  getOrganization: async ({
+    id,
+  }: {
+    id: string;
+  }): Promise<TOrganization | undefined> => {
     return db.query.organizations.findFirst({
       where: eq(organizations.id, id),
     });
@@ -47,10 +53,13 @@ const OrganizationService = {
    * @param organization - The organization to update
    * @returns The updated organization
    */
-  updateOrganization: async (
-    id: string,
-    organization: TUpdateOrganization,
-  ): Promise<TOrganization[]> => {
+  updateOrganization: async ({
+    id,
+    organization,
+  }: {
+    id: string;
+    organization: TUpdateOrganization;
+  }): Promise<TOrganization[]> => {
     return db
       .update(organizations)
       .set(organization)
@@ -62,23 +71,42 @@ const OrganizationService = {
    * @param id - The ID of the organization to delete
    * @returns The deleted organization
    */
-  deleteOrganization: async (id: string): Promise<TOrganization[]> => {
+  deleteOrganization: async ({
+    id,
+  }: {
+    id: string;
+  }): Promise<TOrganization[]> => {
     return db.delete(organizations).where(eq(organizations.id, id)).returning();
   },
-  addMemberToOrganization: async (organizationId: string, userId: string) => {
+  addMemberToOrganization: async ({
+    organizationId,
+    principalId,
+    userId,
+  }: {
+    organizationId: string;
+    principalId: string;
+    userId: string;
+  }): Promise<TOrganizationMembership[]> => {
     return db.insert(organizationMemberships).values({
+      principal_id: principalId,
       organization_id: organizationId,
       user_id: userId,
       rbac_role: RbacRole.MEMBER,
     });
   },
-  addAdminToOrganization: async (
-    organizationId: string,
-    userId: string,
-  ): Promise<TOrganizationMembership[]> => {
+  addAdminToOrganization: async ({
+    principalId,
+    organizationId,
+    userId,
+  }: {
+    principalId: string;
+    organizationId: string;
+    userId: string;
+  }): Promise<TOrganizationMembership[]> => {
     return db
       .insert(organizationMemberships)
       .values({
+        principal_id: principalId,
         organization_id: organizationId,
         user_id: userId,
         rbac_role: RbacRole.ADMIN,

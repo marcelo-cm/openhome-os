@@ -42,9 +42,15 @@ export const users = pgTable('users', {
  *
  * - Associates a user with one or more RBAC roles that apply globally.
  * - Intended for SUPER_ADMIN.
+ *
+ * Questions:
+ * - How should we rename this table?
  */
 export const userRbacRoles = pgTable('user_rbac_roles', {
   ...DrizzleBaseModel,
+  principal_id: text('principal_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   user_id: text('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
@@ -59,6 +65,9 @@ export const userRbacRoles = pgTable('user_rbac_roles', {
  */
 export const organizationMemberships = pgTable('organization_memberships', {
   ...DrizzleBaseModel,
+  principal_id: text('principal_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   organization_id: text('organization_id')
     .notNull()
     .references(() => organizations.id, { onDelete: 'cascade' }),
@@ -76,6 +85,9 @@ export const organizationMemberships = pgTable('organization_memberships', {
  */
 export const projectMemberships = pgTable('project_memberships', {
   ...DrizzleBaseModel,
+  principal_id: text('principal_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
   project_id: text('project_id')
     .notNull()
     .references(() => projects.id, { onDelete: 'cascade' }),
@@ -84,6 +96,8 @@ export const projectMemberships = pgTable('project_memberships', {
     .references(() => users.id, { onDelete: 'cascade' }),
   rbac_role: RbacRoleEnum('rbac_role').notNull(),
 });
+
+// EXAMPLES BELOW ON ACL
 
 /**
  * Post resource.
@@ -94,7 +108,7 @@ export const projectMemberships = pgTable('project_memberships', {
 export const posts = pgTable('posts', {
   ...DrizzleBaseModel,
   title: text('title').notNull(),
-  owner_user_id: text('owner_user_id')
+  principal_id: text('principal_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   organization_id: text('organization_id')
@@ -115,6 +129,9 @@ export const posts = pgTable('posts', {
  * - Associates a user with an ACL role on a specific post instance.
  * - ACL roles (OWNER, EDITOR, VIEWER) provide fine-grained control
  *   in addition to RBAC roles.
+ *
+ * Questions:
+ * - Should we make this a polymorphic table that holds all ACLs for all resources?
  */
 export const postAcl = pgTable('post_acl', {
   ...DrizzleBaseModel,

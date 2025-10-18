@@ -9,9 +9,13 @@ import {
 import ProjectService from './project-service';
 
 // Create
-export async function createProject(data: TCreateProject): Promise<TProject> {
+export async function createProject({
+  data,
+}: {
+  data: TCreateProject;
+}): Promise<TProject> {
   try {
-    const [project] = await ProjectService.createProject(data);
+    const [project] = await ProjectService.createProject({ project: data });
 
     return project;
   } catch (error) {
@@ -21,9 +25,9 @@ export async function createProject(data: TCreateProject): Promise<TProject> {
 }
 
 // Read (Get)
-export async function getProject(id: string): Promise<TProject> {
+export async function getProject({ id }: { id: string }): Promise<TProject> {
   try {
-    const project = await ProjectService.getProject(id);
+    const project = await ProjectService.getProject({ id });
 
     if (!project) {
       throw new Error('Project not found');
@@ -37,12 +41,15 @@ export async function getProject(id: string): Promise<TProject> {
 }
 
 // Update
-export async function updateProject(
-  id: string,
-  data: TUpdateProject,
-): Promise<TProject> {
+export async function updateProject({
+  id,
+  data,
+}: {
+  id: string;
+  data: TUpdateProject;
+}): Promise<TProject> {
   try {
-    const [project] = await ProjectService.updateProject(id, data);
+    const [project] = await ProjectService.updateProject({ id, project: data });
 
     if (!project) {
       throw new Error('Project not found');
@@ -56,9 +63,9 @@ export async function updateProject(
 }
 
 // Delete
-export async function deleteProject(id: string): Promise<TProject> {
+export async function deleteProject({ id }: { id: string }): Promise<TProject> {
   try {
-    const [project] = await ProjectService.deleteProject(id);
+    const [project] = await ProjectService.deleteProject({ id });
 
     if (!project) {
       throw new Error('Project not found');

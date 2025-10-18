@@ -5,9 +5,13 @@ import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
 import UserService from './user-service';
 
 // Create
-export async function createUser(data: TCreateUser): Promise<TUser> {
+export async function createUser({
+  data,
+}: {
+  data: TCreateUser;
+}): Promise<TUser> {
   try {
-    const [user] = await UserService.createUser(data);
+    const [user] = await UserService.createUser({ user: data });
 
     return user;
   } catch (error) {
@@ -17,9 +21,9 @@ export async function createUser(data: TCreateUser): Promise<TUser> {
 }
 
 // Read (Get)
-export async function getUser(id: string): Promise<TUser> {
+export async function getUser({ id }: { id: string }): Promise<TUser> {
   try {
-    const user = await UserService.getUser(id);
+    const user = await UserService.getUser({ id });
 
     if (!user) {
       throw new Error('User not found');
@@ -33,12 +37,15 @@ export async function getUser(id: string): Promise<TUser> {
 }
 
 // Update
-export async function updateUser(
-  id: string,
-  data: TUpdateUser,
-): Promise<TUser> {
+export async function updateUser({
+  id,
+  data,
+}: {
+  id: string;
+  data: TUpdateUser;
+}): Promise<TUser> {
   try {
-    const [user] = await UserService.updateUser(id, data);
+    const [user] = await UserService.updateUser({ id, user: data });
 
     if (!user) {
       throw new Error('User not found');
@@ -52,9 +59,9 @@ export async function updateUser(
 }
 
 // Delete
-export async function deleteUser(id: string): Promise<TUser> {
+export async function deleteUser({ id }: { id: string }): Promise<TUser> {
   try {
-    const [user] = await UserService.deleteUser(id);
+    const [user] = await UserService.deleteUser({ id });
 
     if (!user) {
       throw new Error('User not found');
@@ -68,9 +75,9 @@ export async function deleteUser(id: string): Promise<TUser> {
 }
 
 // Actions
-export async function signup(data: TCreateUser): Promise<TUser> {
+export async function signup({ data }: { data: TCreateUser }): Promise<TUser> {
   try {
-    const user = await UserService.signUp(data);
+    const user = await UserService.signUp({ user: data });
 
     if (!user) {
       throw new Error('User not found');
@@ -83,12 +90,19 @@ export async function signup(data: TCreateUser): Promise<TUser> {
   }
 }
 
-export async function signin(data: {
-  email: string;
-  password: string;
+export async function signin({
+  data,
+}: {
+  data: {
+    email: string;
+    password: string;
+  };
 }): Promise<TUser> {
   try {
-    const user = await UserService.signIn(data.email, data.password);
+    const user = await UserService.signIn({
+      email: data.email,
+      password: data.password,
+    });
 
     if (!user) {
       throw new Error('User not found');

@@ -13,7 +13,7 @@ const UserService = {
    * @param user - The user to create
    * @returns The created user
    */
-  createUser: async (user: TCreateUser): Promise<TUser[]> => {
+  createUser: async ({ user }: { user: TCreateUser }): Promise<TUser[]> => {
     return db.insert(users).values(user).returning();
   },
   /**
@@ -21,7 +21,7 @@ const UserService = {
    * @param id - The ID of the user to get
    * @returns The user with the given ID
    */
-  getUser: async (id: string): Promise<TUser | undefined> => {
+  getUser: async ({ id }: { id: string }): Promise<TUser | undefined> => {
     return db.query.users.findFirst({
       where: eq(users.id, id),
     });
@@ -39,7 +39,13 @@ const UserService = {
    * @param user - The user to update
    * @returns The updated user
    */
-  updateUser: async (id: string, user: TUpdateUser): Promise<TUser[]> => {
+  updateUser: async ({
+    id,
+    user,
+  }: {
+    id: string;
+    user: TUpdateUser;
+  }): Promise<TUser[]> => {
     return db.update(users).set(user).where(eq(users.id, id)).returning();
   },
   /**
@@ -47,7 +53,7 @@ const UserService = {
    * @param id - The ID of the user to delete
    * @returns The deleted user
    */
-  deleteUser: async (id: string): Promise<TUser[]> => {
+  deleteUser: async ({ id }: { id: string }): Promise<TUser[]> => {
     return db.delete(users).where(eq(users.id, id)).returning();
   },
   /**
@@ -56,11 +62,13 @@ const UserService = {
    * @param password - The password of the user to sign in
    * @returns The signed in user
    */
-  signIn: async (
-    email: string,
-    password: string,
-  ): Promise<TUser | undefined> => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  signIn: async ({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }): Promise<TUser | undefined> => {
     const [_email, _password] = [email, password];
     return undefined;
   },
@@ -69,8 +77,11 @@ const UserService = {
    * @param user - The user to sign up
    * @returns The signed up user
    */
-  signUp: async (user: TCreateUser): Promise<TUser | undefined> => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  signUp: async ({
+    user,
+  }: {
+    user: TCreateUser;
+  }): Promise<TUser | undefined> => {
     const [_user] = [user];
     return undefined;
   },

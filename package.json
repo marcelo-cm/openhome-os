@@ -17,7 +17,12 @@
     "size-check": "npx cost-of-modules && du -sh node_modules/",
     "prepare": "husky install",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
+    "db:drop": "drizzle-kit drop"
   },
   "type": "module",
   "dependencies": {

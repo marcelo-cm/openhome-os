@@ -3,8 +3,6 @@ import { relations } from 'drizzle-orm';
 import {
   organizationMemberships,
   organizations,
-  postAcl,
-  posts,
   projectMemberships,
   projects,
   userRbacRoles,
@@ -15,14 +13,11 @@ export const usersRelations = relations(users, ({ many }) => ({
   globalRoles: many(userRbacRoles),
   orgMemberships: many(organizationMemberships),
   projectMemberships: many(projectMemberships),
-  ownedPosts: many(posts),
-  postAclEntries: many(postAcl),
 }));
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
   memberships: many(organizationMemberships),
   projects: many(projects),
-  posts: many(posts),
 }));
 
 export const projectsRelations = relations(projects, ({ one, many }) => ({
@@ -31,7 +26,6 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
     references: [organizations.id],
   }),
   memberships: many(projectMemberships),
-  posts: many(posts),
 }));
 
 export const userRbacRolesRelations = relations(userRbacRoles, ({ one }) => ({
@@ -68,30 +62,3 @@ export const projectMembershipsRelations = relations(
     }),
   }),
 );
-
-export const postsRelations = relations(posts, ({ one, many }) => ({
-  owner: one(users, {
-    fields: [posts.principal_id],
-    references: [users.id],
-  }),
-  organization: one(organizations, {
-    fields: [posts.organization_id],
-    references: [organizations.id],
-  }),
-  project: one(projects, {
-    fields: [posts.project_id],
-    references: [projects.id],
-  }),
-  aclEntries: many(postAcl),
-}));
-
-export const postAclRelations = relations(postAcl, ({ one }) => ({
-  post: one(posts, {
-    fields: [postAcl.post_id],
-    references: [posts.id],
-  }),
-  user: one(users, {
-    fields: [postAcl.user_id],
-    references: [users.id],
-  }),
-}));

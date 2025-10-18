@@ -3,9 +3,7 @@ import { boolean, text, timestamp } from 'drizzle-orm/pg-core';
 export const DrizzleBaseModel = {
   id: text('id')
     .primaryKey()
-    .unique()
     .$defaultFn(() => crypto.randomUUID())
-    .generatedAlwaysAs('uuid')
     .notNull(),
   created_at: timestamp('created_at', {
     mode: 'date',

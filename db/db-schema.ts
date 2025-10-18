@@ -4,12 +4,7 @@ import { DrizzleBaseModel } from '@/models/base/base-types';
 import { OrganizationTier } from '@/models/organization/organization-enums';
 import { UserRole } from '@/models/user/user-enums';
 
-import {
-  AclRoleEnum,
-  OrganizationTierEnum,
-  RbacRoleEnum,
-  UserRoleEnum,
-} from './enums';
+import { OrganizationTierEnum, RbacRoleEnum, UserRoleEnum } from './enums';
 
 export const organizations = pgTable('organizations', {
   ...DrizzleBaseModel,
@@ -133,23 +128,23 @@ export const locationMemberships = pgTable('location_memberships', {
  * - Has a specific user as the owner (used for IS_OWNER checks).
  * - Can also be governed by per-item ACLs in the post_acl table.
  */
-export const posts = pgTable('posts', {
-  ...DrizzleBaseModel,
-  title: text('title').notNull(),
-  principal_id: text('principal_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  organization_id: text('organization_id')
-    .notNull()
-    .references(() => organizations.id, {
-      onDelete: 'cascade',
-    }),
-  project_id: text('project_id')
-    .notNull()
-    .references(() => projects.id, {
-      onDelete: 'cascade',
-    }),
-});
+// export const posts = pgTable('posts', {
+//   ...DrizzleBaseModel,
+//   title: text('title').notNull(),
+//   principal_id: text('principal_id')
+//     .notNull()
+//     .references(() => users.id, { onDelete: 'cascade' }),
+//   organization_id: text('organization_id')
+//     .notNull()
+//     .references(() => organizations.id, {
+//       onDelete: 'cascade',
+//     }),
+//   project_id: text('project_id')
+//     .notNull()
+//     .references(() => projects.id, {
+//       onDelete: 'cascade',
+//     }),
+// });
 
 /**
  * Per-item ACL assignments for posts.
@@ -161,13 +156,13 @@ export const posts = pgTable('posts', {
  * Questions:
  * - Should we make this a polymorphic table that holds all ACLs for all resources?
  */
-export const postAcl = pgTable('post_acl', {
-  ...DrizzleBaseModel,
-  post_id: text('post_id')
-    .notNull()
-    .references(() => posts.id, { onDelete: 'cascade' }),
-  user_id: text('user_id')
-    .notNull()
-    .references(() => users.id, { onDelete: 'cascade' }),
-  acl_role: AclRoleEnum('acl_role').notNull(),
-});
+// export const postAcl = pgTable('post_acl', {
+//   ...DrizzleBaseModel,
+//   post_id: text('post_id')
+//     .notNull()
+//     .references(() => posts.id, { onDelete: 'cascade' }),
+//   user_id: text('user_id')
+//     .notNull()
+//     .references(() => users.id, { onDelete: 'cascade' }),
+//   acl_role: AclRoleEnum('acl_role').notNull(),
+// });

@@ -1,11 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 
 import { db } from '@/db/db';
-import {
-  organizationMemberships,
-  postAcl,
-  projectMemberships,
-} from '@/db/db-schema';
+import { organizationMemberships, projectMemberships } from '@/db/db-schema';
 import { TOrganizationMembership } from '@/models/organization/organization-types';
 
 import { TProjectMembership } from '../models/project/project-types';

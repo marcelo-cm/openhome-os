@@ -13,23 +13,37 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.config({
-    extends: ['next'],
+  // Next.js recommended config using compat
+  ...compat.extends('next'),
+
+  // TypeScript and custom plugins config
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
     plugins: {
       '@typescript-eslint': tseslint,
       'unused-imports': unusedImports,
     },
-    parser: tsParser,
-    parserOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-    },
     rules: {
-      'import/order': 'off',
-      'simple-import-sort/imports': 'off',
-      'simple-import-sort/exports': 'off',
+      // Add any custom rules here
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
     },
-  }),
+  },
 ];
 
 export default eslintConfig;

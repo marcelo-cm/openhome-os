@@ -47,7 +47,7 @@ export function buildFakeProjectMembership(
   const base = buildFakeBase(baseOverride);
   const project: TProjectMembership = {
     ...base,
-    owner_id: faker.string.uuid(),
+    principal_id: faker.string.uuid(),
     user_id: faker.string.uuid(),
     project_id: faker.string.uuid(),
     rbac_role: faker.helpers.enumValue(RbacRole),

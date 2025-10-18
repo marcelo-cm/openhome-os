@@ -88,7 +88,7 @@ const OrganizationService = {
     userId: string;
   }): Promise<TOrganizationMembership[]> => {
     return db.insert(organizationMemberships).values({
-      owner_id: principalId,
+      principal_id: principalId,
       organization_id: organizationId,
       user_id: userId,
       rbac_role: RbacRole.MEMBER,
@@ -106,7 +106,7 @@ const OrganizationService = {
     return db
       .insert(organizationMemberships)
       .values({
-        owner_id: principalId,
+        principal_id: principalId,
         organization_id: organizationId,
         user_id: userId,
         rbac_role: RbacRole.ADMIN,

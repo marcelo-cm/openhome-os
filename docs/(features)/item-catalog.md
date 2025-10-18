@@ -4,6 +4,23 @@
 
 The Clothing Catalog is a personal wardrobe management system that allows users to digitally catalog their clothing items with AI-powered tagging, location tracking, and sharing capabilities. Users can manage their wardrobe, track item movements between locations, lend items to roommates, and (in future phases) create outfit combinations.
 
+### Data Model Context
+
+The platform uses a hierarchical structure for organizing spaces:
+
+```
+Organization (e.g., "My Household")
+  └── Project (e.g., "Personal Belongings", "Shared Items")
+      └── Location (e.g., "SF Apartment", "Toronto House")
+```
+
+**For clothing items**:
+
+- Items are stored at **Locations** (the most specific level)
+- Users can move items between locations they have access to
+- Movement history tracks items as they move between locations
+- Privacy settings can make items visible to others in the same organization/home
+
 ---
 
 ## Goals & Success Metrics
@@ -29,7 +46,7 @@ The Clothing Catalog is a personal wardrobe management system that allows users 
 ### Primary Persona: The Multi-Location Professional
 
 - **Name**: Sarah, 28, Product Designer
-- **Situation**: Splits time between SF apartment and Toronto home
+- **Situation**: Splits time between SF apartment and Toronto home (different locations within her organization)
 - **Pain Points**:
   - Forgets what clothes are at which location
   - Can't remember where she bought items or what she paid
@@ -75,7 +92,7 @@ The Clothing Catalog is a personal wardrobe management system that allows users 
 
 - **Photo** (at least 1, no format restrictions)
 - **Name/Title** (user-defined or AI-suggested)
-- **Current Location** (dropdown of user's projects)
+- **Current Location** (dropdown of user's accessible locations within their organization/projects)
 
 ##### Optional Fields
 
@@ -164,7 +181,8 @@ The Clothing Catalog is a personal wardrobe management system that allows users 
    - Not discoverable or shareable
 
 2. **Home Visible**
-   - Visible to all members of user's home/organization
+   - Visible to all members of user's organization (referred to as "home" in UI)
+   - Organization members can see the item regardless of which project or location it's in
    - Appears in "Roommate Closets" view
    - Can be borrowed (with approval)
 
@@ -195,9 +213,17 @@ The Clothing Catalog is a personal wardrobe management system that allows users 
 
 ##### Location Management
 
-- Items linked to user's Projects (code name) / Locations (UI name)
-- User can have items in multiple locations
-- Dropdown shows only user's accessible projects
+The platform uses a three-tier hierarchy:
+
+- **Organizations** → **Projects** → **Locations**
+
+For clothing items:
+
+- Items are linked to **Locations** (the most granular level)
+- Locations belong to Projects, which belong to Organizations
+- Users can have items across multiple locations (e.g., "SF Apartment Living Room", "Toronto House Bedroom")
+- Dropdown shows only locations the user has access to within their organization/projects
+- Location names are user-friendly (e.g., "SF Apartment", "Toronto House") while the underlying structure maintains the org→project→location hierarchy
 
 ##### Movement History
 
@@ -458,6 +484,28 @@ The Clothing Catalog is a personal wardrobe management system that allows users 
 
 ## Data Model
 
+### Existing Platform Hierarchy
+
+The platform already has this structure in place:
+
+```sql
+organizations
+  └── projects (FK: organization_id)
+      └── locations (FK: project_id)
+
+users
+  └── organization_id (FK, nullable)
+
+-- Memberships exist at multiple levels:
+organization_memberships (user + organization + rbac_role)
+project_memberships (user + project + rbac_role)
+location_memberships (user + location + rbac_role)
+```
+
+Users can belong to an organization and have memberships at the organization, project, or location level. Clothing items will be stored at the **location** level.
+
+---
+
 ### New Tables
 
 #### `clothing_items`
@@ -465,7 +513,7 @@ The Clothing Catalog is a personal wardrobe management system that allows users 
 ```sql
 -- Inherits base model (id, created_at, updated_at, deleted_at)
 id: uuid (PK)
-owner_id: uuid (FK → users.id)
+principal_id: uuid (FK → users.id)
 name: varchar(255)
 description: text
 brand: varchar(100)
@@ -478,7 +526,7 @@ purchase_price: decimal(10,2)
 purchase_date: date
 last_worn_date: date
 care_instructions: text
-current_location_id: uuid (FK → projects.id)
+current_location_id: uuid (FK → locations.id)
 privacy_level: enum('private', 'home_visible', 'public')
 public_share_token: uuid (unique, nullable)
 ai_metadata: jsonb -- stores AI confidence scores and raw responses
@@ -490,16 +538,16 @@ deleted_at: timestamp (nullable)
 
 **Indexes**:
 
-- `owner_id, deleted_at`
+- `principal_id, deleted_at`
 - `current_location_id`
 - `public_share_token` (unique)
 - `privacy_level`
 
 **Constraints**:
 
-- `owner_id` must reference existing user
-- `current_location_id` must reference existing project
-- User must have access to the project
+- `principal_id` must reference existing user
+- `current_location_id` must reference existing location
+- User must have access to the location (via project membership or location membership)
 
 ---
 
@@ -557,8 +605,8 @@ created_at: timestamp
 id: uuid (PK)
 item_id: uuid (FK → clothing_items.id, ON DELETE CASCADE)
 event_type: enum('location_change', 'transfer', 'loan_start', 'loan_end')
-from_location_id: uuid (FK → projects.id, nullable)
-to_location_id: uuid (FK → projects.id, nullable)
+from_location_id: uuid (FK → locations.id, nullable)
+to_location_id: uuid (FK → locations.id, nullable)
 from_user_id: uuid (FK → users.id, nullable)
 to_user_id: uuid (FK → users.id, nullable)
 initiated_by_user_id: uuid (FK → users.id)
@@ -586,7 +634,7 @@ created_at: timestamp
 id: uuid (PK)
 item_id: uuid (FK → clothing_items.id, ON DELETE CASCADE)
 borrower_id: uuid (FK → users.id)
-owner_id: uuid (FK → users.id) -- denormalized for quick access
+principal_id: uuid (FK → users.id) -- denormalized for quick access
 status: enum('pending', 'approved', 'denied', 'active', 'returned', 'cancelled')
 requested_return_date: date (nullable)
 actual_return_date: date (nullable)
@@ -602,7 +650,7 @@ returned_at: timestamp (nullable)
 **Indexes**:
 
 - `borrower_id, status`
-- `owner_id, status`
+- `principal_id, status`
 - `item_id, status`
 - `requested_return_date` (for reminder queries)
 
@@ -712,11 +760,13 @@ created_at: timestamp
 
 #### New ACL Resource: `CLOTHING_ITEM`
 
+**Note on Naming**: The existing `LOCATION` ACL resource refers to physical locations (e.g., "SF Apartment", "Toronto House") in the organization→project→location hierarchy. The new `CLOTHING_ITEM` resource is for individual clothing items in the catalog.
+
 ```typescript
 // acl-enums.ts
 export enum AclResource {
-  LOCATION = 'location',
-  CLOTHING_ITEM = 'clothing_item', // NEW
+  LOCATION = 'location', // Physical locations (existing)
+  CLOTHING_ITEM = 'clothing_item', // NEW - Individual clothing items
 }
 ```
 
@@ -754,14 +804,14 @@ export enum AclResource {
 // Determine if user can view item
 function canViewClothingItem(item: ClothingItem, user: User): boolean {
   // Owner can always view
-  if (item.owner_id === user.id) return true;
+  if (item.principal_id === user.id) return true;
 
   // Public items viewable by anyone with link
   if (item.privacy_level === 'public') return true;
 
-  // Home visible items viewable by home members
+  // Home visible items viewable by organization members
   if (item.privacy_level === 'home_visible') {
-    return isInSameHome(item.owner_id, user.id);
+    return isInSameOrganization(item.principal_id, user.id);
   }
 
   // Private items only for owner
@@ -777,11 +827,11 @@ function canRequestBorrow(item: ClothingItem, user: User): boolean {
   // Must be home-visible
   if (item.privacy_level !== 'home_visible') return false;
 
-  // Must be in same home
-  if (!isInSameHome(item.owner_id, user.id)) return false;
+  // Must be in same organization
+  if (!isInSameOrganization(item.principal_id, user.id)) return false;
 
   // Cannot borrow own items
-  if (item.owner_id === user.id) return false;
+  if (item.principal_id === user.id) return false;
 
   // Item must not be currently on loan
   if (item.current_borrow_status === 'active') return false;
@@ -1014,12 +1064,13 @@ Get movement history for item
 
 ### Browse & Discovery
 
-#### `GET /api/homes/:home_id/catalog`
+#### `GET /api/organizations/:organization_id/catalog`
 
-View all public/home-visible items in a home
+View all public/home-visible items in an organization (referred to as "home" in UI)
 
-- **Auth**: Optional (signed-in users see more if in home)
-- **Returns**: Paginated items from all home members
+- **Auth**: Optional (signed-in users see more if in organization)
+- **Returns**: Paginated items from all organization members
+- **Note**: In the UI, organizations are referred to as "homes" for user-friendliness
 
 #### `GET /api/users/:user_id/catalog`
 
@@ -1151,7 +1202,7 @@ View specific user's public catalog
 
 #### 8. Roommate Closets
 
-- **Home Member List**:
+- **Organization Member List**:
   - Member avatar + name
   - Item count
   - Click to view their catalog
@@ -1159,6 +1210,7 @@ View specific user's public catalog
   - Similar to My Catalog
   - Items show "Request to Borrow" button
   - Respect privacy settings
+  - Can filter by location to see what's at specific places
 
 #### 9. Public Catalog View (via link)
 
@@ -1211,12 +1263,13 @@ interface ConfidenceIndicatorProps {
 ```tsx
 interface LocationSelectorProps {
   currentLocationId: string;
-  userProjects: Project[];
+  userLocations: Location[]; // Locations user has access to
   onChange: (locationId: string) => void;
 }
 
 // Features:
-// - Dropdown with project names
+// - Dropdown with location names (e.g., "SF Apartment", "Toronto House")
+// - Optionally group by project (e.g., "Home > SF Apartment", "Home > Toronto House")
 // - Current location highlighted
 // - Optionally show item count per location
 ```
@@ -1392,12 +1445,12 @@ async function analyzeClothingPhoto(imageUrl: string): Promise<AIAnalysis> {
 - **Double transfer**: If transfer pending, prevent new transfer request
 - **Item on loan**: Prevent transfer while item is loaned out
 - **Deleted item**: Auto-cancel pending transfers
-- **User leaves home**: If recipient leaves home, auto-cancel pending transfers
+- **User leaves organization**: If recipient leaves organization, auto-cancel pending transfers
 
 ### Privacy Changes
 
 - **Public to Private**: Invalidate share links
-- **Home Visible to Private**: Cancel pending borrows from roommates
+- **Home Visible to Private**: Cancel pending borrows from organization members
 
 ### Photo Management
 
@@ -1506,12 +1559,16 @@ async function analyzeClothingPhoto(imageUrl: string): Promise<AIAnalysis> {
 
 ### Glossary
 
+- **Organization**: Top-level entity representing a household/group (referred to as "home" in UI)
+- **Project**: Mid-level grouping within an organization (e.g., "Personal Belongings", "Shared Items")
+- **Location**: Specific physical place where items are stored (e.g., "SF Apartment", "Toronto House")
 - **Catalog**: A user's collection of clothing items
 - **Draft**: Incomplete item awaiting user review after photo upload
 - **Movement History**: Immutable log of location changes and transfers
 - **On Loan**: Item currently borrowed by another user
-- **Home Visible**: Privacy setting allowing roommates to see item
+- **Home Visible**: Privacy setting allowing members of the same organization to see item
 - **Public**: Privacy setting allowing anyone with link to view item
+- **Principal**: The owner/creator of a resource (user_id reference in most tables)
 
 ### References
 

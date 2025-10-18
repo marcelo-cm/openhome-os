@@ -48,7 +48,7 @@ export const users = pgTable('users', {
  */
 export const userRbacRoles = pgTable('user_rbac_roles', {
   ...DrizzleBaseModel,
-  principal_id: text('principal_id')
+  owner_id: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   user_id: text('user_id')
@@ -65,7 +65,7 @@ export const userRbacRoles = pgTable('user_rbac_roles', {
  */
 export const organizationMemberships = pgTable('organization_memberships', {
   ...DrizzleBaseModel,
-  principal_id: text('principal_id')
+  owner_id: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   organization_id: text('organization_id')
@@ -85,7 +85,7 @@ export const organizationMemberships = pgTable('organization_memberships', {
  */
 export const projectMemberships = pgTable('project_memberships', {
   ...DrizzleBaseModel,
-  principal_id: text('principal_id')
+  owner_id: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   project_id: text('project_id')
@@ -108,7 +108,7 @@ export const projectMemberships = pgTable('project_memberships', {
 export const posts = pgTable('posts', {
   ...DrizzleBaseModel,
   title: text('title').notNull(),
-  principal_id: text('principal_id')
+  owner_id: text('owner_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   organization_id: text('organization_id')

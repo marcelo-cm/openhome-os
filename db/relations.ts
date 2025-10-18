@@ -71,7 +71,7 @@ export const projectMembershipsRelations = relations(
 
 export const postsRelations = relations(posts, ({ one, many }) => ({
   owner: one(users, {
-    fields: [posts.principal_id],
+    fields: [posts.owner_id],
     references: [users.id],
   }),
   organization: one(organizations, {

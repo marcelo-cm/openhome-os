@@ -52,7 +52,7 @@ export function buildFakeOrganizationMembership(
   const base = buildFakeBase(baseOverride);
   const organization: TOrganizationMembership = {
     ...base,
-    principal_id: faker.string.uuid(),
+    owner_id: faker.string.uuid(),
     user_id: faker.string.uuid(),
     organization_id: faker.string.uuid(),
     rbac_role: faker.helpers.enumValue(RbacRole),

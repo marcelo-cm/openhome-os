@@ -94,7 +94,7 @@ const ProjectService = {
     userId: string;
   }): Promise<TProjectMembership[]> => {
     return db.insert(projectMemberships).values({
-      principal_id: principalId,
+      owner_id: principalId,
       project_id: projectId,
       user_id: userId,
       rbac_role: RbacRole.MEMBER,
@@ -112,7 +112,7 @@ const ProjectService = {
     return db
       .insert(projectMemberships)
       .values({
-        principal_id: principalId,
+        owner_id: principalId,
         project_id: projectId,
         user_id: userId,
         rbac_role: RbacRole.ADMIN,

@@ -1,3 +1,7 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -11,6 +15,13 @@ import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
 
 const SignInCard = () => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push('/home');
+  };
+
   return (
     <Card className="w-full max-w-sm" variant={'ring'}>
       <CardHeader>
@@ -19,7 +30,7 @@ const SignInCard = () => {
           Enter your credentials to access your account.
         </CardDescription>
       </CardHeader>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <CardPanel>
           <div className="flex flex-col gap-4">
             <Field>

@@ -14,11 +14,17 @@ import {
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
 
-const SignInCard = () => {
+import { signin } from '@/models/user/user-actions';
+
+const AuthCard = () => {
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const user = await signin({ data: { email, password } });
     router.push('/home');
   };
 
@@ -61,4 +67,4 @@ const SignInCard = () => {
   );
 };
 
-export default SignInCard;
+export default AuthCard;

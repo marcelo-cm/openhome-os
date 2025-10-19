@@ -1,4 +1,4 @@
-import SignInCard from '../_components/sign-in-card';
+import SignInCard from '../_components/auth-card';
 
 const SignInView = () => {
   return (

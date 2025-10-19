@@ -9,6 +9,12 @@ import {
   CollapsiblePanel,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
+import {
+  Tooltip,
+  TooltipPopup,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 import { cn } from '@/lib/utils';
 
@@ -28,11 +34,13 @@ const SystemManagementSection = ({
 const SystemManagementSectionHeader = ({
   title,
   description,
+  info,
   children,
   className,
 }: {
   title: string;
   description: string;
+  info?: string;
   children?: React.ReactNode;
   className?: string;
 }) => {
@@ -49,7 +57,21 @@ const SystemManagementSectionHeader = ({
         <div>
           <div className="flex items-center gap-2">
             <ChevronDown className="h-4 w-4 transition-[rotate] duration-300 group-data-[panel-open]/section-trigger:-rotate-180" />
-            <p className="font-semibold">{title}</p>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger
+                  className={'cursor-pointer font-semibold'}
+                  render={<span />}
+                >
+                  {title}
+                </TooltipTrigger>
+                {info && (
+                  <TooltipPopup align="start" alignOffset={-32}>
+                    {info}
+                  </TooltipPopup>
+                )}
+              </Tooltip>
+            </TooltipProvider>
           </div>
           <CardDescription>{description}</CardDescription>
         </div>

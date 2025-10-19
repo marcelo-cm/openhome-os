@@ -1,4 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc';
+import tanstackQuery from '@tanstack/eslint-plugin-query';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
 import unusedImports from 'eslint-plugin-unused-imports';
@@ -29,6 +30,7 @@ const eslintConfig = [
     plugins: {
       '@typescript-eslint': tseslint,
       'unused-imports': unusedImports,
+      '@tanstack/query': tanstackQuery,
     },
     rules: {
       // Add any custom rules here

@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogPopup,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
@@ -27,19 +26,19 @@ import {
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
 
-import { createUser } from '@/models/user/user-actions';
-import { UserRole } from '@/models/user/user-enums';
+import { createOrganization } from '@/models/organization/organization-actions';
+import { OrganizationTier } from '@/models/organization/organization-enums';
 
-interface SystemUserCreationDialogProps extends RemoteTriggerProps {
+interface SystemOrganizationCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
 }
 
-const SystemUserCreationDialog = ({
+const SystemOrganizationCreationDialog = ({
   onSuccess,
   open,
   onOpenChange,
   children,
-}: SystemUserCreationDialogProps) => {
+}: SystemOrganizationCreationDialogProps) => {
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
     onOpenChange,
@@ -55,20 +54,15 @@ const SystemUserCreationDialog = ({
     try {
       const formData = new FormData(e.target as HTMLFormElement);
 
-      const firstName = formData.get('first_name') as string;
-      const lastName = formData.get('last_name') as string;
-      const email = formData.get('email') as string;
-      const password = formData.get('password') as string;
-      const role = formData.get('role') as UserRole;
+      const name = formData.get('name') as string;
+      const logoUrl = formData.get('logo_url') as string;
+      const tier = formData.get('tier') as OrganizationTier;
 
-      await createUser({
+      await createOrganization({
         data: {
-          first_name: firstName,
-          last_name: lastName || undefined,
-          email,
-          password,
-          role,
-          organization_id: undefined,
+          name,
+          logo_url: logoUrl || undefined,
+          tier,
         },
       });
 
@@ -76,7 +70,9 @@ const SystemUserCreationDialog = ({
       handleOpenChange(false);
       onSuccess?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create user');
+      setError(
+        err instanceof Error ? err.message : 'Failed to create organization',
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -84,13 +80,12 @@ const SystemUserCreationDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      {children && <DialogTrigger>{children}</DialogTrigger>}
+      {children && children}
       <DialogPopup>
         <DialogHeader>
-          <DialogTitle>Create New User</DialogTitle>
+          <DialogTitle>Create New Organization</DialogTitle>
           <DialogDescription>
-            Add a new user to the system. They will receive an email with their
-            login credentials.
+            Add a new organization to the system.
           </DialogDescription>
         </DialogHeader>
 
@@ -102,61 +97,39 @@ const SystemUserCreationDialog = ({
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4">
-              <Field>
-                <FieldLabel>First Name</FieldLabel>
-                <FieldControl
-                  name="first_name"
-                  type="text"
-                  placeholder="John"
-                  required
-                  disabled={isSubmitting}
-                />
-              </Field>
-
-              <Field>
-                <FieldLabel>Last Name</FieldLabel>
-                <FieldControl
-                  name="last_name"
-                  type="text"
-                  placeholder="Doe"
-                  disabled={isSubmitting}
-                />
-              </Field>
-            </div>
-
             <Field>
-              <FieldLabel>Email</FieldLabel>
+              <FieldLabel>Name</FieldLabel>
               <FieldControl
-                name="email"
-                type="email"
-                placeholder="john.doe@example.com"
+                name="name"
+                type="text"
+                placeholder="Acme Corp"
                 required
                 disabled={isSubmitting}
               />
             </Field>
 
             <Field>
-              <FieldLabel>Password</FieldLabel>
+              <FieldLabel>Logo URL</FieldLabel>
               <FieldControl
-                name="password"
-                type="password"
-                placeholder="Minimum 8 characters"
-                required
-                minLength={8}
+                name="logo_url"
+                type="url"
+                placeholder="https://example.com/logo.png"
                 disabled={isSubmitting}
               />
             </Field>
 
             <Field>
-              <FieldLabel>Role</FieldLabel>
-              <Select name="role" defaultValue={UserRole.USER}>
+              <FieldLabel>Tier</FieldLabel>
+              <Select name="tier" defaultValue={OrganizationTier.FREE}>
                 <SelectTrigger disabled={isSubmitting}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectPopup>
-                  <SelectItem value={UserRole.USER}>User</SelectItem>
-                  <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                  <SelectItem value={OrganizationTier.FREE}>Free</SelectItem>
+                  <SelectItem value={OrganizationTier.PRO}>Pro</SelectItem>
+                  <SelectItem value={OrganizationTier.ENTERPRISE}>
+                    Enterprise
+                  </SelectItem>
                 </SelectPopup>
               </Select>
             </Field>
@@ -172,7 +145,7 @@ const SystemUserCreationDialog = ({
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create User'}
+              {isSubmitting ? 'Creating...' : 'Create Organization'}
             </Button>
           </DialogFooter>
         </Form>
@@ -181,4 +154,4 @@ const SystemUserCreationDialog = ({
   );
 };
 
-export default SystemUserCreationDialog;
+export default SystemOrganizationCreationDialog;

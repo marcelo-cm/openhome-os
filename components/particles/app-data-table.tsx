@@ -1,5 +1,7 @@
 'use client';
 
+import { Loader2 } from 'lucide-react';
+
 import {
   ColumnDef,
   flexRender,
@@ -7,6 +9,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
+import { Skeleton } from '../ui/skeleton';
 import {
   Table,
   TableBody,
@@ -19,11 +22,15 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  loading?: boolean;
+  loadingVariant?: 'spinner' | 'skeleton';
 }
 
 function AppDataTable<TData, TValue>({
   columns,
   data,
+  loading,
+  loadingVariant,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -52,7 +59,29 @@ function AppDataTable<TData, TValue>({
         ))}
       </TableHeader>
       <TableBody>
-        {table.getRowModel().rows?.length ? (
+        {loading ? (
+          loadingVariant === 'spinner' ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
+                <span className="flex h-full w-full items-center justify-center">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                </span>
+              </TableCell>
+            </TableRow>
+          ) : (
+            Array.from({
+              length: table.getState().pagination.pageSize ?? 10,
+            }).map((_, index) => (
+              <TableRow key={index}>
+                {Array.from({ length: columns.length }).map((_, index) => (
+                  <TableCell key={index}>
+                    <Skeleton className="h-4 w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
+          )
+        ) : table.getRowModel().rows?.length ? (
           table.getRowModel().rows.map((row) => (
             <TableRow
               key={row.id}

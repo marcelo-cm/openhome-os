@@ -10,7 +10,6 @@ import {
   DialogHeader,
   DialogPopup,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
@@ -71,7 +70,7 @@ const SystemLocationCreationDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      {children && <DialogTrigger>{children}</DialogTrigger>}
+      {children && children}
       <DialogPopup>
         <DialogHeader>
           <DialogTitle>Create New Location</DialogTitle>

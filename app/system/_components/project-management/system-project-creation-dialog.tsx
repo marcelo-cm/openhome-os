@@ -10,36 +10,27 @@ import {
   DialogHeader,
   DialogPopup,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
-import {
-  Select,
-  SelectItem,
-  SelectPopup,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
 
-import { createOrganization } from '@/models/organization/organization-actions';
-import { OrganizationTier } from '@/models/organization/organization-enums';
+import { createProject } from '@/models/project/project-actions';
 
-interface SystemOrganizationCreationDialogProps extends RemoteTriggerProps {
+interface SystemProjectCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
 }
 
-const SystemOrganizationCreationDialog = ({
+const SystemProjectCreationDialog = ({
   onSuccess,
   open,
   onOpenChange,
   children,
-}: SystemOrganizationCreationDialogProps) => {
+}: SystemProjectCreationDialogProps) => {
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
     onOpenChange,
@@ -56,14 +47,12 @@ const SystemOrganizationCreationDialog = ({
       const formData = new FormData(e.target as HTMLFormElement);
 
       const name = formData.get('name') as string;
-      const logoUrl = formData.get('logo_url') as string;
-      const tier = formData.get('tier') as OrganizationTier;
+      const organizationId = formData.get('organization_id') as string;
 
-      await createOrganization({
+      await createProject({
         data: {
           name,
-          logo_url: logoUrl || undefined,
-          tier,
+          organization_id: organizationId,
         },
       });
 
@@ -71,9 +60,7 @@ const SystemOrganizationCreationDialog = ({
       handleOpenChange(false);
       onSuccess?.();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create organization',
-      );
+      setError(err instanceof Error ? err.message : 'Failed to create project');
     } finally {
       setIsSubmitting(false);
     }
@@ -81,12 +68,12 @@ const SystemOrganizationCreationDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      {children && <DialogTrigger>{children}</DialogTrigger>}
+      {children && children}
       <DialogPopup>
         <DialogHeader>
-          <DialogTitle>Create New Organization</DialogTitle>
+          <DialogTitle>Create New Project</DialogTitle>
           <DialogDescription>
-            Add a new organization to the system.
+            Add a new project to an organization.
           </DialogDescription>
         </DialogHeader>
 
@@ -103,36 +90,21 @@ const SystemOrganizationCreationDialog = ({
               <FieldControl
                 name="name"
                 type="text"
-                placeholder="Acme Corp"
+                placeholder="My Project"
                 required
                 disabled={isSubmitting}
               />
             </Field>
 
             <Field>
-              <FieldLabel>Logo URL</FieldLabel>
+              <FieldLabel>Organization ID</FieldLabel>
               <FieldControl
-                name="logo_url"
-                type="url"
-                placeholder="https://example.com/logo.png"
+                name="organization_id"
+                type="text"
+                placeholder="Organization ID"
+                required
                 disabled={isSubmitting}
               />
-            </Field>
-
-            <Field>
-              <FieldLabel>Tier</FieldLabel>
-              <Select name="tier" defaultValue={OrganizationTier.FREE}>
-                <SelectTrigger disabled={isSubmitting}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectPopup>
-                  <SelectItem value={OrganizationTier.FREE}>Free</SelectItem>
-                  <SelectItem value={OrganizationTier.PRO}>Pro</SelectItem>
-                  <SelectItem value={OrganizationTier.ENTERPRISE}>
-                    Enterprise
-                  </SelectItem>
-                </SelectPopup>
-              </Select>
             </Field>
           </div>
 
@@ -146,7 +118,7 @@ const SystemOrganizationCreationDialog = ({
               Cancel
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Organization'}
+              {isSubmitting ? 'Creating...' : 'Create Project'}
             </Button>
           </DialogFooter>
         </Form>
@@ -155,4 +127,4 @@ const SystemOrganizationCreationDialog = ({
   );
 };
 
-export default SystemOrganizationCreationDialog;
+export default SystemProjectCreationDialog;

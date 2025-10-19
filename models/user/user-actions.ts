@@ -36,6 +36,19 @@ export async function getUser({ id }: { id: string }): Promise<TUser> {
   }
 }
 
+// Read (Get)
+export async function getUsers(): Promise<TUser[]> {
+  try {
+    const users = await UserService.getAllUser();
+
+    console.log('[getUsers]', users);
+    return users;
+  } catch (error) {
+    console.error('[getUsers]', error);
+    throw new Error('Failed to get Users');
+  }
+}
+
 // Update
 export async function updateUser({
   id,

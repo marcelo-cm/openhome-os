@@ -1,13 +1,14 @@
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { DialogTrigger } from '@/components/ui/dialog';
 import { Frame, FramePanel } from '@/components/ui/frame';
 
 import {
   SystemManagementSection,
   SystemManagementSectionHeader,
   SystemManagementSectionPanel,
-} from '../system-management-section';
+} from '../management-section';
 import SystemLocationCreationDialog from './system-location-creation-dialog';
 import SystemLocationManagementTable from './system-location-management-table';
 
@@ -15,13 +16,14 @@ const SystemLocationManagement = () => {
   return (
     <SystemManagementSection>
       <SystemManagementSectionHeader
-        title="Location Management"
+        title="Locations"
         description="Manage locations across all projects."
+        info="Locations are the bottom-level entities in the system. They can be used to group devices and sensors."
       >
         <SystemLocationCreationDialog>
-          <Button variant="outline" size="sm">
-            Add Location <PlusIcon />
-          </Button>
+          <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
+            <PlusIcon />
+          </DialogTrigger>
         </SystemLocationCreationDialog>
       </SystemManagementSectionHeader>
       <SystemManagementSectionPanel>

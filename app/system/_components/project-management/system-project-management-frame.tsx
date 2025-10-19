@@ -1,13 +1,14 @@
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { DialogTrigger } from '@/components/ui/dialog';
 import { Frame, FramePanel } from '@/components/ui/frame';
 
 import {
   SystemManagementSection,
   SystemManagementSectionHeader,
   SystemManagementSectionPanel,
-} from '../system-management-section';
+} from '../management-section';
 import SystemProjectCreationDialog from './system-project-creation-dialog';
 import SystemProjectManagementTable from './system-project-management-table';
 
@@ -15,13 +16,14 @@ const SystemProjectManagement = () => {
   return (
     <SystemManagementSection>
       <SystemManagementSectionHeader
-        title="Project Management"
+        title="Projects"
         description="Manage projects across all organizations."
+        info="Projects are the top-level entities in the system. They can be used to group locations."
       >
         <SystemProjectCreationDialog>
-          <Button variant="outline" size="sm">
-            Add Project <PlusIcon />
-          </Button>
+          <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
+            <PlusIcon />
+          </DialogTrigger>
         </SystemProjectCreationDialog>
       </SystemManagementSectionHeader>
       <SystemManagementSectionPanel>

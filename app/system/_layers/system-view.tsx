@@ -7,10 +7,10 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 
-import SystemLocationManagement from '../_components/system-location-management/system-location-management-frame';
-import SystemOrganizationManagement from '../_components/system-organization-management/system-organization-management-frame';
-import SystemProjectManagement from '../_components/system-project-management/system-project-management-frame';
-import SystemUserManagement from '../_components/system-user-management/system-user-management-frame';
+import SystemLocationManagement from '../_components/location-management/system-location-management-frame';
+import SystemOrganizationManagement from '../_components/organization-management/system-organization-management-frame';
+import SystemProjectManagement from '../_components/project-management/system-project-management-frame';
+import SystemUserManagement from '../_components/user-management/system-user-management-frame';
 
 const SystemView = () => {
   return (

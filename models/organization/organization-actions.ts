@@ -26,6 +26,18 @@ export async function createOrganization({
   }
 }
 
+// Read (Get All)
+export async function getOrganizations(): Promise<TOrganization[]> {
+  try {
+    const organizations = await OrganizationService.getAllOrganization();
+
+    return organizations;
+  } catch (error) {
+    console.error('[getOrganizations]', error);
+    throw new Error('Failed to get Organizations');
+  }
+}
+
 // Read (Get)
 export async function getOrganization({
   id,

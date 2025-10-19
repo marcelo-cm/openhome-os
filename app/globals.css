@@ -104,4 +104,8 @@
   [class*='@container/'] {
     container-type: normal !important;
   }
+
+  .font-heading {
+    @apply font-semibold;
+  }
 }

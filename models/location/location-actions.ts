@@ -26,6 +26,18 @@ export async function createLocation({
   }
 }
 
+// Read (Get All)
+export async function getLocations(): Promise<TLocation[]> {
+  try {
+    const locations = await LocationService.getAllLocation();
+
+    return locations;
+  } catch (error) {
+    console.error('[getLocations]', error);
+    throw new Error('Failed to get Locations');
+  }
+}
+
 // Read (Get)
 export async function getLocation({ id }: { id: string }): Promise<TLocation> {
   try {

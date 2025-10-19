@@ -24,6 +24,18 @@ export async function createProject({
   }
 }
 
+// Read (Get All)
+export async function getProjects(): Promise<TProject[]> {
+  try {
+    const projects = await ProjectService.getAllProject();
+
+    return projects;
+  } catch (error) {
+    console.error('[getProjects]', error);
+    throw new Error('Failed to get Projects');
+  }
+}
+
 // Read (Get)
 export async function getProject({ id }: { id: string }): Promise<TProject> {
   try {

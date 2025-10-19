@@ -30,7 +30,7 @@ export interface RemoteTriggerProps extends UseRemoteTriggerProps {
  * ```
  */
 export const useRemoteTrigger = ({
-  open,
+  open = false,
   onOpenChange,
 }: UseRemoteTriggerProps) => {
   const [isOpen, setIsOpen] = useState(open);

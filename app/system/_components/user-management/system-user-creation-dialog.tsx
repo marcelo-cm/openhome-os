@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -29,12 +29,13 @@ import {
 } from '@/hooks/use-remote-trigger';
 import useOrganizations from '@/models/organization/hooks/use-organizations';
 
-import { createUser } from '@/models/user/user-actions';
+import { createUser, updateUser } from '@/models/user/user-actions';
 import { UserRole } from '@/models/user/user-enums';
+import { TUser } from '@/models/user/user-types';
 
 interface SystemUserCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
-  trigger?: React.ReactNode;
+  user?: TUser;
 }
 
 const SystemUserCreationDialog = ({
@@ -42,7 +43,9 @@ const SystemUserCreationDialog = ({
   open,
   onOpenChange,
   children,
+  user,
 }: SystemUserCreationDialogProps) => {
+  const mode = user ? 'edit' : 'create';
   const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
@@ -67,41 +70,90 @@ const SystemUserCreationDialog = ({
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
       const role = formData.get('role') as UserRole;
+      const organizationId = formData.get('organization_id') as
+        | string
+        | undefined;
 
-      await createUser({
-        data: {
-          first_name: firstName,
-          last_name: lastName || undefined,
-          email,
-          password,
-          role,
-          organization_id: undefined,
-        },
-      });
+      if (mode === 'create') {
+        await createUser({
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            password,
+            role,
+            organization_id: organizationId,
+          },
+        });
+      } else if (mode === 'edit') {
+        if (!user) {
+          throw new Error('User not found');
+        }
+        await updateUser({
+          id: user.id,
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            role,
+            organization_id: organizationId,
+          },
+        });
+      } else {
+        throw new Error('Invalid mode');
+      }
 
       // Close the dialog and call success callback
       handleOpenChange(false);
-      await queryClient.invalidateQueries({
-        queryKey: ['users'],
-      });
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create user');
     } finally {
       setIsSubmitting(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['users'],
+      });
     }
   };
+
+  const text = useMemo(() => {
+    switch (mode) {
+      case 'create':
+        return {
+          title: 'Create New User',
+          description:
+            'Add a new user to the system. They will receive an email with their login credentials.',
+          primary: {
+            text: 'Create User',
+            loading: 'Creating...',
+          },
+          secondary: {
+            text: 'Cancel',
+            loading: 'Cancelling...',
+          },
+        };
+      case 'edit':
+        return {
+          title: 'Edit User',
+          description: "Edit the user's information.",
+          primary: {
+            text: 'Update User',
+            loading: 'Updating...',
+          },
+          secondary: {
+            text: 'Cancel',
+            loading: 'Cancelling...',
+          },
+        };
+    }
+  }, [mode]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {children && children}
       <DialogPopup>
         <DialogHeader>
-          <DialogTitle>Create New User</DialogTitle>
-          <DialogDescription>
-            Add a new user to the system. They will receive an email with their
-            login credentials.
-          </DialogDescription>
+          <DialogTitle>{text.title}</DialogTitle>
+          <DialogDescription>{text.description}</DialogDescription>
         </DialogHeader>
 
         <Form onSubmit={handleSubmit}>
@@ -121,6 +173,7 @@ const SystemUserCreationDialog = ({
                   placeholder="John"
                   required
                   disabled={isSubmitting}
+                  defaultValue={user?.first_name}
                 />
               </Field>
 
@@ -131,6 +184,7 @@ const SystemUserCreationDialog = ({
                   type="text"
                   placeholder="Doe"
                   disabled={isSubmitting}
+                  defaultValue={user?.last_name ?? undefined}
                 />
               </Field>
             </div>
@@ -143,24 +197,27 @@ const SystemUserCreationDialog = ({
                 placeholder="john.doe@example.com"
                 required
                 disabled={isSubmitting}
+                defaultValue={user?.email}
               />
             </Field>
 
-            <Field>
-              <FieldLabel>Password</FieldLabel>
-              <FieldControl
-                name="password"
-                type="password"
-                placeholder="Minimum 8 characters"
-                required
-                minLength={8}
-                disabled={isSubmitting}
-              />
-            </Field>
+            {mode === 'create' && (
+              <Field>
+                <FieldLabel>Password</FieldLabel>
+                <FieldControl
+                  name="password"
+                  type="password"
+                  placeholder="Minimum 8 characters"
+                  required
+                  minLength={8}
+                  disabled={isSubmitting}
+                />
+              </Field>
+            )}
 
             <Field>
               <FieldLabel>Role</FieldLabel>
-              <Select name="role" defaultValue={UserRole.USER}>
+              <Select name="role" defaultValue={user?.role ?? UserRole.USER}>
                 <SelectTrigger disabled={isSubmitting}>
                   <SelectValue />
                 </SelectTrigger>
@@ -173,7 +230,10 @@ const SystemUserCreationDialog = ({
 
             <Field>
               <FieldLabel>Organization</FieldLabel>
-              <Select name="organization_id" defaultValue={undefined}>
+              <Select
+                name="organization_id"
+                defaultValue={user?.organization_id ?? undefined}
+              >
                 <SelectTrigger disabled={isSubmitting || isLoading}>
                   <SelectValue />
                 </SelectTrigger>
@@ -195,10 +255,10 @@ const SystemUserCreationDialog = ({
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
             >
-              Cancel
+              {text.secondary.text}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create User'}
+              {isSubmitting ? text.primary.loading : text.primary.text}
             </Button>
           </DialogFooter>
         </Form>

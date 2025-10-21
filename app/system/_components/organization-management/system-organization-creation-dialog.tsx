@@ -30,9 +30,11 @@ import {
 
 import { createOrganization } from '@/models/organization/organization-actions';
 import { OrganizationTier } from '@/models/organization/organization-enums';
+import { TOrganization } from '@/models/organization/organization-types';
 
 interface SystemOrganizationCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
+  organization?: TOrganization;
 }
 
 const SystemOrganizationCreationDialog = ({
@@ -40,6 +42,7 @@ const SystemOrganizationCreationDialog = ({
   open,
   onOpenChange,
   children,
+  organization,
 }: SystemOrganizationCreationDialogProps) => {
   const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
@@ -109,6 +112,7 @@ const SystemOrganizationCreationDialog = ({
                 name="name"
                 type="text"
                 placeholder="Acme Corp"
+                defaultValue={organization?.name}
                 required
                 disabled={isSubmitting}
               />
@@ -120,13 +124,17 @@ const SystemOrganizationCreationDialog = ({
                 name="logo_url"
                 type="url"
                 placeholder="https://example.com/logo.png"
+                defaultValue={organization?.logo_url ?? undefined}
                 disabled={isSubmitting}
               />
             </Field>
 
             <Field>
               <FieldLabel>Tier</FieldLabel>
-              <Select name="tier" defaultValue={OrganizationTier.FREE}>
+              <Select
+                name="tier"
+                defaultValue={organization?.tier ?? OrganizationTier.FREE}
+              >
                 <SelectTrigger disabled={isSubmitting}>
                   <SelectValue />
                 </SelectTrigger>

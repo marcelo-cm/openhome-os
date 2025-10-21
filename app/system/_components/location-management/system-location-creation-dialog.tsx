@@ -30,9 +30,11 @@ import {
 import useProjects from '@/models/project/hooks/use-projects';
 
 import { createLocation } from '@/models/location/location-actions';
+import { TLocation } from '@/models/location/location-types';
 
 interface SystemLocationCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
+  location?: TLocation;
 }
 
 const SystemLocationCreationDialog = ({
@@ -40,6 +42,7 @@ const SystemLocationCreationDialog = ({
   open,
   onOpenChange,
   children,
+  location,
 }: SystemLocationCreationDialogProps) => {
   const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
@@ -110,6 +113,7 @@ const SystemLocationCreationDialog = ({
                 name="name"
                 type="text"
                 placeholder="Building A"
+                defaultValue={location?.name}
                 required
                 disabled={isSubmitting}
               />
@@ -117,7 +121,7 @@ const SystemLocationCreationDialog = ({
 
             <Field>
               <FieldLabel>Project</FieldLabel>
-              <Select name="project_id" defaultValue={undefined}>
+              <Select name="project_id" defaultValue={location?.project_id}>
                 <SelectTrigger disabled={isSubmitting || isProjectsLoading}>
                   <SelectValue />
                 </SelectTrigger>

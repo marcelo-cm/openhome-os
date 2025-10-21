@@ -30,9 +30,11 @@ import {
 import useOrganizations from '@/models/organization/hooks/use-organizations';
 
 import { createProject } from '@/models/project/project-actions';
+import { TProject } from '@/models/project/project-types';
 
 interface SystemProjectCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
+  project?: TProject;
 }
 
 const SystemProjectCreationDialog = ({
@@ -40,6 +42,7 @@ const SystemProjectCreationDialog = ({
   open,
   onOpenChange,
   children,
+  project,
 }: SystemProjectCreationDialogProps) => {
   const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
@@ -110,12 +113,16 @@ const SystemProjectCreationDialog = ({
                 placeholder="My Project"
                 required
                 disabled={isSubmitting}
+                defaultValue={project?.name}
               />
             </Field>
 
             <Field>
               <FieldLabel>Organization</FieldLabel>
-              <Select name="organization_id" defaultValue={undefined}>
+              <Select
+                name="organization_id"
+                defaultValue={project?.organization_id ?? undefined}
+              >
                 <SelectTrigger disabled={isSubmitting || isLoading}>
                   <SelectValue />
                 </SelectTrigger>

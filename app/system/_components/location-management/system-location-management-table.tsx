@@ -4,13 +4,13 @@ import { useMemo } from 'react';
 
 import AppDataTable from '@/components/particles/app-data-table';
 
-import useLocations from '@/models/location/hooks/use-locations';
+import useLocationsQuery from '@/models/location/hooks/use-locations-query';
 
 import { createLocationManagementColumns } from './system-location-management-utils';
 
 const SystemLocationManagementTable = () => {
-  const { data = [], isLoading } = useLocations({
-    queryKey: ['system'],
+  const { data = [], isLoading } = useLocationsQuery({
+    queryKey: ['system', 'locations'],
   });
   const columns = useMemo(() => createLocationManagementColumns(), []);
 

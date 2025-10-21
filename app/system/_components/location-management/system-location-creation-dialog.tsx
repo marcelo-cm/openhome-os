@@ -27,7 +27,7 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-import useProjects from '@/models/project/hooks/use-projects';
+import useProjectsQuery from '@/models/project/hooks/use-projects-query';
 
 import {
   createLocation,
@@ -84,8 +84,9 @@ const SystemLocationCreationDialog = ({
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: projects, isLoading: isProjectsLoading } = useProjects({
+  const { data: projects, isLoading: isProjectsLoading } = useProjectsQuery({
     enabled: isOpen,
+    queryKey: ['system', 'projects'],
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -130,8 +131,7 @@ const SystemLocationCreationDialog = ({
     } finally {
       setIsSubmitting(false);
       await queryClient.invalidateQueries({
-        queryKey: ['locations'],
-        exact: false,
+        queryKey: ['system', 'locations'],
       });
     }
   };

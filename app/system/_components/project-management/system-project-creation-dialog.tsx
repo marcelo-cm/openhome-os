@@ -27,7 +27,7 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-import useOrganizations from '@/models/organization/hooks/use-organizations';
+import useOrganizationsQuery from '@/models/organization/hooks/use-organizations-query';
 
 import { createProject, updateProject } from '@/models/project/project-actions';
 import { TProject } from '@/models/project/project-types';
@@ -79,8 +79,9 @@ const SystemProjectCreationDialog = ({
     open,
     onOpenChange,
   });
-  const { data: organizations, isLoading } = useOrganizations({
+  const { data: organizations, isLoading } = useOrganizationsQuery({
     enabled: isOpen,
+    queryKey: ['system', 'organizations'],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -127,8 +128,7 @@ const SystemProjectCreationDialog = ({
     } finally {
       setIsSubmitting(false);
       await queryClient.invalidateQueries({
-        queryKey: ['projects'],
-        exact: false,
+        queryKey: ['system', 'projects'],
       });
     }
   };

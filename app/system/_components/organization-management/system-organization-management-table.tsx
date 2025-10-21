@@ -4,12 +4,12 @@ import { useMemo } from 'react';
 
 import AppDataTable from '@/components/particles/app-data-table';
 
-import useOrganizations from '@/models/organization/hooks/use-organizations';
+import useOrganizationsQuery from '@/models/organization/hooks/use-organizations-query';
 
 import { createOrganizationManagementColumns } from './system-organization-management-utils';
 
 const SystemOrganizationManagementTable = () => {
-  const { data = [], isLoading } = useOrganizations({
+  const { data = [], isLoading } = useOrganizationsQuery({
     queryKey: ['system'],
   });
   const columns = useMemo(() => createOrganizationManagementColumns(), []);

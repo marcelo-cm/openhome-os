@@ -27,7 +27,7 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-import useOrganizations from '@/models/organization/hooks/use-organizations';
+import useOrganizationsQuery from '@/models/organization/hooks/use-organizations-query';
 
 import { createUser, updateUser } from '@/models/user/user-actions';
 import { UserRole } from '@/models/user/user-enums';
@@ -81,8 +81,9 @@ const SystemUserCreationDialog = ({
     open,
     onOpenChange,
   });
-  const { data: organizations, isLoading } = useOrganizations({
+  const { data: organizations, isLoading } = useOrganizationsQuery({
     enabled: isOpen,
+    queryKey: ['system', 'organizations'],
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -140,8 +141,7 @@ const SystemUserCreationDialog = ({
     } finally {
       setIsSubmitting(false);
       await queryClient.invalidateQueries({
-        queryKey: ['users'],
-        exact: false,
+        queryKey: ['system', 'users'],
       });
     }
   };

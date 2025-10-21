@@ -129,8 +129,7 @@ const SystemOrganizationCreationDialog = ({
       setError(err instanceof Error ? err.message : text[mode].error);
     } finally {
       await queryClient.invalidateQueries({
-        queryKey: ['organizations'],
-        exact: false,
+        queryKey: ['system', 'organizations'],
       });
       setIsSubmitting(false);
     }

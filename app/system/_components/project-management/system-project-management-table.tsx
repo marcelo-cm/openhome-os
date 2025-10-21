@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 import AppDataTable from '@/components/particles/app-data-table';
 
-import useProjects from '@/models/project/hooks/use-projects';
+import useProjects from '@/models/project/hooks/use-projects-query';
 
 import { createProjectManagementColumns } from './system-project-management-utils';
 

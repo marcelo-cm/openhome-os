@@ -2,26 +2,22 @@
 
 import { useMemo } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
 import AppDataTable from '@/components/particles/app-data-table';
 
-import { getProjects } from '@/models/project/project-actions';
+import useProjects from '@/models/project/hooks/use-projects';
 
 import { createProjectManagementColumns } from './system-project-management-utils';
 
 const SystemProjectManagementTable = () => {
-  const { data: projects, isLoading } = useQuery({
-    queryKey: ['system', 'projects'],
-    queryFn: () => getProjects(),
-    initialData: [],
+  const { data = [], isLoading } = useProjects({
+    queryKey: ['system'],
   });
   const columns = useMemo(() => createProjectManagementColumns(), []);
 
   return (
     <AppDataTable
       columns={columns}
-      data={projects}
+      data={data}
       loading={isLoading}
       loadingVariant="skeleton"
     />

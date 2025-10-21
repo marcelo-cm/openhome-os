@@ -29,13 +29,45 @@ import {
 } from '@/hooks/use-remote-trigger';
 import useProjects from '@/models/project/hooks/use-projects';
 
-import { createLocation } from '@/models/location/location-actions';
+import {
+  createLocation,
+  updateLocation,
+} from '@/models/location/location-actions';
 import { TLocation } from '@/models/location/location-types';
 
 interface SystemLocationCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
   location?: TLocation;
 }
+
+const text = {
+  create: {
+    title: 'Create New Location',
+    description: 'Add a new location to a project.',
+    primary: {
+      text: 'Create Location',
+      loading: 'Creating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to create location',
+  },
+  edit: {
+    title: 'Edit Location',
+    description: "Edit the location's information.",
+    primary: {
+      text: 'Update Location',
+      loading: 'Updating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to update location',
+  },
+};
 
 const SystemLocationCreationDialog = ({
   onSuccess,
@@ -44,6 +76,7 @@ const SystemLocationCreationDialog = ({
   children,
   location,
 }: SystemLocationCreationDialogProps) => {
+  const mode = location ? 'edit' : 'create';
   const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
@@ -66,25 +99,40 @@ const SystemLocationCreationDialog = ({
       const name = formData.get('name') as string;
       const projectId = formData.get('project_id') as string;
 
-      await createLocation({
-        data: {
-          name,
-          project_id: projectId,
-        },
-      });
+      if (mode === 'create') {
+        await createLocation({
+          data: {
+            name,
+            project_id: projectId,
+          },
+        });
+      } else if (mode === 'edit') {
+        if (!location) {
+          throw new Error('Location not found');
+        }
+        await updateLocation({
+          id: location.id,
+          data: {
+            name,
+            project_id: projectId,
+          },
+        });
+      } else {
+        throw new Error('Invalid mode');
+      }
 
       // Close the dialog and call success callback
       handleOpenChange(false);
-      await queryClient.invalidateQueries({
-        queryKey: ['locations'],
-      });
+
       onSuccess?.();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create location',
-      );
+      setError(err instanceof Error ? err.message : text[mode].error);
     } finally {
       setIsSubmitting(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['locations'],
+        exact: false,
+      });
     }
   };
 
@@ -93,10 +141,8 @@ const SystemLocationCreationDialog = ({
       {children && children}
       <DialogPopup>
         <DialogHeader>
-          <DialogTitle>Create New Location</DialogTitle>
-          <DialogDescription>
-            Add a new location to a project.
-          </DialogDescription>
+          <DialogTitle>{text[mode].title}</DialogTitle>
+          <DialogDescription>{text[mode].description}</DialogDescription>
         </DialogHeader>
 
         <Form onSubmit={handleSubmit}>
@@ -143,10 +189,12 @@ const SystemLocationCreationDialog = ({
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
             >
-              Cancel
+              {text[mode].secondary.text}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Location'}
+              {isSubmitting
+                ? text[mode].primary.loading
+                : text[mode].primary.text}
             </Button>
           </DialogFooter>
         </Form>

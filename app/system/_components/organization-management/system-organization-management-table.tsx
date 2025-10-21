@@ -2,26 +2,22 @@
 
 import { useMemo } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
 import AppDataTable from '@/components/particles/app-data-table';
 
-import { getOrganizations } from '@/models/organization/organization-actions';
+import useOrganizations from '@/models/organization/hooks/use-organizations';
 
 import { createOrganizationManagementColumns } from './system-organization-management-utils';
 
 const SystemOrganizationManagementTable = () => {
-  const { data: organizations, isLoading } = useQuery({
-    queryKey: ['system', 'organizations'],
-    queryFn: () => getOrganizations(),
-    initialData: [],
+  const { data = [], isLoading } = useOrganizations({
+    queryKey: ['system'],
   });
   const columns = useMemo(() => createOrganizationManagementColumns(), []);
 
   return (
     <AppDataTable
       columns={columns}
-      data={organizations}
+      data={data}
       loading={isLoading}
       loadingVariant="skeleton"
     />

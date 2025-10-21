@@ -29,13 +29,42 @@ import {
 } from '@/hooks/use-remote-trigger';
 import useOrganizations from '@/models/organization/hooks/use-organizations';
 
-import { createProject } from '@/models/project/project-actions';
+import { createProject, updateProject } from '@/models/project/project-actions';
 import { TProject } from '@/models/project/project-types';
 
 interface SystemProjectCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
   project?: TProject;
 }
+
+const text = {
+  create: {
+    title: 'Create New Project',
+    description: 'Add a new project to an organization.',
+    primary: {
+      text: 'Create Project',
+      loading: 'Creating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to create project',
+  },
+  edit: {
+    title: 'Edit Project',
+    description: "Edit the project's information.",
+    primary: {
+      text: 'Update Project',
+      loading: 'Updating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to update project',
+  },
+};
 
 const SystemProjectCreationDialog = ({
   onSuccess,
@@ -44,6 +73,7 @@ const SystemProjectCreationDialog = ({
   children,
   project,
 }: SystemProjectCreationDialogProps) => {
+  const mode = project ? 'edit' : 'create';
   const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
@@ -66,23 +96,40 @@ const SystemProjectCreationDialog = ({
       const name = formData.get('name') as string;
       const organizationId = formData.get('organization_id') as string;
 
-      await createProject({
-        data: {
-          name,
-          organization_id: organizationId,
-        },
-      });
+      if (mode === 'create') {
+        await createProject({
+          data: {
+            name,
+            organization_id: organizationId,
+          },
+        });
+      } else if (mode === 'edit') {
+        if (!project) {
+          throw new Error('Project not found');
+        }
+        await updateProject({
+          id: project.id,
+          data: {
+            name,
+            organization_id: organizationId,
+          },
+        });
+      } else {
+        throw new Error('Invalid mode');
+      }
 
       // Close the dialog and call success callback
       handleOpenChange(false);
-      await queryClient.invalidateQueries({
-        queryKey: ['projects'],
-      });
+
       onSuccess?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create project');
+      setError(err instanceof Error ? err.message : text[mode].error);
     } finally {
       setIsSubmitting(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['projects'],
+        exact: false,
+      });
     }
   };
 
@@ -91,10 +138,8 @@ const SystemProjectCreationDialog = ({
       {children && children}
       <DialogPopup>
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
-          <DialogDescription>
-            Add a new project to an organization.
-          </DialogDescription>
+          <DialogTitle>{text[mode].title}</DialogTitle>
+          <DialogDescription>{text[mode].description}</DialogDescription>
         </DialogHeader>
 
         <Form onSubmit={handleSubmit}>
@@ -144,10 +189,12 @@ const SystemProjectCreationDialog = ({
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
             >
-              Cancel
+              {text[mode].secondary.text}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Project'}
+              {isSubmitting
+                ? text[mode].primary.loading
+                : text[mode].primary.text}
             </Button>
           </DialogFooter>
         </Form>

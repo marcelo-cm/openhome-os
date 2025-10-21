@@ -2,26 +2,22 @@
 
 import { useMemo } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
-
 import AppDataTable from '@/components/particles/app-data-table';
 
-import { getLocations } from '@/models/location/location-actions';
+import useLocations from '@/models/location/hooks/use-locations';
 
 import { createLocationManagementColumns } from './system-location-management-utils';
 
 const SystemLocationManagementTable = () => {
-  const { data: locations, isLoading } = useQuery({
-    queryKey: ['system', 'locations'],
-    queryFn: () => getLocations(),
-    initialData: [],
+  const { data = [], isLoading } = useLocations({
+    queryKey: ['system'],
   });
   const columns = useMemo(() => createLocationManagementColumns(), []);
 
   return (
     <AppDataTable
       columns={columns}
-      data={locations}
+      data={data}
       loading={isLoading}
       loadingVariant="skeleton"
     />

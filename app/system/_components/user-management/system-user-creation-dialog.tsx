@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -37,6 +37,36 @@ interface SystemUserCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;
   user?: TUser;
 }
+
+const text = {
+  create: {
+    title: 'Create New User',
+    description:
+      'Add a new user to the system. They will receive an email with their login credentials.',
+    primary: {
+      text: 'Create User',
+      loading: 'Creating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to create user',
+  },
+  edit: {
+    title: 'Edit User',
+    description: "Edit the user's information.",
+    primary: {
+      text: 'Update User',
+      loading: 'Updating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to update user',
+  },
+};
 
 const SystemUserCreationDialog = ({
   onSuccess,
@@ -106,54 +136,23 @@ const SystemUserCreationDialog = ({
       handleOpenChange(false);
       onSuccess?.();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create user');
+      setError(err instanceof Error ? err.message : text[mode].error);
     } finally {
       setIsSubmitting(false);
       await queryClient.invalidateQueries({
         queryKey: ['users'],
+        exact: false,
       });
     }
   };
-
-  const text = useMemo(() => {
-    switch (mode) {
-      case 'create':
-        return {
-          title: 'Create New User',
-          description:
-            'Add a new user to the system. They will receive an email with their login credentials.',
-          primary: {
-            text: 'Create User',
-            loading: 'Creating...',
-          },
-          secondary: {
-            text: 'Cancel',
-            loading: 'Cancelling...',
-          },
-        };
-      case 'edit':
-        return {
-          title: 'Edit User',
-          description: "Edit the user's information.",
-          primary: {
-            text: 'Update User',
-            loading: 'Updating...',
-          },
-          secondary: {
-            text: 'Cancel',
-            loading: 'Cancelling...',
-          },
-        };
-    }
-  }, [mode]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {children && children}
       <DialogPopup>
         <DialogHeader>
-          <DialogTitle>{text.title}</DialogTitle>
-          <DialogDescription>{text.description}</DialogDescription>
+          <DialogTitle>{text[mode].title}</DialogTitle>
+          <DialogDescription>{text[mode].description}</DialogDescription>
         </DialogHeader>
 
         <Form onSubmit={handleSubmit}>
@@ -255,10 +254,12 @@ const SystemUserCreationDialog = ({
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
             >
-              {text.secondary.text}
+              {text[mode].secondary.text}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? text.primary.loading : text.primary.text}
+              {isSubmitting
+                ? text[mode].primary.loading
+                : text[mode].primary.text}
             </Button>
           </DialogFooter>
         </Form>

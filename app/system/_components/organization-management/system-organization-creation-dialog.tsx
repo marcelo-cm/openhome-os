@@ -28,7 +28,10 @@ import {
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
 
-import { createOrganization } from '@/models/organization/organization-actions';
+import {
+  createOrganization,
+  updateOrganization,
+} from '@/models/organization/organization-actions';
 import { OrganizationTier } from '@/models/organization/organization-enums';
 import { TOrganization } from '@/models/organization/organization-types';
 
@@ -37,6 +40,35 @@ interface SystemOrganizationCreationDialogProps extends RemoteTriggerProps {
   organization?: TOrganization;
 }
 
+const text = {
+  create: {
+    title: 'Create New Organization',
+    description: 'Add a new organization to the system.',
+    primary: {
+      text: 'Create Organization',
+      loading: 'Creating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to create organization',
+  },
+  edit: {
+    title: 'Edit Organization',
+    description: "Edit the organization's information.",
+    primary: {
+      text: 'Update Organization',
+      loading: 'Updating...',
+    },
+    secondary: {
+      text: 'Cancel',
+      loading: 'Cancelling...',
+    },
+    error: 'Failed to update organization',
+  },
+};
+
 const SystemOrganizationCreationDialog = ({
   onSuccess,
   open,
@@ -44,6 +76,7 @@ const SystemOrganizationCreationDialog = ({
   children,
   organization,
 }: SystemOrganizationCreationDialogProps) => {
+  const mode = organization ? 'edit' : 'create';
   const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
@@ -64,25 +97,41 @@ const SystemOrganizationCreationDialog = ({
       const logoUrl = formData.get('logo_url') as string;
       const tier = formData.get('tier') as OrganizationTier;
 
-      await createOrganization({
-        data: {
-          name,
-          logo_url: logoUrl || undefined,
-          tier,
-        },
-      });
+      if (mode === 'create') {
+        await createOrganization({
+          data: {
+            name,
+            logo_url: logoUrl || undefined,
+            tier,
+          },
+        });
+      } else if (mode === 'edit') {
+        if (!organization) {
+          throw new Error('Organization not found');
+        }
+        await updateOrganization({
+          id: organization.id,
+          data: {
+            name,
+            logo_url: logoUrl || undefined,
+            tier,
+          },
+        });
+      } else {
+        throw new Error('Invalid mode');
+      }
 
       // Close the dialog and call success callback
       handleOpenChange(false);
-      await queryClient.invalidateQueries({
-        queryKey: ['organizations'],
-      });
+
       onSuccess?.();
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : 'Failed to create organization',
-      );
+      setError(err instanceof Error ? err.message : text[mode].error);
     } finally {
+      await queryClient.invalidateQueries({
+        queryKey: ['organizations'],
+        exact: false,
+      });
       setIsSubmitting(false);
     }
   };
@@ -92,10 +141,8 @@ const SystemOrganizationCreationDialog = ({
       {children && children}
       <DialogPopup>
         <DialogHeader>
-          <DialogTitle>Create New Organization</DialogTitle>
-          <DialogDescription>
-            Add a new organization to the system.
-          </DialogDescription>
+          <DialogTitle>{text[mode].title}</DialogTitle>
+          <DialogDescription>{text[mode].description}</DialogDescription>
         </DialogHeader>
 
         <Form onSubmit={handleSubmit}>
@@ -156,10 +203,12 @@ const SystemOrganizationCreationDialog = ({
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
             >
-              Cancel
+              {text[mode].secondary.text}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Organization'}
+              {isSubmitting
+                ? text[mode].primary.loading
+                : text[mode].primary.text}
             </Button>
           </DialogFooter>
         </Form>

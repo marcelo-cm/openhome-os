@@ -1,11 +1,19 @@
+import { Fragment, useState } from 'react';
+
+import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
+
 import { ColumnDef } from '@tanstack/react-table';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@/components/ui/menu';
 
 import { cn } from '@/lib/utils';
 import { OrganizationTier } from '@/models/organization/organization-enums';
 import { TOrganization } from '@/models/organization/organization-types';
 import { titleCase } from '@/utils/text-formatting-utils';
+
+import SystemOrganizationCreationDialog from './system-organization-creation-dialog';
 
 export const createOrganizationManagementColumns =
   (): ColumnDef<TOrganization>[] => {
@@ -71,6 +79,48 @@ export const createOrganizationManagementColumns =
             day: 'numeric',
             year: 'numeric',
           }),
+      },
+      {
+        header: '',
+        accessorKey: 'actions',
+        cell: ({ row }) => {
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const [open, setOpen] = useState(false);
+
+          return (
+            <Fragment>
+              <Menu data-slot="organization-management-actions">
+                <MenuTrigger
+                  render={<Button variant="outline" size="icon-sm" />}
+                >
+                  <EllipsisVerticalIcon />
+                </MenuTrigger>
+                <MenuPopup align="end">
+                  <MenuItem
+                    data-slot="organization-management-actions-edit"
+                    title="Edit Organization"
+                    onClick={() => setOpen(true)}
+                  >
+                    <PencilIcon />
+                    Edit
+                  </MenuItem>
+                  <MenuItem
+                    data-slot="organization-management-actions-delete"
+                    title="Delete Organization"
+                  >
+                    <TrashIcon />
+                    Delete
+                  </MenuItem>
+                </MenuPopup>
+              </Menu>
+              <SystemOrganizationCreationDialog
+                open={open}
+                onOpenChange={setOpen}
+                organization={row.original}
+              />
+            </Fragment>
+          );
+        },
       },
     ];
   };

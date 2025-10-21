@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -39,6 +41,7 @@ const SystemOrganizationCreationDialog = ({
   onOpenChange,
   children,
 }: SystemOrganizationCreationDialogProps) => {
+  const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
     onOpenChange,
@@ -68,6 +71,9 @@ const SystemOrganizationCreationDialog = ({
 
       // Close the dialog and call success callback
       handleOpenChange(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['organizations'],
+      });
       onSuccess?.();
     } catch (err) {
       setError(

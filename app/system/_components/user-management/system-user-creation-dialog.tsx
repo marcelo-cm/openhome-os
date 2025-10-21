@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -25,6 +27,7 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
+import useOrganizations from '@/models/organization/hooks/use-organizations';
 
 import { createUser } from '@/models/user/user-actions';
 import { UserRole } from '@/models/user/user-enums';
@@ -40,9 +43,13 @@ const SystemUserCreationDialog = ({
   onOpenChange,
   children,
 }: SystemUserCreationDialogProps) => {
+  const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
     onOpenChange,
+  });
+  const { data: organizations, isLoading } = useOrganizations({
+    enabled: isOpen,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -74,6 +81,9 @@ const SystemUserCreationDialog = ({
 
       // Close the dialog and call success callback
       handleOpenChange(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['users'],
+      });
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create user');
@@ -157,6 +167,22 @@ const SystemUserCreationDialog = ({
                 <SelectPopup>
                   <SelectItem value={UserRole.USER}>User</SelectItem>
                   <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                </SelectPopup>
+              </Select>
+            </Field>
+
+            <Field>
+              <FieldLabel>Organization</FieldLabel>
+              <Select name="organization_id" defaultValue={undefined}>
+                <SelectTrigger disabled={isSubmitting || isLoading}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectPopup>
+                  {organizations?.map((organization) => (
+                    <SelectItem key={organization.id} value={organization.id}>
+                      {organization.name}
+                    </SelectItem>
+                  ))}
                 </SelectPopup>
               </Select>
             </Field>

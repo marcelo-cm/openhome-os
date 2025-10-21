@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,11 +15,19 @@ import {
 } from '@/components/ui/dialog';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
+import {
+  Select,
+  SelectItem,
+  SelectPopup,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
+import useProjects from '@/models/project/hooks/use-projects';
 
 import { createLocation } from '@/models/location/location-actions';
 
@@ -31,12 +41,16 @@ const SystemLocationCreationDialog = ({
   onOpenChange,
   children,
 }: SystemLocationCreationDialogProps) => {
+  const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
     onOpenChange,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { data: projects, isLoading: isProjectsLoading } = useProjects({
+    enabled: isOpen,
+  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -58,6 +72,9 @@ const SystemLocationCreationDialog = ({
 
       // Close the dialog and call success callback
       handleOpenChange(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['locations'],
+      });
       onSuccess?.();
     } catch (err) {
       setError(
@@ -99,14 +116,19 @@ const SystemLocationCreationDialog = ({
             </Field>
 
             <Field>
-              <FieldLabel>Project ID</FieldLabel>
-              <FieldControl
-                name="project_id"
-                type="text"
-                placeholder="Project ID"
-                required
-                disabled={isSubmitting}
-              />
+              <FieldLabel>Project</FieldLabel>
+              <Select name="project_id" defaultValue={undefined}>
+                <SelectTrigger disabled={isSubmitting || isProjectsLoading}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectPopup>
+                  {projects?.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+                </SelectPopup>
+              </Select>
             </Field>
           </div>
 

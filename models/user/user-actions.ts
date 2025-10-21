@@ -40,8 +40,6 @@ export async function getUser({ id }: { id: string }): Promise<TUser> {
 export async function getUsers(): Promise<TUser[]> {
   try {
     const users = await UserService.getAllUser();
-
-    console.log('[getUsers]', users);
     return users;
   } catch (error) {
     console.error('[getUsers]', error);

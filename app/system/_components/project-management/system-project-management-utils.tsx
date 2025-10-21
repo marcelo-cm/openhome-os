@@ -12,15 +12,11 @@ export const createProjectManagementColumns = (): ColumnDef<TProject>[] => {
           <div>
             <p className="font-medium">{row.original.name}</p>
             <p className="text-muted-foreground text-xs">
-              Org ID: {row.original.organization_id}
+              Org: {row.original.organization_id}
             </p>
           </div>
         );
       },
-    },
-    {
-      header: 'Organization ID',
-      accessorKey: 'organization_id',
     },
     {
       header: 'Created',

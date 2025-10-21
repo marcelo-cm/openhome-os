@@ -12,15 +12,11 @@ export const createLocationManagementColumns = (): ColumnDef<TLocation>[] => {
           <div>
             <p className="font-medium">{row.original.name}</p>
             <p className="text-muted-foreground text-xs">
-              Project ID: {row.original.project_id}
+              Proj: {row.original.project_id}
             </p>
           </div>
         );
       },
-    },
-    {
-      header: 'Project ID',
-      accessorKey: 'project_id',
     },
     {
       header: 'Created',

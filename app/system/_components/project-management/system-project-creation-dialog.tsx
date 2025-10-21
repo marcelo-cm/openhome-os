@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { useQueryClient } from '@tanstack/react-query';
+
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,11 +15,19 @@ import {
 } from '@/components/ui/dialog';
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
+import {
+  Select,
+  SelectItem,
+  SelectPopup,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
+import useOrganizations from '@/models/organization/hooks/use-organizations';
 
 import { createProject } from '@/models/project/project-actions';
 
@@ -31,9 +41,13 @@ const SystemProjectCreationDialog = ({
   onOpenChange,
   children,
 }: SystemProjectCreationDialogProps) => {
+  const queryClient = useQueryClient();
   const [isOpen, handleOpenChange] = useRemoteTrigger({
     open,
     onOpenChange,
+  });
+  const { data: organizations, isLoading } = useOrganizations({
+    enabled: isOpen,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,6 +72,9 @@ const SystemProjectCreationDialog = ({
 
       // Close the dialog and call success callback
       handleOpenChange(false);
+      await queryClient.invalidateQueries({
+        queryKey: ['projects'],
+      });
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create project');
@@ -97,14 +114,19 @@ const SystemProjectCreationDialog = ({
             </Field>
 
             <Field>
-              <FieldLabel>Organization ID</FieldLabel>
-              <FieldControl
-                name="organization_id"
-                type="text"
-                placeholder="Organization ID"
-                required
-                disabled={isSubmitting}
-              />
+              <FieldLabel>Organization</FieldLabel>
+              <Select name="organization_id" defaultValue={undefined}>
+                <SelectTrigger disabled={isSubmitting || isLoading}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectPopup>
+                  {organizations?.map((organization) => (
+                    <SelectItem key={organization.id} value={organization.id}>
+                      {organization.name}
+                    </SelectItem>
+                  ))}
+                </SelectPopup>
+              </Select>
             </Field>
           </div>
 

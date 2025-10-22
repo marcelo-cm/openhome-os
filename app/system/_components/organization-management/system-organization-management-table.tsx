@@ -10,8 +10,9 @@ import { createOrganizationManagementColumns } from './system-organization-manag
 
 const SystemOrganizationManagementTable = () => {
   const { data = [], isLoading } = useOrganizationsQuery({
-    queryKey: ['system'],
+    queryKey: ['system', ' organizations'],
   });
+
   const columns = useMemo(() => createOrganizationManagementColumns(), []);
 
   return (

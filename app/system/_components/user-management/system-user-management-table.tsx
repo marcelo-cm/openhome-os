@@ -10,7 +10,7 @@ import { createUserManagementColumns } from './system-user-management-utils';
 
 const SystemUserManagementTable = () => {
   const { data = [], isLoading } = useUsers({
-    queryKey: ['system'],
+    queryKey: ['system', 'users'],
   });
   const columns = useMemo(() => createUserManagementColumns(), []);
 

@@ -10,7 +10,7 @@ import { createProjectManagementColumns } from './system-project-management-util
 
 const SystemProjectManagementTable = () => {
   const { data = [], isLoading } = useProjects({
-    queryKey: ['system'],
+    queryKey: ['system', 'projects'],
   });
   const columns = useMemo(() => createProjectManagementColumns(), []);
 

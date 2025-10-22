@@ -9,7 +9,9 @@ export function prettifyText(text: string) {
  * @param text - The text to capitalize
  * @returns The capitalized text
  */
-export function titleCase(text: string) {
+export function titleCase(text: string | undefined) {
+  if (text === undefined || text.length === 0) return text;
+
   return text.replace(/\b\w/g, (char) => char.toUpperCase());
 }
 

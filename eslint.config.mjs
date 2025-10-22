@@ -2,6 +2,8 @@ import { FlatCompat } from '@eslint/eslintrc';
 import tanstackQuery from '@tanstack/eslint-plugin-query';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals';
+import nextTypescript from 'eslint-config-next/typescript';
 import unusedImports from 'eslint-plugin-unused-imports';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -14,9 +16,9 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  // Next.js recommended config using compat
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   ...compat.extends('next'),
-
   // TypeScript and custom plugins config
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
@@ -45,6 +47,15 @@ const eslintConfig = [
         },
       ],
     },
+  },
+  {
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'out/**',
+      'build/**',
+      'next-env.d.ts',
+    ],
   },
 ];
 

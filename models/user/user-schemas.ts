@@ -9,6 +9,7 @@ export const CreateUserSchema = createInsertSchema(users)
     first_name: true,
     last_name: true,
     email: true,
+    profile_picture_url: true,
     role: true,
     organization_id: true,
   })

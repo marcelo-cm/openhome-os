@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -17,33 +18,37 @@ import {
 import { Field, FieldControl, FieldLabel } from '@/components/ui/field';
 import { Form } from '@/components/ui/form';
 
-import { createClient } from '@/lib/supabase/client';
-import { signin } from '@/models/user/user-actions';
+import { uploadProfilePicture } from '@/lib/supabase/storage';
+import { signInWithOAuth, signup } from '@/models/user/user-actions';
+import { UserRole } from '@/models/user/user-enums';
 
-const AuthCard = () => {
+const SignUpCard = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const handleGoogleSignIn = async () => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setProfilePicture(file);
+      // Create preview URL
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
+  };
+
+  const handleOAuthSignIn = async () => {
     try {
       setIsLoading(true);
       setError(null);
-
-      const supabase = createClient();
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) throw error;
+      const { url } = await signInWithOAuth({ provider: 'google' });
+      // Redirect to Google OAuth
+      window.location.href = url;
     } catch (err) {
-      console.error('[handleGoogleSignIn]', err);
-      setError(
-        err instanceof Error ? err.message : 'Failed to sign in with Google',
-      );
+      console.error('[OAuth Sign In]', err);
+      setError('Failed to sign in with Google. Please try again.');
       setIsLoading(false);
     }
   };
@@ -57,27 +62,69 @@ const AuthCard = () => {
       const formData = new FormData(e.target as HTMLFormElement);
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
-      await signin({ data: { email, password } });
+      const firstName = formData.get('first_name') as string;
+      const lastName = formData.get('last_name') as string;
+
+      // Upload profile picture first if one was selected
+
+      // Create user account
+      const user = await signup({
+        data: {
+          email,
+          password,
+          first_name: firstName,
+          last_name: lastName,
+          role: UserRole.USER,
+          organization_id: undefined,
+        },
+        profilePicture,
+      });
+
+      // Redirect to home on success
       router.push('/home');
     } catch (err) {
-      console.error('[handleSubmit]', err);
-      setError(err instanceof Error ? err.message : 'Failed to sign in');
+      console.error('[Sign Up]', err);
+      setError(err instanceof Error ? err.message : 'Failed to create account');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-sm" variant={'ring'}>
+    <Card className="w-full max-w-md" variant={'ring'}>
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
+        <CardTitle>Create Account</CardTitle>
         <CardDescription>
-          Enter your credentials to access your account.
+          Sign up to get started with OpenHomeOS.
         </CardDescription>
       </CardHeader>
       <Form onSubmit={handleSubmit}>
         <CardPanel>
           <div className="flex flex-col gap-4">
+            {/* First Name */}
+            <Field>
+              <FieldLabel>First Name</FieldLabel>
+              <FieldControl
+                name="first_name"
+                type="text"
+                placeholder="Enter your first name"
+                required
+                disabled={isLoading}
+              />
+            </Field>
+
+            {/* Last Name */}
+            <Field>
+              <FieldLabel>Last Name</FieldLabel>
+              <FieldControl
+                name="last_name"
+                type="text"
+                placeholder="Enter your last name"
+                disabled={isLoading}
+              />
+            </Field>
+
+            {/* Email */}
             <Field>
               <FieldLabel>Email</FieldLabel>
               <FieldControl
@@ -88,15 +135,41 @@ const AuthCard = () => {
                 disabled={isLoading}
               />
             </Field>
+
+            {/* Password */}
             <Field>
               <FieldLabel>Password</FieldLabel>
               <FieldControl
                 name="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Enter your password (min 8 characters)"
                 required
+                minLength={8}
                 disabled={isLoading}
               />
+            </Field>
+
+            {/* Profile Picture Upload */}
+            <Field>
+              <FieldLabel>Profile Picture (Optional)</FieldLabel>
+              <div className="flex flex-col items-center gap-3">
+                {previewUrl && (
+                  <div className="border-muted relative size-24 overflow-hidden rounded-full border-2">
+                    <Image
+                      src={previewUrl}
+                      alt="Profile preview"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 text-sm file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:text-sm file:font-medium"
+                />
+              </div>
             </Field>
 
             {/* Error Message */}
@@ -109,9 +182,9 @@ const AuthCard = () => {
         </CardPanel>
         <CardFooter>
           <div className="flex w-full flex-col gap-4">
-            {/* Sign In Button */}
+            {/* Sign Up Button */}
             <Button className="w-full" type="submit" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? 'Creating account...' : 'Sign Up'}
             </Button>
 
             {/* Divider */}
@@ -131,7 +204,7 @@ const AuthCard = () => {
               type="button"
               variant="outline"
               className="w-full"
-              onClick={handleGoogleSignIn}
+              onClick={handleOAuthSignIn}
               disabled={isLoading}
             >
               <svg className="mr-2 size-4" viewBox="0 0 24 24">
@@ -152,19 +225,19 @@ const AuthCard = () => {
                   fill="#EA4335"
                 />
               </svg>
-              Sign in with Google
+              Sign up with Google
             </Button>
 
-            {/* Sign Up Link */}
+            {/* Sign In Link */}
             <div className="flex flex-row items-center justify-center gap-2">
               <p className="text-muted-foreground text-center text-sm">
-                Don't have an account?
+                Already have an account?
               </p>
               <Link
                 className="text-primary text-sm font-bold hover:animate-pulse"
-                href="/auth/sign-up"
+                href="/auth"
               >
-                Sign Up
+                Sign In
               </Link>
             </div>
           </div>
@@ -174,4 +247,4 @@ const AuthCard = () => {
   );
 };
 
-export default AuthCard;
+export default SignUpCard;

@@ -1,5 +1,6 @@
 'use server';
 
+import { uploadProfilePicture } from '@/lib/supabase/storage';
 import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
 
 import UserService from './user-service';
@@ -86,9 +87,24 @@ export async function deleteUser({ id }: { id: string }): Promise<TUser> {
 }
 
 // Actions
-export async function signup({ data }: { data: TCreateUser }): Promise<TUser> {
+export async function signup({
+  data,
+  profilePicture,
+}: {
+  data: TCreateUser;
+  profilePicture: File | null;
+}): Promise<TUser> {
   try {
-    const user = await UserService.signUp({ user: data });
+    const profilePictureUrl = profilePicture
+      ? await uploadProfilePicture(
+          await profilePicture.arrayBuffer(),
+          data.email,
+          profilePicture.name,
+        )
+      : null;
+    const user = await UserService.signUp({
+      user: { ...data, profile_picture_url: profilePictureUrl ?? undefined },
+    });
 
     if (!user) {
       throw new Error('User not found');
@@ -123,5 +139,53 @@ export async function signin({
   } catch (error) {
     console.error('[signin]', error);
     throw new Error('Failed to sign in User');
+  }
+}
+
+export async function signInWithOAuth({
+  provider,
+}: {
+  provider: 'google';
+}): Promise<{ url: string }> {
+  try {
+    const { createClient } = await import('@/lib/supabase/server');
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      },
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { url: data.url };
+  } catch (error) {
+    console.error('[signInWithOAuth]', error);
+    throw new Error('Failed to sign in with OAuth');
+  }
+}
+
+// OAuth
+export async function syncOAuthUser({
+  authUser,
+  profileData,
+}: {
+  authUser: { id: string; email: string };
+  profileData?: {
+    first_name?: string;
+    last_name?: string;
+    profile_picture_url?: string;
+  };
+}): Promise<TUser> {
+  try {
+    const user = await UserService.syncOAuthUser({ authUser, profileData });
+    return user;
+  } catch (error) {
+    console.error('[syncOAuthUser]', error);
+    throw new Error('Failed to sync OAuth user');
   }
 }

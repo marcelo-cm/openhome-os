@@ -35,6 +35,7 @@ export const users = pgTable('users', {
   last_name: text('last_name'),
   email: text('email').notNull().unique(),
   role: UserRoleEnum('role').notNull().default(UserRole.USER),
+  profile_picture_url: text('profile_picture_url'),
   organization_id: text('organization_id').references(() => organizations.id, {
     onDelete: 'cascade',
   }),

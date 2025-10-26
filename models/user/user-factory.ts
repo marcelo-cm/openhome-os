@@ -21,6 +21,7 @@ export function buildFakeUser(
     last_name: faker.person.lastName(),
     email: faker.internet.email(),
     role: faker.helpers.enumValue(UserRole),
+    profile_picture_url: faker.image.url(),
     organization_id: faker.string.uuid(),
   };
 

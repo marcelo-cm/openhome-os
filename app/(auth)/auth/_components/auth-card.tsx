@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
@@ -58,9 +59,22 @@ const AuthCard = () => {
           </div>
         </CardPanel>
         <CardFooter>
-          <Button className="w-full" type="submit">
-            Sign In
-          </Button>
+          <div className="flex-1 flex-col space-y-4">
+            <Button className="w-full" type="submit">
+              Sign In
+            </Button>
+            <div className="flex flex-row items-center justify-center gap-2">
+              <p className="text-muted-foreground text-center text-sm">
+                Don't have an account?
+              </p>
+              <Link
+                className="text-primary text-sm font-bold hover:animate-pulse"
+                href="/auth/sign-up"
+              >
+                Sign Up
+              </Link>
+            </div>
+          </div>
         </CardFooter>
       </Form>
     </Card>

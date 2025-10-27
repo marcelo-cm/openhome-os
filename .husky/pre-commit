@@ -28,8 +28,8 @@ else
   # ---------- Type-check ----------
   TS_STAGED="$(echo "${STAGED}" | grep -E '\.(ts|tsx)$' || true)"
   if [ -n "${TS_STAGED}" ] || [ "${current_branch}" = "dev" ] || [ "${current_branch}" = "main" ]; then
-    echo -e "${YELLOW}Running TypeScript type-check (pnpm lint:type)...${NC}"
-    pnpm lint:type || { echo -e "${RED}Type check failed${NC}"; exit 1; }
+    echo -e "${YELLOW}Running TypeScript type-check (pnpm type-check)...${NC}"
+    pnpm type-check || { echo -e "${RED}Type check failed${NC}"; exit 1; }
   else
     echo -e "${YELLOW}Skipping type-check (no TS changes and not on dev/main).${NC}"
   fi

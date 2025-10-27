@@ -1,0 +1,70 @@
+import * as React from 'react';
+
+import { mergeProps } from '@base-ui-components/react/merge-props';
+import { useRender } from '@base-ui-components/react/use-render';
+import { type VariantProps, cva } from 'class-variance-authority';
+
+import { cn } from './util/cn';
+
+const buttonVariants = cva(
+  "focus-visible:ring-ring focus-visible:ring-offset-background disabled:opacity-64 pointer-coarse:after:absolute pointer-coarse:after:size-full pointer-coarse:after:min-h-11 pointer-coarse:after:min-w-11 relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-lg border bg-clip-padding text-sm font-medium outline-none transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] focus-visible:ring-2 focus-visible:ring-offset-1 disabled:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default:
+          'border-primary bg-primary text-primary-foreground shadow-primary/24 hover:bg-primary/90 shadow-xs not-disabled:inset-shadow-[0_1px_--theme(--color-white/16%)] [&:is(:active,[data-pressed])]:inset-shadow-[0_1px_--theme(--color-black/8%)] [&:is(:disabled,:active,[data-pressed])]:shadow-none',
+        outline:
+          'border-border bg-background dark:bg-input/32 [&:is(:hover,[data-pressed])]:bg-accent/50 dark:[&:is(:hover,[data-pressed])]:bg-input/64 shadow-xs not-disabled:not-active:not-data-pressed:before:shadow-[0_1px_--theme(--color-black/4%)] dark:not-in-data-[slot=group]:bg-clip-border dark:not-disabled:not-data-pressed:before:shadow-[0_-1px_--theme(--color-white/4%)] dark:not-disabled:not-active:not-data-pressed:before:shadow-[0_-1px_--theme(--color-white/8%)] [&:is(:disabled,:active,[data-pressed])]:shadow-none',
+        secondary:
+          'border-secondary bg-secondary text-secondary-foreground hover:bg-secondary/90 data-pressed:bg-secondary/90',
+        destructive:
+          'border-destructive bg-destructive shadow-destructive/24 hover:bg-destructive/90 shadow-xs not-disabled:inset-shadow-[0_1px_--theme(--color-white/16%)] [&:is(:active,[data-pressed])]:inset-shadow-[0_1px_--theme(--color-black/8%)] text-white [&:is(:disabled,:active,[data-pressed])]:shadow-none',
+        'destructive-outline':
+          'border-border text-destructive-foreground dark:bg-input/32 [&:is(:hover,[data-pressed])]:border-destructive/32 [&:is(:hover,[data-pressed])]:bg-destructive/4 shadow-xs not-disabled:not-active:not-data-pressed:before:shadow-[0_1px_--theme(--color-black/4%)] dark:not-in-data-[slot=group]:bg-clip-border dark:not-disabled:before:shadow-[0_-1px_--theme(--color-white/4%)] dark:not-disabled:not-active:not-data-pressed:before:shadow-[0_-1px_--theme(--color-white/8%)] bg-transparent [&:is(:disabled,:active,[data-pressed])]:shadow-none',
+        ghost: 'hover:bg-accent data-pressed:bg-accent border-transparent',
+        link: 'border-transparent underline-offset-4 hover:underline',
+      },
+      size: {
+        default:
+          'min-h-8 px-[calc(--spacing(3)-1px)] py-[calc(--spacing(1.5)-1px)]',
+        xs: "min-h-6 gap-1 rounded-md px-[calc(--spacing(2)-1px)] py-[calc(--spacing(1)-1px)] text-xs before:rounded-[calc(var(--radius-md)-1px)] [&_svg:not([class*='size-'])]:size-3",
+        sm: 'min-h-7 gap-1.5 px-[calc(--spacing(2.5)-1px)] py-[calc(--spacing(1)-1px)]',
+        lg: 'min-h-9 px-[calc(--spacing(3.5)-1px)] py-[calc(--spacing(2)-1px)]',
+        xl: "[&_svg:not([class*='size-'])]:size-4.5 min-h-10 px-[calc(--spacing(4)-1px)] py-[calc(--spacing(2)-1px)] text-base",
+        icon: 'size-8',
+        'icon-sm': 'size-7',
+        'icon-lg': 'size-9',
+        'icon-xl': 'size-10',
+        'icon-xs': 'size-6',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default',
+    },
+  },
+);
+
+interface ButtonProps extends useRender.ComponentProps<'button'> {
+  variant?: VariantProps<typeof buttonVariants>['variant'];
+  size?: VariantProps<typeof buttonVariants>['size'];
+}
+
+function Button({ className, variant, size, render, ...props }: ButtonProps) {
+  const typeValue: React.ButtonHTMLAttributes<HTMLButtonElement>['type'] =
+    render ? undefined : 'button';
+
+  const defaultProps = {
+    'data-slot': 'button',
+    className: cn(buttonVariants({ variant, size, className })),
+    type: typeValue,
+  };
+
+  return useRender({
+    defaultTagName: 'button',
+    render,
+    props: mergeProps<'button'>(defaultProps, props),
+  });
+}
+
+export { Button, buttonVariants };

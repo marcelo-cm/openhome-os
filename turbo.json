@@ -15,8 +15,10 @@
       "env": [
         "DATABASE_URL",
         "SUPABASE_DATABASE_PASSWORD",
-        "SUPABASE_PROFILE_PICTURES_BUCKET",
-        "SUPABASE_SERVICE_ROLE_KEY"
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_BUCKET"
       ]
     },
     "dev": {
@@ -28,6 +30,14 @@
         ".env.local",
         ".env.development",
         ".env"
+      ],
+      "env": [
+        "DATABASE_URL",
+        "SUPABASE_DATABASE_PASSWORD",
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY",
+        "SUPABASE_BUCKET"
       ]
     },
     "lint": {

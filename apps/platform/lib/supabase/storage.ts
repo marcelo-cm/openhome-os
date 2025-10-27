@@ -1,6 +1,7 @@
+import { DATABASE_CONSTANTS } from '@/constants/db-constants';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-const PROFILE_PICTURES_BUCKET = process.env.SUPABASE_PROFILE_PICTURES_BUCKET!;
+const PROFILE_PICTURES_BUCKET = process.env.SUPABASE_BUCKET!;
 
 /**
  * Uploads a profile picture from the server side
@@ -19,7 +20,7 @@ export async function uploadProfilePicture(
   // Generate unique filename with timestamp
   const fileExt = fileName.split('.').pop();
   const uniqueFileName = `${userId}-${Date.now()}.${fileExt}`;
-  const filePath = `${uniqueFileName}`;
+  const filePath = `${DATABASE_CONSTANTS.PROFILE_PICTURES_FOLDER}/${uniqueFileName}`;
 
   // Upload file
   const { error: uploadError } = await supabase.storage
@@ -50,7 +51,9 @@ export async function deleteProfilePicture(fileUrl: string): Promise<void> {
   const supabase = await createAdminClient();
 
   // Extract filename from URL
-  const fileName = fileUrl.split('/').pop();
+  const fileName = fileUrl
+    .split(`${DATABASE_CONSTANTS.PROFILE_PICTURES_FOLDER}/`)
+    .pop();
   if (!fileName) {
     throw new Error('Invalid file URL');
   }

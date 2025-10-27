@@ -49,15 +49,20 @@ export const nextJsConfig = [
   {
     plugins: {
       'react-hooks': pluginReactHooks,
-      '@typescript-eslint': tseslint,
+      'typescript-eslint': tseslint,
       'unused-imports': unusedImports,
       '@tanstack/query': tanstackQuery,
     },
     settings: { react: { version: 'detect' } },
     rules: {
       ...pluginReactHooks.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
+      ...tanstackQuery.configs['flat/recommended'].rules,
+      'unused-imports/no-unused-imports': 'error',
+      'unused-imports/no-unused-vars': 'error',
       // React scope no longer necessary with new JSX transform.
       'react/react-in-jsx-scope': 'off',
     },
   },
+  // TanStack Query rules
 ];

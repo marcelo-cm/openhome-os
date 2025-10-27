@@ -156,7 +156,7 @@ const AuthCard = () => {
             {/* Sign Up Link */}
             <div className="flex flex-row items-center justify-center gap-2">
               <p className="text-muted-foreground text-center text-sm">
-                Don't have an account?
+                Don&apos;t have an account?
               </p>
               <Link
                 className="text-primary text-sm font-bold hover:animate-pulse"

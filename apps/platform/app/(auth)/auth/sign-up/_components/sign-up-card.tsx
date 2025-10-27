@@ -17,7 +17,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { uploadProfilePicture } from '@/lib/supabase/storage';
 import { signInWithOAuth, signup } from '@/models/user/user-actions';
 import { UserRole } from '@/models/user/user-enums';
 

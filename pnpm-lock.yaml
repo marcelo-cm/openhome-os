@@ -161,6 +161,9 @@ importers:
       '@openhome-os/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@openhome-os/icons':
+        specifier: workspace:*
+        version: link:../../packages/icons
       '@openhome-os/tailwind-config':
         specifier: workspace:*
         version: link:../../packages/tailwind-config
@@ -296,6 +299,40 @@ importers:
         version: 9.38.0(jiti@2.6.1)
       typescript:
         specifier: ^5.9.2
+        version: 5.9.2
+
+  packages/icons:
+    dependencies:
+      lucide-react:
+        specifier: ^0.474.0
+        version: 0.474.0(react@19.2.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.1.0
+        version: 19.2.0(react@19.2.0)
+    devDependencies:
+      '@openhome-os/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@openhome-os/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      '@types/react':
+        specifier: 19.2.2
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: 19.2.2
+        version: 19.2.2(@types/react@19.2.2)
+      eslint:
+        specifier: ^9.38.0
+        version: 9.38.0(jiti@2.6.1)
+      typescript:
+        specifier: 5.9.2
         version: 5.9.2
 
   packages/particles:

@@ -102,6 +102,7 @@ export async function signup({
           profilePicture.name,
         )
       : null;
+
     const user = await UserService.signUp({
       user: { ...data, profile_picture_url: profilePictureUrl ?? undefined },
     });
@@ -113,6 +114,11 @@ export async function signup({
     return user;
   } catch (error) {
     console.error('[signup]', error);
+
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
     throw new Error('Failed to sign up User');
   }
 }
@@ -138,6 +144,10 @@ export async function signin({
     return user;
   } catch (error) {
     console.error('[signin]', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
     throw new Error('Failed to sign in User');
   }
 }
@@ -154,7 +164,7 @@ export async function signInWithOAuth({
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+        redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3002'}/auth/callback`,
       },
     });
 
@@ -165,6 +175,10 @@ export async function signInWithOAuth({
     return { url: data.url };
   } catch (error) {
     console.error('[signInWithOAuth]', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
     throw new Error('Failed to sign in with OAuth');
   }
 }
@@ -186,6 +200,10 @@ export async function syncOAuthUser({
     return user;
   } catch (error) {
     console.error('[syncOAuthUser]', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
     throw new Error('Failed to sync OAuth user');
   }
 }

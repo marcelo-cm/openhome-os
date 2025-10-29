@@ -6,6 +6,15 @@ const nextConfig: NextConfig = {
   experimental: {
     turbopackFileSystemCacheForDev: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
+        protocol: 'https',
+      },
+    ],
+  },
 };
 
 export default nextConfig;

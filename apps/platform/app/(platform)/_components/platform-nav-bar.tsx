@@ -19,6 +19,7 @@ const PlatformNavBar = () => {
     <div className="pointer-events-none flex w-full justify-end p-4">
       <Menu openOnHover delay={0}>
         <MenuTrigger
+          nativeButton={false}
           className="pointer-events-auto ml-auto size-8 overflow-hidden rounded-full"
           render={
             <Image

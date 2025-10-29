@@ -1,5 +1,6 @@
 'use server';
 
+import { createClient } from '@/lib/supabase/server';
 import { uploadProfilePicture } from '@/lib/supabase/storage';
 import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
 
@@ -34,6 +35,27 @@ export async function getUser({ id }: { id: string }): Promise<TUser> {
   } catch (error) {
     console.error('[getUser]', error);
     throw new Error('Failed to get User');
+  }
+}
+
+// Get Current User
+export async function getCurrentUser(): Promise<TUser | null> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+
+    if (!authUser) {
+      return null;
+    }
+
+    const user = await UserService.getUser({ id: authUser.id });
+
+    return user ?? null;
+  } catch (error) {
+    console.error('[getCurrentUser]', error);
+    throw new Error('Failed to get Current User');
   }
 }
 

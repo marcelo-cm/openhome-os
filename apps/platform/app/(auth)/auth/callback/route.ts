@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { createClient } from '@/lib/supabase/server';
+import { syncOAuthUser } from '@/models/user/user-actions';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -22,9 +23,6 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser();
 
     if (user) {
-      // Import the sync function dynamically to avoid circular dependencies
-      const { syncOAuthUser } = await import('@/models/user/user-actions');
-
       try {
         // Sync OAuth user with database
         await syncOAuthUser({

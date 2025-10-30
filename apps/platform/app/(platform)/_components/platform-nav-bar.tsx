@@ -1,10 +1,18 @@
 'use client';
 
-import { UserIcon } from 'lucide-react';
+import { LogOutIcon, UserIcon } from 'lucide-react';
 
-import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
+import {
+  Menu,
+  MenuItem,
+  MenuPopup,
+  MenuSeparator,
+  MenuTrigger,
+} from '@openhome-os/ui/menu';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { signOut } from '@/models/user/user-actions';
 
 import { useUser } from '../_layers/_providers/user-provider';
 
@@ -39,6 +47,11 @@ const PlatformNavBar = () => {
               </Link>
             }
           />
+          <MenuSeparator />
+          <MenuItem onClick={async () => await signOut()}>
+            <LogOutIcon />
+            <span>Logout</span>
+          </MenuItem>
         </MenuPopup>
       </Menu>
     </div>

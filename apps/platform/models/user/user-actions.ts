@@ -1,5 +1,7 @@
 'use server';
 
+import { AuthError } from '@supabase/supabase-js';
+
 import { createClient } from '@/lib/supabase/server';
 import { uploadProfilePicture } from '@/lib/supabase/storage';
 import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
@@ -180,7 +182,6 @@ export async function signInWithOAuth({
   provider: 'google';
 }): Promise<{ url: string }> {
   try {
-    const { createClient } = await import('@/lib/supabase/server');
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -202,6 +203,24 @@ export async function signInWithOAuth({
     }
 
     throw new Error('Failed to sign in with OAuth');
+  }
+}
+
+// Logout
+export async function signOut(): Promise<{
+  error: AuthError | null;
+}> {
+  try {
+    const { error } = await UserService.logout();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return { error: null };
+  } catch (error) {
+    console.error('[logout]', error);
+    throw new Error('Failed to logout');
   }
 }
 

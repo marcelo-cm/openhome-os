@@ -1,6 +1,7 @@
 'use server';
 
 import { AuthError } from '@supabase/supabase-js';
+import { redirect } from 'next/navigation';
 
 import { createClient } from '@/lib/supabase/server';
 import { uploadProfilePicture } from '@/lib/supabase/storage';
@@ -216,12 +217,11 @@ export async function signOut(): Promise<{
     if (error) {
       throw new Error(error.message);
     }
-
-    return { error: null };
   } catch (error) {
     console.error('[logout]', error);
     throw new Error('Failed to logout');
   }
+  redirect('/sign-in');
 }
 
 // OAuth

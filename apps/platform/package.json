@@ -54,6 +54,7 @@
     "@openhome-os/eslint-config": "workspace:*",
     "@openhome-os/tailwind-config": "workspace:*",
     "@openhome-os/typescript-config": "workspace:*",
+    "@openhome-os/icons": "workspace:*",
     "@faker-js/faker": "^9.9.0",
     "@next/eslint-plugin-next": "16.0.0",
     "@swc/jest": "^0.2.39",

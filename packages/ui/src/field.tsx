@@ -18,7 +18,10 @@ function FieldLabel({ className, ...props }: FieldPrimitive.Label.Props) {
   return (
     <FieldPrimitive.Label
       data-slot="field-label"
-      className={cn('inline-flex items-center gap-2 text-sm/4', className)}
+      className={cn(
+        'inline-flex items-baseline gap-2 text-sm/4 font-medium',
+        className,
+      )}
       {...props}
     />
   );
@@ -39,7 +42,7 @@ function FieldControl({
     <span
       data-slot="field-control"
       className={cn(
-        'border-input ring-ring/24 has-focus-visible:border-ring has-aria-invalid:border-destructive/36 has-focus-visible:has-aria-invalid:border-destructive/64 has-focus-visible:has-aria-invalid:ring-destructive/16 dark:bg-input/32 dark:has-aria-invalid:ring-destructive/24 shadow-xs not-has-disabled:has-not-focus-visible:not-has-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] has-focus-visible:ring-[3px] has-disabled:opacity-64 dark:not-in-data-[slot=group]:bg-clip-border dark:not-has-disabled:has-not-focus-visible:not-has-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/8%)] relative inline-flex w-full rounded-lg border bg-transparent bg-clip-padding text-base/5 transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] sm:text-sm [&:has(:disabled,:focus-visible,[aria-invalid])]:shadow-none',
+        'border-input ring-ring/24 has-focus-visible:border-ring has-aria-invalid:border-destructive-foreground/36 has-focus-visible:has-aria-invalid:border-destructive-foreground/64 has-focus-visible:has-aria-invalid:ring-destructive-foreground/16 dark:bg-input/32 dark:has-aria-invalid:ring-destructive-foreground/24 relative inline-flex w-full rounded-lg border bg-transparent bg-clip-padding text-base/5 shadow-xs transition-shadow before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-lg)-1px)] not-has-disabled:has-not-focus-visible:not-has-aria-invalid:before:shadow-[0_1px_--theme(--color-black/4%)] has-focus-visible:ring-[3px] has-disabled:opacity-64 sm:text-sm dark:not-in-data-[slot=group]:bg-clip-border dark:not-has-disabled:has-not-focus-visible:not-has-aria-invalid:before:shadow-[0_-1px_--theme(--color-white/8%)] [&:has(:disabled,:focus-visible,[aria-invalid])]:shadow-none',
         className,
       )}
     >

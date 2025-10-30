@@ -48,7 +48,7 @@ const PlatformNavBar = () => {
             }
           />
           <MenuSeparator />
-          <MenuItem onClick={async () => await signOut()}>
+          <MenuItem onClick={signOut}>
             <LogOutIcon />
             <span>Logout</span>
           </MenuItem>

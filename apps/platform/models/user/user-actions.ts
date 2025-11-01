@@ -1,5 +1,9 @@
 'use server';
 
+import { AuthError } from '@supabase/supabase-js';
+import { redirect } from 'next/navigation';
+
+import { createClient } from '@/lib/supabase/server';
 import { uploadProfilePicture } from '@/lib/supabase/storage';
 import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
 
@@ -34,6 +38,27 @@ export async function getUser({ id }: { id: string }): Promise<TUser> {
   } catch (error) {
     console.error('[getUser]', error);
     throw new Error('Failed to get User');
+  }
+}
+
+// Get Current User
+export async function getCurrentUser(): Promise<TUser | null> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user: authUser },
+    } = await supabase.auth.getUser();
+
+    if (!authUser) {
+      return null;
+    }
+
+    const user = await UserService.getUser({ id: authUser.id });
+
+    return user ?? null;
+  } catch (error) {
+    console.error('[getCurrentUser]', error);
+    throw new Error('Failed to get Current User');
   }
 }
 
@@ -158,7 +183,6 @@ export async function signInWithOAuth({
   provider: 'google';
 }): Promise<{ url: string }> {
   try {
-    const { createClient } = await import('@/lib/supabase/server');
     const supabase = await createClient();
 
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -181,6 +205,23 @@ export async function signInWithOAuth({
 
     throw new Error('Failed to sign in with OAuth');
   }
+}
+
+// Logout
+export async function signOut(): Promise<{
+  error: AuthError | null;
+}> {
+  try {
+    const { error } = await UserService.logout();
+
+    if (error) {
+      throw new Error(error.message);
+    }
+  } catch (error) {
+    console.error('[logout]', error);
+    throw new Error('Failed to logout');
+  }
+  redirect('/sign-in');
 }
 
 // OAuth

@@ -1,7 +1,9 @@
+import { AuthError } from '@supabase/supabase-js';
 import { eq } from 'drizzle-orm';
 
 import { db } from '@/db/db';
 import { users } from '@/db/db-schema';
+import { createClient } from '@/lib/supabase/server';
 import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
 
 /**
@@ -69,7 +71,6 @@ const UserService = {
     email: string;
     password: string;
   }): Promise<TUser | undefined> => {
-    const { createClient } = await import('@/lib/supabase/server');
     const supabase = await createClient();
 
     // Sign in with Supabase Auth
@@ -104,7 +105,6 @@ const UserService = {
   }: {
     user: TCreateUser;
   }): Promise<TUser | undefined> => {
-    const { createClient } = await import('@/lib/supabase/server');
     const supabase = await createClient();
 
     // Create auth user in Supabase
@@ -137,6 +137,16 @@ const UserService = {
       .returning();
 
     return dbUser;
+  },
+  /**
+   * @description Logout a user
+   * @returns The logged out user
+   */
+  logout: async (): Promise<{
+    error: AuthError | null;
+  }> => {
+    const supabase = await createClient();
+    return supabase.auth.signOut();
   },
   /**
    * @description Sync OAuth user with database

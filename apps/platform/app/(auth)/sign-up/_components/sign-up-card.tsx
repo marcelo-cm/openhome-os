@@ -112,7 +112,7 @@ const SignUpCard = () => {
               onClick={handleOAuthSignIn}
               disabled={isLoading}
             >
-              <GoogleIcon className="mr-2 size-4" />
+              <GoogleIcon className="absolute top-1/2 left-2 size-4 -translate-y-1/2" />
               {signInWithOAuth.isPending
                 ? 'Redirecting to Google...'
                 : 'Sign up with Google'}

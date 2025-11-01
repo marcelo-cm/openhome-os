@@ -60,6 +60,7 @@ const useUserAuthentication = () => {
   const signInWithOAuthMutation = useMutation({
     mutationFn: async ({ provider }: { provider: 'google' }) => {
       const { url } = await signInWithOAuth({ provider });
+      console.log('url', url);
       return url;
     },
     onSuccess: (url) => {

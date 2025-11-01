@@ -79,7 +79,7 @@ const SignUpCard = () => {
       <CardHeader>
         <CardTitle>Create Account</CardTitle>
         <CardDescription>
-          Sign up to get started with OpenHome OS.
+          Sign up to get started with OpenHomeOS.
         </CardDescription>
       </CardHeader>
       <Form onSubmit={handleSubmit}>

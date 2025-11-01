@@ -2,6 +2,7 @@
 
 import { LogOutIcon, UserIcon } from 'lucide-react';
 
+import AppAvatar from '@openhome-os/particles/app-avatar';
 import {
   Menu,
   MenuItem,
@@ -9,7 +10,6 @@ import {
   MenuSeparator,
   MenuTrigger,
 } from '@openhome-os/ui/menu';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import { signOut } from '@/models/user/user-actions';
@@ -30,11 +30,11 @@ const PlatformNavBar = () => {
           nativeButton={false}
           className="pointer-events-auto ml-auto size-8 overflow-hidden rounded-full"
           render={
-            <Image
-              src={`${user?.profile_picture_url}`}
-              alt={`${user?.first_name} ${user?.last_name}`}
-              width={100}
-              height={100}
+            <AppAvatar
+              name={`${user?.first_name} ${user?.last_name}`}
+              src={user?.profile_picture_url}
+              width={32}
+              height={32}
             />
           }
         />

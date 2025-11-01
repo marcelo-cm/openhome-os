@@ -5,18 +5,17 @@
   "tsx": true,
   "tailwind": {
     "config": "",
-    "css": "app/globals.css",
+    "css": "../../apps/platform/app/globals.css",
     "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
+    "cssVariables": true
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+    "components": "@openhome-os/ui/components",
+    "utils": "@openhome-os/ui/src/util",
+    "ui": "@openhome-os/ui/src",
+    "lib": "@openhome-os/ui/src/lib",
+    "hooks": "@openhome-os/ui/src/hooks"
   },
   "registries": {
     "@coss": "https://coss.com/ui/r/{name}.json"

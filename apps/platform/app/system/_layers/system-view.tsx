@@ -15,7 +15,7 @@ import SystemUserManagement from '../_components/user-management/system-user-man
 const SystemView = () => {
   return (
     <Card
-      className="flex min-h-fit w-full max-w-3xl flex-grow flex-col gap-4"
+      className="flex min-h-fit w-full max-w-3xl grow flex-col gap-4"
       variant={'ring'}
     >
       <CardHeader>

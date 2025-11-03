@@ -7,7 +7,6 @@ const buildFakeBase = (override?: Partial<TBaseModel>): TBaseModel => {
     id: faker.string.uuid(),
     created_at: faker.date.past(),
     updated_at: faker.date.recent(),
-    is_active: faker.datatype.boolean(),
     deleted_at: null,
   };
 

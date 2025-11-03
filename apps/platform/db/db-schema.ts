@@ -1,10 +1,20 @@
-import { pgTable, text } from 'drizzle-orm/pg-core';
+import { date, jsonb, numeric, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { DrizzleBaseModel } from '@/models/base/base-types';
+import {
+  ClothingItemStatus,
+  ClothingPrivacy,
+} from '@/models/clothing-item/clothing-item-enums';
 import { OrganizationTier } from '@/models/organization/organization-enums';
 import { UserRole } from '@/models/user/user-enums';
 
-import { OrganizationTierEnum, RbacRoleEnum, UserRoleEnum } from './enums';
+import {
+  ClothingItemStatusEnum,
+  ClothingPrivacyEnum,
+  OrganizationTierEnum,
+  RbacRoleEnum,
+  UserRoleEnum,
+} from './enums';
 
 export const organizations = pgTable('organizations', {
   ...DrizzleBaseModel,
@@ -167,3 +177,39 @@ export const locationMemberships = pgTable('location_memberships', {
 //     .references(() => users.id, { onDelete: 'cascade' }),
 //   acl_role: AclRoleEnum('acl_role').notNull(),
 // });
+
+/**
+ * Clothing resource - a single clothing item.
+ *
+ * - Associated to a location (clothing items on a location is a closet)
+ */
+export const clothingItems = pgTable('clothing_items', {
+  ...DrizzleBaseModel,
+  principal_id: text('principal_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+
+  name: text('name').notNull(),
+  description: text('description'),
+  size: text('size'),
+  base_color: text('base_color'),
+  care_instructions: text('care_instructions'),
+  brand: text('brand'),
+  notes: text('notes'),
+  ai_metadata: jsonb('ai_metadata'),
+
+  purchase_price: numeric('purchase_price', { precision: 8, scale: 2 }),
+  purchase_date: date('purchase_date'),
+
+  location_id: text('location_id')
+    .notNull()
+    .references(() => locations.id, { onDelete: 'cascade' }),
+
+  privacy: ClothingPrivacyEnum('privacy')
+    .notNull()
+    .default(ClothingPrivacy.PRIVATE),
+
+  status: ClothingItemStatusEnum('status')
+    .notNull()
+    .default(ClothingItemStatus.DRAFT),
+});

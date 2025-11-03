@@ -1,5 +1,9 @@
 import { pgEnum } from 'drizzle-orm/pg-core';
 
+import {
+  ClothingItemStatus,
+  ClothingPrivacy,
+} from '@/models/clothing-item/clothing-item-enums';
 import { OrganizationTier } from '@/models/organization/organization-enums';
 import { UserRole } from '@/models/user/user-enums';
 import { AclRole } from '@/permissions/acl-enums';
@@ -28,4 +32,14 @@ export const AclRoleEnum = pgEnum(
 export const RbacResourceEnum = pgEnum(
   'rbac_resource',
   Object.values(RbacResource) as [string, ...string[]],
+);
+
+export const ClothingPrivacyEnum = pgEnum(
+  'clothing_privacy',
+  Object.values(ClothingPrivacy) as [string, ...string[]],
+);
+
+export const ClothingItemStatusEnum = pgEnum(
+  'clothing_item_status',
+  Object.values(ClothingItemStatus) as [string, ...string[]],
 );

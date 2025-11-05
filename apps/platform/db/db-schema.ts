@@ -131,53 +131,6 @@ export const locationMemberships = pgTable('location_memberships', {
   rbac_role: RbacRoleEnum('rbac_role').notNull(),
 });
 
-// EXAMPLES BELOW ON ACL
-
-/**
- * Post resource.
- *
- * - Has a specific user as the owner (used for IS_OWNER checks).
- * - Can also be governed by per-item ACLs in the post_acl table.
- */
-// export const posts = pgTable('posts', {
-//   ...DrizzleBaseModel,
-//   title: text('title').notNull(),
-//   principal_id: text('principal_id')
-//     .notNull()
-//     .references(() => users.id, { onDelete: 'cascade' }),
-//   organization_id: text('organization_id')
-//     .notNull()
-//     .references(() => organizations.id, {
-//       onDelete: 'cascade',
-//     }),
-//   project_id: text('project_id')
-//     .notNull()
-//     .references(() => projects.id, {
-//       onDelete: 'cascade',
-//     }),
-// });
-
-/**
- * Per-item ACL assignments for posts.
- *
- * - Associates a user with an ACL role on a specific post instance.
- * - ACL roles (OWNER, EDITOR, VIEWER) provide fine-grained control
- *   in addition to RBAC roles.
- *
- * Questions:
- * - Should we make this a polymorphic table that holds all ACLs for all resources?
- */
-// export const postAcl = pgTable('post_acl', {
-//   ...DrizzleBaseModel,
-//   post_id: text('post_id')
-//     .notNull()
-//     .references(() => posts.id, { onDelete: 'cascade' }),
-//   user_id: text('user_id')
-//     .notNull()
-//     .references(() => users.id, { onDelete: 'cascade' }),
-//   acl_role: AclRoleEnum('acl_role').notNull(),
-// });
-
 /**
  * Clothing resource - a single clothing item.
  *

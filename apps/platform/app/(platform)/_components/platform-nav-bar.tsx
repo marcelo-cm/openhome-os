@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOutIcon, UserIcon } from 'lucide-react';
+import { HomeIcon, LogOutIcon, ShirtIcon, UserIcon } from 'lucide-react';
 
 import AppAvatar from '@openhome-os/particles/app-avatar';
 import {
@@ -44,6 +44,22 @@ const PlatformNavBar = () => {
               <Link href="/settings/me">
                 <UserIcon />
                 <span>Profile</span>
+              </Link>
+            }
+          />
+          <MenuItem
+            render={
+              <Link href="/home">
+                <HomeIcon />
+                <span>Home</span>
+              </Link>
+            }
+          />
+          <MenuItem
+            render={
+              <Link href="/closet">
+                <ShirtIcon />
+                <span>Closet</span>
               </Link>
             }
           />

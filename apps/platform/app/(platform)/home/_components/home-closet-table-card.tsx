@@ -10,7 +10,7 @@ const HomeClosetTableCard = () => {
   return (
     <Card variant={'ring'} className="w-full">
       <CardHeader>
-        <Link href="/home/closet">
+        <Link href="/closet">
           <CardTitle>Your Closet</CardTitle>
         </Link>
         <CardDescription>

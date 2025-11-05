@@ -6,6 +6,7 @@ import {
   TCreateLocation,
   TLocation,
   TLocationMembership,
+  TLocationMembershipHydrated,
   TUpdateLocation,
 } from '@/models/location/location-types';
 import { RbacRole } from '@/permissions/rbac-enums';
@@ -83,12 +84,15 @@ const LocationService = {
     principalId: string;
     userId: string;
   }): Promise<TLocationMembership[]> => {
-    return db.insert(locationMemberships).values({
-      principal_id: principalId,
-      location_id: locationId,
-      user_id: userId,
-      rbac_role: RbacRole.MEMBER,
-    });
+    return db
+      .insert(locationMemberships)
+      .values({
+        principal_id: principalId,
+        location_id: locationId,
+        user_id: userId,
+        rbac_role: RbacRole.MEMBER,
+      })
+      .returning();
   },
   addAdminToLocation: async ({
     principalId,
@@ -108,6 +112,25 @@ const LocationService = {
         rbac_role: RbacRole.ADMIN,
       })
       .returning();
+  },
+  /**
+   * @description Get location memberships by location ID with user data
+   * @param locationId - The ID of the location
+   * @returns Array of location memberships with user data
+   */
+  getLocationMembershipsByLocationId: async ({
+    locationId,
+  }: {
+    locationId: string;
+  }): Promise<TLocationMembershipHydrated[]> => {
+    const memberships = await db.query.locationMemberships.findMany({
+      where: eq(locationMemberships.location_id, locationId),
+      with: {
+        user: true,
+      },
+    });
+
+    return memberships as TLocationMembershipHydrated[];
   },
 };
 

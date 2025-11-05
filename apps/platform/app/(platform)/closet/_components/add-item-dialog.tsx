@@ -10,16 +10,14 @@ import {
   DialogTitle,
 } from '@openhome-os/ui/dialog';
 
-import { useRemoteTrigger } from '@/hooks/use-remote-trigger';
+import {
+  RemoteTriggerProps,
+  useRemoteTrigger,
+} from '@/hooks/use-remote-trigger';
 
 import { AIAnalysisStep } from './ai-analysis-step';
 import { PhotoUploadStep } from './photo-upload-step';
 import { ReviewFormStep } from './review-form-step';
-
-export interface RemoteTriggerProps {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-}
 
 type UploadStep = 'upload' | 'analyzing' | 'review';
 
@@ -42,7 +40,11 @@ interface ClothingItemData {
   notes?: string;
 }
 
-export function AddItemDialog({ open, onOpenChange }: RemoteTriggerProps) {
+export function AddItemDialog({
+  open,
+  onOpenChange,
+  children,
+}: RemoteTriggerProps) {
   const [isOpen, handleOpenChange] = useRemoteTrigger({ open, onOpenChange });
   const [currentStep, setCurrentStep] = useState<UploadStep>('upload');
   const [itemData, setItemData] = useState<ClothingItemData>({ photos: [] });
@@ -93,6 +95,7 @@ export function AddItemDialog({ open, onOpenChange }: RemoteTriggerProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
+      {children && children}
       <DialogPopup className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>

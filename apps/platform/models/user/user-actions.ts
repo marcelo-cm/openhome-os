@@ -248,3 +248,38 @@ export async function syncOAuthUser({
     throw new Error('Failed to sync OAuth user');
   }
 }
+
+// Update Profile Picture
+export async function updateProfilePicture({
+  userId,
+  profilePicture,
+}: {
+  userId: string;
+  profilePicture: File;
+}): Promise<TUser> {
+  try {
+    const profilePictureUrl = await uploadProfilePicture(
+      await profilePicture.arrayBuffer(),
+      userId,
+      profilePicture.name,
+    );
+
+    const [user] = await UserService.updateUser({
+      id: userId,
+      user: { profile_picture_url: profilePictureUrl },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
+  } catch (error) {
+    console.error('[updateProfilePicture]', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error('Failed to update profile picture');
+  }
+}

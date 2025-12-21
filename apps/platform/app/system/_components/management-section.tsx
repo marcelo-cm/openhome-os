@@ -55,7 +55,7 @@ const SystemManagementSectionHeader = ({
       <CollapsibleTrigger className={'group/section-trigger text-left'}>
         <div>
           <div className="flex items-center gap-2">
-            <ChevronDown className="h-4 w-4 transition-[rotate] duration-300 group-data-[panel-open]/section-trigger:-rotate-180" />
+            <ChevronDown className="h-4 w-4 transition-[rotate] duration-300 group-data-panel-open/section-trigger:-rotate-180" />
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger

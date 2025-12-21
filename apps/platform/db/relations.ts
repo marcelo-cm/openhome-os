@@ -1,6 +1,8 @@
 import { relations } from 'drizzle-orm';
 
 import {
+  locationMemberships,
+  locations,
   organizationMemberships,
   organizations,
   projectMemberships,
@@ -13,6 +15,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   globalRoles: many(userRbacRoles),
   orgMemberships: many(organizationMemberships),
   projectMemberships: many(projectMemberships),
+  locationMemberships: many(locationMemberships),
 }));
 
 export const organizationsRelations = relations(organizations, ({ many }) => ({
@@ -26,6 +29,15 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
     references: [organizations.id],
   }),
   memberships: many(projectMemberships),
+  locations: many(locations),
+}));
+
+export const locationsRelations = relations(locations, ({ one, many }) => ({
+  project: one(projects, {
+    fields: [locations.project_id],
+    references: [projects.id],
+  }),
+  memberships: many(locationMemberships),
 }));
 
 export const userRbacRolesRelations = relations(userRbacRoles, ({ one }) => ({
@@ -59,6 +71,20 @@ export const projectMembershipsRelations = relations(
     project: one(projects, {
       fields: [projectMemberships.project_id],
       references: [projects.id],
+    }),
+  }),
+);
+
+export const locationMembershipsRelations = relations(
+  locationMemberships,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [locationMemberships.user_id],
+      references: [users.id],
+    }),
+    location: one(locations, {
+      fields: [locationMemberships.location_id],
+      references: [locations.id],
     }),
   }),
 );

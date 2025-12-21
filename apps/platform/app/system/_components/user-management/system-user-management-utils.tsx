@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
@@ -102,11 +102,13 @@ export const createUserManagementColumns = (): ColumnDef<TUser>[] => {
                 </MenuItem>
               </MenuPopup>
             </Menu>
-            <SystemUserCreationDialog
-              open={open}
-              onOpenChange={setOpen}
-              user={row.original}
-            />
+            <Suspense>
+              <SystemUserCreationDialog
+                open={open}
+                onOpenChange={setOpen}
+                user={row.original}
+              />
+            </Suspense>
           </Fragment>
         );
       },

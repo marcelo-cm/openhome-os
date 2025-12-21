@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOutIcon, UserIcon } from 'lucide-react';
+import { HomeIcon, LogOutIcon, ShirtIcon, UserIcon } from 'lucide-react';
 
 import AppAvatar from '@openhome-os/particles/app-avatar';
 import {
@@ -41,9 +41,25 @@ const PlatformNavBar = () => {
         <MenuPopup align="end" className={'pointer-events-auto'}>
           <MenuItem
             render={
-              <Link href="/settings/me">
+              <Link href="/settings/me" prefetch={true}>
                 <UserIcon />
                 <span>Profile</span>
+              </Link>
+            }
+          />
+          <MenuItem
+            render={
+              <Link href="/home" prefetch={true}>
+                <HomeIcon />
+                <span>Home</span>
+              </Link>
+            }
+          />
+          <MenuItem
+            render={
+              <Link href="/closet" prefetch={true}>
+                <ShirtIcon />
+                <span>Closet</span>
               </Link>
             }
           />

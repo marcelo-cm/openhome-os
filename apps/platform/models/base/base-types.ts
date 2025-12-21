@@ -1,4 +1,4 @@
-import { boolean, text, timestamp } from 'drizzle-orm/pg-core';
+import { text, timestamp } from 'drizzle-orm/pg-core';
 
 export const DrizzleBaseModel = {
   id: text('id')
@@ -20,7 +20,6 @@ export const DrizzleBaseModel = {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
-  is_active: boolean('is_active').notNull().default(true),
   deleted_at: timestamp('deleted_at', {
     mode: 'date',
     precision: 3,
@@ -31,7 +30,6 @@ export interface IBaseModel {
   id: string;
   created_at: Date;
   updated_at: Date;
-  is_active: boolean;
   deleted_at: Date | null;
 }
 // Backwards-compatible alias for existing imports

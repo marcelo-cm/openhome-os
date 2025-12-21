@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
@@ -112,11 +112,13 @@ export const createOrganizationManagementColumns =
                   </MenuItem>
                 </MenuPopup>
               </Menu>
-              <SystemOrganizationCreationDialog
-                open={open}
-                onOpenChange={setOpen}
-                organization={row.original}
-              />
+              <Suspense>
+                <SystemOrganizationCreationDialog
+                  open={open}
+                  onOpenChange={setOpen}
+                  organization={row.original}
+                />
+              </Suspense>
             </Fragment>
           );
         },

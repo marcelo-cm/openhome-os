@@ -1,10 +1,20 @@
-import { pgTable, text } from 'drizzle-orm/pg-core';
+import { date, jsonb, numeric, pgTable, text } from 'drizzle-orm/pg-core';
 
 import { DrizzleBaseModel } from '@/models/base/base-types';
+import {
+  ClothingItemStatus,
+  ClothingPrivacy,
+} from '@/models/clothing-item/clothing-item-enums';
 import { OrganizationTier } from '@/models/organization/organization-enums';
 import { UserRole } from '@/models/user/user-enums';
 
-import { OrganizationTierEnum, RbacRoleEnum, UserRoleEnum } from './enums';
+import {
+  ClothingItemStatusEnum,
+  ClothingPrivacyEnum,
+  OrganizationTierEnum,
+  RbacRoleEnum,
+  UserRoleEnum,
+} from './enums';
 
 export const organizations = pgTable('organizations', {
   ...DrizzleBaseModel,
@@ -121,49 +131,38 @@ export const locationMemberships = pgTable('location_memberships', {
   rbac_role: RbacRoleEnum('rbac_role').notNull(),
 });
 
-// EXAMPLES BELOW ON ACL
-
 /**
- * Post resource.
+ * Clothing resource - a single clothing item.
  *
- * - Has a specific user as the owner (used for IS_OWNER checks).
- * - Can also be governed by per-item ACLs in the post_acl table.
+ * - Associated to a location (clothing items on a location is a closet)
  */
-// export const posts = pgTable('posts', {
-//   ...DrizzleBaseModel,
-//   title: text('title').notNull(),
-//   principal_id: text('principal_id')
-//     .notNull()
-//     .references(() => users.id, { onDelete: 'cascade' }),
-//   organization_id: text('organization_id')
-//     .notNull()
-//     .references(() => organizations.id, {
-//       onDelete: 'cascade',
-//     }),
-//   project_id: text('project_id')
-//     .notNull()
-//     .references(() => projects.id, {
-//       onDelete: 'cascade',
-//     }),
-// });
+export const clothingItems = pgTable('clothing_items', {
+  ...DrizzleBaseModel,
+  principal_id: text('principal_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
 
-/**
- * Per-item ACL assignments for posts.
- *
- * - Associates a user with an ACL role on a specific post instance.
- * - ACL roles (OWNER, EDITOR, VIEWER) provide fine-grained control
- *   in addition to RBAC roles.
- *
- * Questions:
- * - Should we make this a polymorphic table that holds all ACLs for all resources?
- */
-// export const postAcl = pgTable('post_acl', {
-//   ...DrizzleBaseModel,
-//   post_id: text('post_id')
-//     .notNull()
-//     .references(() => posts.id, { onDelete: 'cascade' }),
-//   user_id: text('user_id')
-//     .notNull()
-//     .references(() => users.id, { onDelete: 'cascade' }),
-//   acl_role: AclRoleEnum('acl_role').notNull(),
-// });
+  name: text('name').notNull(),
+  description: text('description'),
+  size: text('size'),
+  base_color: text('base_color'),
+  care_instructions: text('care_instructions'),
+  brand: text('brand'),
+  notes: text('notes'),
+  ai_metadata: jsonb('ai_metadata'),
+
+  purchase_price: numeric('purchase_price', { precision: 8, scale: 2 }),
+  purchase_date: date('purchase_date'),
+
+  location_id: text('location_id')
+    .notNull()
+    .references(() => locations.id, { onDelete: 'cascade' }),
+
+  privacy: ClothingPrivacyEnum('privacy')
+    .notNull()
+    .default(ClothingPrivacy.PRIVATE),
+
+  status: ClothingItemStatusEnum('status')
+    .notNull()
+    .default(ClothingItemStatus.DRAFT),
+});

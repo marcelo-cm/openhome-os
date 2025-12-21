@@ -57,6 +57,9 @@ export async function getCurrentUser(): Promise<TUser | null> {
 
     return user ?? null;
   } catch (error) {
+    if (error instanceof Error && error.message.includes('prerendering')) {
+      return null;
+    }
     console.error('[getCurrentUser]', error);
     throw new Error('Failed to get Current User');
   }

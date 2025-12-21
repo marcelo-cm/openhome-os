@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@openhome-os/ui/button';
@@ -20,16 +22,20 @@ const SystemLocationManagement = () => {
         description="Manage locations across all projects."
         info="Locations are the bottom-level entities in the system. They can be used to group devices and sensors."
       >
-        <SystemLocationCreationDialog>
-          <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
-            <PlusIcon />
-          </DialogTrigger>
-        </SystemLocationCreationDialog>
+        <Suspense>
+          <SystemLocationCreationDialog>
+            <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
+              <PlusIcon />
+            </DialogTrigger>
+          </SystemLocationCreationDialog>
+        </Suspense>
       </SystemManagementSectionHeader>
       <SystemManagementSectionPanel>
         <Frame>
           <FramePanel>
-            <SystemLocationManagementTable />
+            <Suspense>
+              <SystemLocationManagementTable />
+            </Suspense>
           </FramePanel>
         </Frame>
       </SystemManagementSectionPanel>

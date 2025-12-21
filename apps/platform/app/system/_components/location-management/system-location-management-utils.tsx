@@ -5,6 +5,7 @@ import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { Button } from '@openhome-os/ui/button';
 import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
+import Link from 'next/link';
 
 import { TLocation } from '@/models/location/location-types';
 
@@ -17,12 +18,12 @@ export const createLocationManagementColumns = (): ColumnDef<TLocation>[] => {
       accessorKey: 'name',
       cell: ({ row }) => {
         return (
-          <div>
+          <Link href={`/system/location/${row.original.id}`}>
             <p className="font-medium">{row.original.name}</p>
             <p className="text-muted-foreground text-xs">
               Proj: {row.original.project_id}
             </p>
-          </div>
+          </Link>
         );
       },
     },

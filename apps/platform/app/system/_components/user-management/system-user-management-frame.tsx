@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@openhome-os/ui/button';
@@ -20,16 +22,20 @@ const SystemUserManagement = () => {
         description="Manage users and their roles in the system."
         info="Users are the individuals who have access to the system. They can be assigned roles to perform different actions."
       >
-        <SystemUserCreationDialog>
-          <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
-            <PlusIcon />
-          </DialogTrigger>
-        </SystemUserCreationDialog>
+        <Suspense>
+          <SystemUserCreationDialog>
+            <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
+              <PlusIcon />
+            </DialogTrigger>
+          </SystemUserCreationDialog>
+        </Suspense>
       </SystemManagementSectionHeader>
       <SystemManagementSectionPanel>
         <Frame>
           <FramePanel>
-            <SystemUserManagementTable />
+            <Suspense>
+              <SystemUserManagementTable />
+            </Suspense>
           </FramePanel>
         </Frame>
       </SystemManagementSectionPanel>

@@ -41,7 +41,7 @@ const PlatformNavBar = () => {
         <MenuPopup align="end" className={'pointer-events-auto'}>
           <MenuItem
             render={
-              <Link href="/settings/me">
+              <Link href="/settings/me" prefetch={true}>
                 <UserIcon />
                 <span>Profile</span>
               </Link>
@@ -49,7 +49,7 @@ const PlatformNavBar = () => {
           />
           <MenuItem
             render={
-              <Link href="/home">
+              <Link href="/home" prefetch={true}>
                 <HomeIcon />
                 <span>Home</span>
               </Link>
@@ -57,7 +57,7 @@ const PlatformNavBar = () => {
           />
           <MenuItem
             render={
-              <Link href="/closet">
+              <Link href="/closet" prefetch={true}>
                 <ShirtIcon />
                 <span>Closet</span>
               </Link>

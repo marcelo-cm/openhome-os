@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@openhome-os/ui/button';
@@ -20,16 +22,20 @@ const SystemProjectManagement = () => {
         description="Manage projects across all organizations."
         info="Projects are the top-level entities in the system. They can be used to group locations."
       >
-        <SystemProjectCreationDialog>
-          <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
-            <PlusIcon />
-          </DialogTrigger>
-        </SystemProjectCreationDialog>
+        <Suspense>
+          <SystemProjectCreationDialog>
+            <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
+              <PlusIcon />
+            </DialogTrigger>
+          </SystemProjectCreationDialog>
+        </Suspense>
       </SystemManagementSectionHeader>
       <SystemManagementSectionPanel>
         <Frame>
           <FramePanel>
-            <SystemProjectManagementTable />
+            <Suspense>
+              <SystemProjectManagementTable />
+            </Suspense>
           </FramePanel>
         </Frame>
       </SystemManagementSectionPanel>

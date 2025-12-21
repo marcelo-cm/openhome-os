@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@openhome-os/ui/button';
@@ -44,11 +46,15 @@ const LocationView = ({ location }: LocationViewProps) => {
               Users with access to this location.
             </p>
           </div>
-          <LocationMembershipCreationDialog locationId={location.id}>
-            <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
-              <PlusIcon />
-            </DialogTrigger>
-          </LocationMembershipCreationDialog>
+          <Suspense>
+            <LocationMembershipCreationDialog locationId={location.id}>
+              <DialogTrigger
+                render={<Button variant="outline" size="icon-sm" />}
+              >
+                <PlusIcon />
+              </DialogTrigger>
+            </LocationMembershipCreationDialog>
+          </Suspense>
         </div>
         <Frame>
           <FramePanel>

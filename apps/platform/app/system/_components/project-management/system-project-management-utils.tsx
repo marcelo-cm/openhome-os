@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react';
+import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
@@ -77,11 +77,13 @@ export const createProjectManagementColumns = (): ColumnDef<TProject>[] => {
                 </MenuItem>
               </MenuPopup>
             </Menu>
-            <SystemProjectCreationDialog
-              open={open}
-              onOpenChange={setOpen}
-              project={row.original}
-            />
+            <Suspense>
+              <SystemProjectCreationDialog
+                open={open}
+                onOpenChange={setOpen}
+                project={row.original}
+              />
+            </Suspense>
           </Fragment>
         );
       },

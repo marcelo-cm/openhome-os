@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@openhome-os/ui/button';
@@ -20,16 +22,20 @@ const SystemOrganizationManagement = () => {
         description="Manage organizations and their settings."
         info="Organizations are the top-level entities in the system. They can be used to group projects and locations."
       >
-        <SystemOrganizationCreationDialog>
-          <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
-            <PlusIcon />
-          </DialogTrigger>
-        </SystemOrganizationCreationDialog>
+        <Suspense>
+          <SystemOrganizationCreationDialog>
+            <DialogTrigger render={<Button variant="outline" size="icon-sm" />}>
+              <PlusIcon />
+            </DialogTrigger>
+          </SystemOrganizationCreationDialog>
+        </Suspense>
       </SystemManagementSectionHeader>
       <SystemManagementSectionPanel>
         <Frame>
           <FramePanel>
-            <SystemOrganizationManagementTable />
+            <Suspense>
+              <SystemOrganizationManagementTable />
+            </Suspense>
           </FramePanel>
         </Frame>
       </SystemManagementSectionPanel>

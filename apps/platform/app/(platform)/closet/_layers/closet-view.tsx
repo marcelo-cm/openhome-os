@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import { PlusIcon } from 'lucide-react';
 
 import { Button } from '@openhome-os/ui/button';
@@ -10,16 +12,18 @@ const ClosetView = () => {
     <div className="flex w-full max-w-6xl flex-col gap-6 p-6">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">My Closet</h1>
-        <AddItemDialog>
-          <DialogTrigger
-            render={
-              <Button>
-                <PlusIcon />
-                Add Item
-              </Button>
-            }
-          />
-        </AddItemDialog>
+        <Suspense>
+          <AddItemDialog>
+            <DialogTrigger
+              render={
+                <Button>
+                  <PlusIcon />
+                  Add Item
+                </Button>
+              }
+            />
+          </AddItemDialog>
+        </Suspense>
       </div>
 
       <div className="text-muted-foreground">

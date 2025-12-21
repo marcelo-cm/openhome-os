@@ -11,6 +11,10 @@ echo -e "====================================${NC}"
 current_branch="$(git rev-parse --abbrev-ref HEAD)"
 echo -e "${BLUE}Current branch: ${BOLD}${current_branch}${NC}"
 
+# ---------- Next typegen ----------
+echo -e "${YELLOW}Running next typegen...${NC}"
+pnpm --filter platform exec next typegen || { echo -e "${RED}Next typegen failed${NC}"; exit 1; }
+
 # Collect staged files (Added/Copied/Modified/Renamed)
 STAGED="$(git diff --cached --name-only --diff-filter=ACMR || true)"
 

@@ -37,11 +37,11 @@
     "geist": "^1.5.1",
     "lucide-react": "^0.474.0",
     "motion": "^12.23.24",
-    "next": "16.0.0",
+    "next": "16.1.0",
     "next-themes": "^0.4.6",
     "postgres": "^3.4.7",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-hook-form": "^7.65.0",
     "react-use-measure": "^2.1.7",
     "sonner": "^1.7.4",
@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
-    "@next/eslint-plugin-next": "16.0.0",
+    "@next/eslint-plugin-next": "16.1.0",
     "@openhome-os/eslint-config": "workspace:*",
     "@openhome-os/icons": "workspace:*",
     "@openhome-os/tailwind-config": "workspace:*",
@@ -66,8 +66,8 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.19.22",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.46.1",
     "@typescript-eslint/parser": "^8.46.1",
     "baseline-browser-mapping": "^2.9.11",
@@ -87,5 +87,11 @@
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",
     "whatwg-fetch": "^3.6.20"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
+    }
   }
 }

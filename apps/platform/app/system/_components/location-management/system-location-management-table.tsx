@@ -9,7 +9,7 @@ import useLocationsQuery from '@/models/location/hooks/use-locations-query';
 import { createLocationManagementColumns } from './system-location-management-utils';
 
 const SystemLocationManagementTable = () => {
-  const { data = [], isLoading } = useLocationsQuery({
+  const { data, isLoading, isPending, isFetched } = useLocationsQuery({
     queryKey: ['system', 'locations'],
   });
   const columns = useMemo(() => createLocationManagementColumns(), []);
@@ -18,7 +18,7 @@ const SystemLocationManagementTable = () => {
     <AppDataTable
       columns={columns}
       data={data}
-      loading={isLoading}
+      loading={isLoading || isPending || !isFetched}
       loadingVariant="skeleton"
     />
   );

@@ -9,7 +9,7 @@ import useProjects from '@/models/project/hooks/use-projects-query';
 import { createProjectManagementColumns } from './system-project-management-utils';
 
 const SystemProjectManagementTable = () => {
-  const { data = [], isLoading } = useProjects({
+  const { data, isLoading, isPending, isFetched } = useProjects({
     queryKey: ['system', 'projects'],
   });
   const columns = useMemo(() => createProjectManagementColumns(), []);
@@ -18,7 +18,7 @@ const SystemProjectManagementTable = () => {
     <AppDataTable
       columns={columns}
       data={data}
-      loading={isLoading}
+      loading={isLoading || isPending || !isFetched}
       loadingVariant="skeleton"
     />
   );

@@ -20,14 +20,14 @@ import {
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  data: TData[] | undefined;
   loading?: boolean;
   loadingVariant?: 'spinner' | 'skeleton';
 }
 
 function AppDataTable<TData, TValue>({
   columns,
-  data,
+  data = [],
   loading,
   loadingVariant,
 }: DataTableProps<TData, TValue>) {

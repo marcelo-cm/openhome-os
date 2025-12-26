@@ -9,7 +9,7 @@ import useUsers from '@/models/user/hooks/use-users';
 import { createUserManagementColumns } from './system-user-management-utils';
 
 const SystemUserManagementTable = () => {
-  const { data = [], isLoading } = useUsers({
+  const { data, isLoading, isPending, isFetched } = useUsers({
     queryKey: ['system', 'users'],
   });
   const columns = useMemo(() => createUserManagementColumns(), []);
@@ -18,7 +18,7 @@ const SystemUserManagementTable = () => {
     <AppDataTable
       columns={columns}
       data={data}
-      loading={isLoading}
+      loading={isLoading || isPending || !isFetched}
       loadingVariant="skeleton"
     />
   );

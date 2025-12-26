@@ -9,7 +9,7 @@ import useOrganizationsQuery from '@/models/organization/hooks/use-organizations
 import { createOrganizationManagementColumns } from './system-organization-management-utils';
 
 const SystemOrganizationManagementTable = () => {
-  const { data = [], isLoading } = useOrganizationsQuery({
+  const { data, isLoading, isPending, isFetched } = useOrganizationsQuery({
     queryKey: ['system', ' organizations'],
   });
 
@@ -19,7 +19,7 @@ const SystemOrganizationManagementTable = () => {
     <AppDataTable
       columns={columns}
       data={data}
-      loading={isLoading}
+      loading={isLoading || isPending || !isFetched}
       loadingVariant="skeleton"
     />
   );

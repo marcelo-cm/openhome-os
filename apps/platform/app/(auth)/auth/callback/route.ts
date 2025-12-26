@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 import { createClient } from '@/lib/supabase/server';
-import { syncOAuthUser } from '@/models/user/user-actions';
+import { syncOAuthUserWithSetup } from '@/models/user/user-actions';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
@@ -24,8 +24,8 @@ export async function GET(request: Request) {
 
     if (user) {
       try {
-        // Sync OAuth user with database
-        await syncOAuthUser({
+        // Sync OAuth user with database and create organization, project, and memberships
+        await syncOAuthUserWithSetup({
           authUser: {
             id: user.id,
             email: user.email!,

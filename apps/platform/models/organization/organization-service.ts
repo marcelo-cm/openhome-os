@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 
-import { db } from '@/db/db';
+import { type Database } from '@/db/db';
 import { organizationMemberships, organizations } from '@/db/db-schema';
+import { supportsTransaction } from '@/db/db-utils';
 import {
   TCreateOrganization,
   TOrganization,
@@ -19,100 +20,129 @@ const OrganizationService = {
    * @param organization - The organization to create
    * @returns The created organization
    */
-  createOrganization: async ({
-    organization,
-  }: {
-    organization: TCreateOrganization;
-  }): Promise<TOrganization[]> => {
-    return db.insert(organizations).values(organization).returning();
-  },
+  createOrganization: supportsTransaction(
+    async ({
+      organization,
+      db,
+    }: {
+      organization: TCreateOrganization;
+      db: Database;
+    }): Promise<TOrganization[]> => {
+      return db.insert(organizations).values(organization).returning();
+    },
+  ),
   /**
    * @description Get a organization by their ID
    * @param id - The ID of the organization to get
    * @returns The organization with the given ID
    */
-  getOrganization: async ({
-    id,
-  }: {
-    id: string;
-  }): Promise<TOrganization | undefined> => {
-    return db.query.organizations.findFirst({
-      where: eq(organizations.id, id),
-    });
-  },
+  getOrganization: supportsTransaction(
+    async ({
+      id,
+      db,
+    }: {
+      id: string;
+      db: Database;
+    }): Promise<TOrganization | undefined> => {
+      return db.query.organizations.findFirst({
+        where: eq(organizations.id, id),
+      });
+    },
+  ),
   /**
    * @description Get all organizations
    * @returns All organizations
    */
-  getAllOrganization: async (): Promise<TOrganization[]> => {
-    return db.query.organizations.findMany();
-  },
+  getAllOrganization: supportsTransaction(
+    async ({ db }: { db: Database }): Promise<TOrganization[]> => {
+      return db.query.organizations.findMany();
+    },
+  ),
   /**
    * @description Update a organization by their ID
    * @param id - The ID of the organization to update
    * @param organization - The organization to update
    * @returns The updated organization
    */
-  updateOrganization: async ({
-    id,
-    organization,
-  }: {
-    id: string;
-    organization: TUpdateOrganization;
-  }): Promise<TOrganization[]> => {
-    return db
-      .update(organizations)
-      .set(organization)
-      .where(eq(organizations.id, id))
-      .returning();
-  },
+  updateOrganization: supportsTransaction(
+    async ({
+      id,
+      organization,
+      db,
+    }: {
+      id: string;
+      organization: TUpdateOrganization;
+      db: Database;
+    }): Promise<TOrganization[]> => {
+      return db
+        .update(organizations)
+        .set(organization)
+        .where(eq(organizations.id, id))
+        .returning();
+    },
+  ),
   /**
    * @description Delete a organization by their ID
    * @param id - The ID of the organization to delete
    * @returns The deleted organization
    */
-  deleteOrganization: async ({
-    id,
-  }: {
-    id: string;
-  }): Promise<TOrganization[]> => {
-    return db.delete(organizations).where(eq(organizations.id, id)).returning();
-  },
-  addMemberToOrganization: async ({
-    organizationId,
-    principalId,
-    userId,
-  }: {
-    organizationId: string;
-    principalId: string;
-    userId: string;
-  }): Promise<TOrganizationMembership[]> => {
-    return db.insert(organizationMemberships).values({
-      principal_id: principalId,
-      organization_id: organizationId,
-      user_id: userId,
-      rbac_role: RbacRole.MEMBER,
-    });
-  },
-  addAdminToOrganization: async ({
-    principalId,
-    organizationId,
-    userId,
-  }: {
-    principalId: string;
-    organizationId: string;
-    userId: string;
-  }): Promise<TOrganizationMembership[]> => {
-    return db
-      .insert(organizationMemberships)
-      .values({
+  deleteOrganization: supportsTransaction(
+    async ({
+      id,
+      db,
+    }: {
+      id: string;
+      db: Database;
+    }): Promise<TOrganization[]> => {
+      return db
+        .delete(organizations)
+        .where(eq(organizations.id, id))
+        .returning();
+    },
+  ),
+  addMemberToOrganization: supportsTransaction(
+    async ({
+      organizationId,
+      principalId,
+      userId,
+      db,
+    }: {
+      organizationId: string;
+      principalId: string;
+      userId: string;
+      db: Database;
+    }): Promise<TOrganizationMembership[]> => {
+      return db.insert(organizationMemberships).values({
         principal_id: principalId,
         organization_id: organizationId,
         user_id: userId,
-        rbac_role: RbacRole.ADMIN,
-      })
-      .returning();
-  },
+        rbac_role: RbacRole.MEMBER,
+      });
+    },
+  ),
+  addAdminToOrganization: supportsTransaction(
+    async ({
+      principalId,
+      organizationId,
+      userId,
+      db,
+    }: {
+      principalId: string;
+      organizationId: string;
+      userId: string;
+      db: Database;
+    }): Promise<TOrganizationMembership[]> => {
+      return db
+        .insert(organizationMemberships)
+        .values({
+          principal_id: principalId,
+          organization_id: organizationId,
+          user_id: userId,
+          rbac_role: RbacRole.ADMIN,
+        })
+        .returning();
+    },
+  ),
 };
 
 export default OrganizationService;

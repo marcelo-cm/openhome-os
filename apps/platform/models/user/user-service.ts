@@ -1,8 +1,9 @@
 import { AuthError } from '@supabase/supabase-js';
 import { eq } from 'drizzle-orm';
 
-import { db } from '@/db/db';
+import { type Database, db } from '@/db/db';
 import { users } from '@/db/db-schema';
+import { supportsTransaction } from '@/db/db-utils';
 import { createClient } from '@/lib/supabase/server';
 import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
 
@@ -15,49 +16,73 @@ const UserService = {
    * @param user - The user to create
    * @returns The created user
    */
-  createUser: async ({ user }: { user: TCreateUser }): Promise<TUser[]> => {
-    return db.insert(users).values(user).returning();
-  },
+  createUser: supportsTransaction(
+    async ({
+      user,
+      db,
+    }: {
+      user: TCreateUser;
+      db: Database;
+    }): Promise<TUser[]> => {
+      return db.insert(users).values(user).returning();
+    },
+  ),
   /**
    * @description Get a user by their ID
    * @param id - The ID of the user to get
    * @returns The user with the given ID
    */
-  getUser: async ({ id }: { id: string }): Promise<TUser | undefined> => {
-    return db.query.users.findFirst({
-      where: eq(users.id, id),
-    });
-  },
+  getUser: supportsTransaction(
+    async ({
+      id,
+      db,
+    }: {
+      id: string;
+      db: Database;
+    }): Promise<TUser | undefined> => {
+      return db.query.users.findFirst({
+        where: eq(users.id, id),
+      });
+    },
+  ),
   /**
    * @description Get all users
    * @returns All users
    */
-  getAllUser: async (): Promise<TUser[]> => {
-    return db.query.users.findMany();
-  },
+  getAllUser: supportsTransaction(
+    async ({ db }: { db: Database }): Promise<TUser[]> => {
+      return db.query.users.findMany();
+    },
+  ),
   /**
    * @description Update a user by their ID
    * @param id - The ID of the user to update
    * @param user - The user to update
    * @returns The updated user
    */
-  updateUser: async ({
-    id,
-    user,
-  }: {
-    id: string;
-    user: TUpdateUser;
-  }): Promise<TUser[]> => {
-    return db.update(users).set(user).where(eq(users.id, id)).returning();
-  },
+  updateUser: supportsTransaction(
+    async ({
+      id,
+      user,
+      db,
+    }: {
+      id: string;
+      user: TUpdateUser;
+      db: Database;
+    }): Promise<TUser[]> => {
+      return db.update(users).set(user).where(eq(users.id, id)).returning();
+    },
+  ),
   /**
    * @description Delete a user by their ID
    * @param id - The ID of the user to delete
    * @returns The deleted user
    */
-  deleteUser: async ({ id }: { id: string }): Promise<TUser[]> => {
-    return db.delete(users).where(eq(users.id, id)).returning();
-  },
+  deleteUser: supportsTransaction(
+    async ({ id, db }: { id: string; db: Database }): Promise<TUser[]> => {
+      return db.delete(users).where(eq(users.id, id)).returning();
+    },
+  ),
   /**
    * @description Sign in a user
    * @param email - The email of the user to sign in
@@ -154,44 +179,51 @@ const UserService = {
    * @param profileData - Additional profile data from OAuth
    * @returns The synced user
    */
-  syncOAuthUser: async ({
-    authUser,
-    profileData,
-  }: {
-    authUser: { id: string; email: string };
-    profileData?: {
-      first_name?: string;
-      last_name?: string;
-      profile_picture_url?: string;
-    };
-  }): Promise<TUser> => {
-    // Check if user already exists
-    const existingUser = await db.query.users.findFirst({
-      where: eq(users.id, authUser.id),
-    });
+  syncOAuthUser: supportsTransaction(
+    async ({
+      authUser,
+      profileData,
+      organizationId,
+      db,
+    }: {
+      authUser: { id: string; email: string };
+      profileData?: {
+        first_name?: string;
+        last_name?: string;
+        profile_picture_url?: string;
+      };
+      organizationId?: string;
+      db: Database;
+    }): Promise<TUser> => {
+      // Check if user already exists
+      const existingUser = await db.query.users.findFirst({
+        where: eq(users.id, authUser.id),
+      });
 
-    if (existingUser) {
-      return existingUser;
-    }
+      if (existingUser) {
+        return existingUser;
+      }
 
-    // Create new user from OAuth data
-    const [newUser] = await db
-      .insert(users)
-      .values({
-        id: authUser.id,
-        email: authUser.email,
-        first_name: profileData?.first_name || '',
-        last_name: profileData?.last_name || null,
-        profile_picture_url: profileData?.profile_picture_url || null,
-      })
-      .returning();
+      // Create new user from OAuth data
+      const [newUser] = await db
+        .insert(users)
+        .values({
+          id: authUser.id,
+          email: authUser.email,
+          first_name: profileData?.first_name || '',
+          last_name: profileData?.last_name || null,
+          profile_picture_url: profileData?.profile_picture_url || null,
+          organization_id: organizationId || null,
+        })
+        .returning();
 
-    if (!newUser) {
-      throw new Error('No user returned from sync OAuth user');
-    }
+      if (!newUser) {
+        throw new Error('No user returned from sync OAuth user');
+      }
 
-    return newUser;
-  },
+      return newUser;
+    },
+  ),
 };
 
 export default UserService;

@@ -3,8 +3,12 @@
 import { AuthError } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 
+import { db } from '@/db/db';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { createClient } from '@/lib/supabase/server';
 import { uploadProfilePicture } from '@/lib/supabase/storage';
+import OrganizationService from '@/models/organization/organization-service';
+import ProjectService from '@/models/project/project-service';
 import { TCreateUser, TUpdateUser, TUser } from '@/models/user/user-types';
 
 import UserService from './user-service';
@@ -101,15 +105,36 @@ export async function updateUser({
 // Delete
 export async function deleteUser({ id }: { id: string }): Promise<TUser> {
   try {
-    const [user] = await UserService.deleteUser({ id });
+    // First, get the user to verify it exists
+    const user = await UserService.getUser({ id });
 
     if (!user) {
       throw new Error('User not found');
     }
 
-    return user;
+    // Delete the auth user from Supabase
+    const supabaseAdmin = createAdminClient();
+    const { error: authError } = await supabaseAdmin.auth.admin.deleteUser(id);
+
+    if (authError) {
+      console.error('[deleteUser] Error deleting auth user:', authError);
+      // Continue with database deletion even if auth deletion fails
+      // This ensures we clean up the database record
+    }
+
+    // Delete the database user
+    const [deletedUser] = await UserService.deleteUser({ id });
+
+    if (!deletedUser) {
+      throw new Error('Failed to delete user from database');
+    }
+
+    return deletedUser;
   } catch (error) {
     console.error('[deleteUser]', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
     throw new Error('Failed to delete User');
   }
 }
@@ -249,5 +274,112 @@ export async function syncOAuthUser({
     }
 
     throw new Error('Failed to sync OAuth user');
+  }
+}
+
+/**
+ * @description Sync OAuth user and create initial organization, project, and memberships in a single transaction
+ * @param authUser - The Supabase auth user
+ * @param profileData - Additional profile data from OAuth
+ * @param organizationName - Optional organization name (defaults to email domain or "Personal Organization")
+ * @param projectName - Optional project name (defaults to "Home")
+ * @returns The synced user and created entities
+ */
+export async function syncOAuthUserWithSetup({
+  authUser,
+  profileData,
+  organizationName,
+  projectName = 'Home',
+}: {
+  authUser: { id: string; email: string };
+  profileData?: {
+    first_name?: string;
+    last_name?: string;
+    profile_picture_url?: string;
+  };
+  organizationName?: string;
+  projectName?: string;
+}): Promise<{
+  user: TUser;
+  organization: { id: string; name: string };
+  project: { id: string; name: string };
+}> {
+  try {
+    const orgName =
+      organizationName || `${profileData?.first_name}'s Organization`;
+
+    return await db.transaction(async (tx) => {
+      // 1. Create organization
+      const [organization] = await OrganizationService.createOrganization({
+        organization: {
+          name: orgName,
+        },
+        tx,
+      });
+
+      if (!organization) {
+        throw new Error('Failed to create organization');
+      }
+
+      // 2. Sync/create user
+      const user = await UserService.syncOAuthUser({
+        authUser,
+        profileData,
+        organizationId: organization.id,
+        tx,
+      });
+
+      if (!user) {
+        throw new Error('Failed to sync/create user');
+      }
+
+      // 3. Add user as admin to organization
+      await OrganizationService.addAdminToOrganization({
+        principalId: user.id,
+        organizationId: organization.id,
+        userId: user.id,
+        tx,
+      });
+
+      // 4. Create project under organization
+      const [project] = await ProjectService.createProject({
+        project: {
+          name: projectName,
+          organization_id: organization.id,
+        },
+        tx,
+      });
+
+      if (!project) {
+        throw new Error('Failed to create project');
+      }
+
+      // 5. Add user as admin to project
+      await ProjectService.addAdminToProject({
+        projectId: project.id,
+        principalId: user.id,
+        userId: user.id,
+        tx,
+      });
+
+      return {
+        user,
+        organization: {
+          id: organization.id,
+          name: organization.name,
+        },
+        project: {
+          id: project.id,
+          name: project.name,
+        },
+      };
+    });
+  } catch (error) {
+    console.error('[syncOAuthUserWithSetup]', error);
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+
+    throw new Error('Failed to sync OAuth user with setup');
   }
 }

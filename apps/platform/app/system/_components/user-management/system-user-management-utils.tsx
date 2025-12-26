@@ -8,6 +8,7 @@ import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
+import { deleteUser } from '@/models/user/user-actions';
 import { UserRole } from '@/models/user/user-enums';
 import { TUser } from '@/models/user/user-types';
 import { titleCase } from '@/utils/text-formatting-utils';
@@ -96,6 +97,7 @@ export const createUserManagementColumns = (): ColumnDef<TUser>[] => {
                 <MenuItem
                   data-slot="user-management-actions-delete"
                   title="Delete User"
+                  onClick={() => deleteUser({ id: row.original.id })}
                 >
                   <TrashIcon />
                   Delete

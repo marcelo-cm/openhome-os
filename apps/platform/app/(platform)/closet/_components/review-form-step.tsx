@@ -82,10 +82,6 @@ export function ReviewFormStep({
     if (!score) return null;
 
     const percentage = Math.round(score * 100);
-    let color = 'bg-green-500';
-    if (score < 0.7) color = 'bg-yellow-500';
-    if (score < 0.5) color = 'bg-red-500';
-
     return (
       <span
         className="text-muted-foreground inline-flex items-center gap-1 text-xs"

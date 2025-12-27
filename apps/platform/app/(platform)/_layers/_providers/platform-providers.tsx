@@ -1,24 +1,27 @@
-import { cache } from 'react';
+import { getPlatformAuthContext } from '@/app/(platform)/_layers/_providers/platform-context-actions';
 
-import { getCurrentUser } from '@/models/user/user-actions';
-
-import { UserContextProvider } from './user-provider';
-
-const getCachedUser = cache(getCurrentUser);
+import { PlatformContextProvider } from './platform-context-provider';
 
 /**
- * PlatformProviders passes the user promise (not resolved) to avoid blocking navigation.
- * - Unwrapped in client component using use() hook.
- * - Unwrapped in server components using await hook.
- * This pattern is compatible with cacheComponents and allows non-blocking renders
+ * PlatformProviders loads and provides platform authentication context (blocking SSR)
+ *
+ * This server component:
+ * - Fetches user, organization, and organization role (parallel)
+ * - Blocks rendering until all data is loaded
+ * - Redirects to /sign-up if any required data is missing
+ * - Provides resolved (non-null) data to all child components via context
  */
-const PlatformProviders = ({ children }: { children: React.ReactNode }) => {
-  const promisedUser = getCachedUser();
+const PlatformProviders = async ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const platformAuthContext = await getPlatformAuthContext();
 
   return (
-    <UserContextProvider promisedUser={promisedUser}>
+    <PlatformContextProvider platformAuthContext={platformAuthContext}>
       {children}
-    </UserContextProvider>
+    </PlatformContextProvider>
   );
 };
 

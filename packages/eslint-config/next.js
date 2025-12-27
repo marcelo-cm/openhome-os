@@ -62,6 +62,8 @@ export const nextJsConfig = [
       'unused-imports/no-unused-vars': 'error',
       // React scope no longer necessary with new JSX transform.
       'react/react-in-jsx-scope': 'off',
+      // Disable image optimization warnings
+      '@next/next/no-img-element': 'off',
     },
   },
   // TanStack Query rules

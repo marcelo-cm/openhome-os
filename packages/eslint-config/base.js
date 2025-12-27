@@ -19,6 +19,10 @@ export const config = [
     },
     rules: {
       'turbo/no-undeclared-env-vars': 'warn',
+      '@typescript-eslint/no-empty-object-type': [
+        'error',
+        { allowInterfaces: 'with-single-extends' },
+      ],
     },
   },
   {

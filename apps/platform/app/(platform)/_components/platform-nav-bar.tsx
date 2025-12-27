@@ -12,16 +12,12 @@ import {
 } from '@openhome-os/ui/menu';
 import Link from 'next/link';
 
-import { signOut } from '@/models/user/user-actions';
+import { useUser } from '@/models/user/hooks/use-user';
 
-import { useUser } from '../_layers/_providers/user-provider';
+import { signOut } from '@/models/user/user-actions';
 
 const PlatformNavBar = () => {
   const { user } = useUser();
-
-  if (!user) {
-    return null;
-  }
 
   return (
     <div className="pointer-events-none flex w-full justify-end p-4">
@@ -31,8 +27,8 @@ const PlatformNavBar = () => {
           className="pointer-events-auto ml-auto size-8 overflow-hidden rounded-full"
           render={
             <AppAvatar
-              name={`${user?.first_name} ${user?.last_name}`}
-              src={user?.profile_picture_url}
+              name={`${user.first_name} ${user.last_name}`}
+              src={user.profile_picture_url}
               width={32}
               height={32}
             />

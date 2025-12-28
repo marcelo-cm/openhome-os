@@ -2,11 +2,10 @@ import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
+import { TProject } from '@openhome-os/core/models/project/project-types';
 import { Button } from '@openhome-os/ui/button';
 import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
-
-import { TProject } from '@/models/project/project-types';
 
 import SystemProjectCreationDialog from './system-project-creation-dialog';
 

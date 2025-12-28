@@ -2,9 +2,8 @@
 
 import { useMemo } from 'react';
 
+import useLocationMembershipsQuery from '@openhome-os/core/models/location/hooks/use-location-memberships-query';
 import AppDataTable from '@openhome-os/particles/app-data-table';
-
-import useLocationMembershipsQuery from '@/models/location/hooks/use-location-memberships-query';
 
 import { createLocationMembershipColumns } from './location-membership-management-utils';
 

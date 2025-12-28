@@ -2,6 +2,13 @@
 
 import { useState } from 'react';
 
+import useOrganizationsQuery from '@openhome-os/core/models/organization/hooks/use-organizations-query';
+import {
+  createUser,
+  updateUser,
+} from '@openhome-os/core/models/user/user-actions';
+import { UserRole } from '@openhome-os/core/models/user/user-enums';
+import { TUser } from '@openhome-os/core/models/user/user-types';
 import { Button } from '@openhome-os/ui/button';
 import {
   Dialog,
@@ -26,11 +33,6 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-import useOrganizationsQuery from '@/models/organization/hooks/use-organizations-query';
-
-import { createUser, updateUser } from '@/models/user/user-actions';
-import { UserRole } from '@/models/user/user-enums';
-import { TUser } from '@/models/user/user-types';
 
 interface SystemUserCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;

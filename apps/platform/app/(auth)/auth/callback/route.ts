@@ -1,7 +1,6 @@
+import { syncOAuthUserWithSetup } from '@openhome-os/core/models/user/user-actions';
+import { createClient } from '@openhome-os/core/supabase/server';
 import { NextResponse } from 'next/server';
-
-import { createClient } from '@/lib/supabase/server';
-import { syncOAuthUserWithSetup } from '@/models/user/user-actions';
 
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);

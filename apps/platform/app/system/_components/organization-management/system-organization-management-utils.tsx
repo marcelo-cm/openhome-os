@@ -2,14 +2,14 @@ import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
+import { OrganizationTier } from '@openhome-os/core/models/organization/organization-enums';
+import { TOrganization } from '@openhome-os/core/models/organization/organization-types';
 import { Badge } from '@openhome-os/ui/badge';
 import { Button } from '@openhome-os/ui/button';
 import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { OrganizationTier } from '@/models/organization/organization-enums';
-import { TOrganization } from '@/models/organization/organization-types';
 import { titleCase } from '@/utils/text-formatting-utils';
 
 import SystemOrganizationCreationDialog from './system-organization-creation-dialog';

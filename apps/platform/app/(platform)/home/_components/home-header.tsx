@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { useUser } from '@/models/user/hooks/use-user';
+import { useUser } from '@/hooks/user/use-user';
 
 import PlatformSectionHeader from '../../_components/platform-section-header';
 

@@ -2,6 +2,7 @@
 
 import { HomeIcon, LogOutIcon, ShirtIcon, UserIcon } from 'lucide-react';
 
+import { signOut } from '@openhome-os/core/models/user/user-actions';
 import AppAvatar from '@openhome-os/particles/app-avatar';
 import {
   Menu,
@@ -12,9 +13,7 @@ import {
 } from '@openhome-os/ui/menu';
 import Link from 'next/link';
 
-import { useUser } from '@/models/user/hooks/use-user';
-
-import { signOut } from '@/models/user/user-actions';
+import { useUser } from '@/hooks/user/use-user';
 
 const PlatformNavBar = () => {
   const { user } = useUser();

@@ -1,5 +1,6 @@
 'use client';
 
+import useUserAuthentication from '@openhome-os/core/models/user/hooks/use-user-authentication';
 import { GoogleIcon } from '@openhome-os/icons/google';
 import { Button } from '@openhome-os/ui/button';
 import {
@@ -12,8 +13,6 @@ import {
 } from '@openhome-os/ui/card';
 import { Form } from '@openhome-os/ui/form';
 import Link from 'next/link';
-
-import useUserAuthentication from '@/models/user/hooks/use-user-authentication';
 
 import AuthForm from '@/app/_components/auth-form';
 

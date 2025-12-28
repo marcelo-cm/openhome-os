@@ -2,6 +2,12 @@
 
 import { useState } from 'react';
 
+import {
+  createLocation,
+  updateLocation,
+} from '@openhome-os/core/models/location/location-actions';
+import { TLocation } from '@openhome-os/core/models/location/location-types';
+import useProjectsQuery from '@openhome-os/core/models/project/hooks/use-projects-query';
 import { Button } from '@openhome-os/ui/button';
 import {
   Dialog,
@@ -26,13 +32,6 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-import useProjectsQuery from '@/models/project/hooks/use-projects-query';
-
-import {
-  createLocation,
-  updateLocation,
-} from '@/models/location/location-actions';
-import { TLocation } from '@/models/location/location-types';
 
 interface SystemLocationCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;

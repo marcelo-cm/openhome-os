@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import useUserAuthentication from '@openhome-os/core/models/user/hooks/use-user-authentication';
+import { UserRole } from '@openhome-os/core/models/user/user-enums';
 import { GoogleIcon } from '@openhome-os/icons/google';
 import { Button } from '@openhome-os/ui/button';
 import {
@@ -16,10 +18,7 @@ import { Form } from '@openhome-os/ui/form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import useUserAuthentication from '@/models/user/hooks/use-user-authentication';
-
 import AuthForm from '@/app/_components/auth-form';
-import { UserRole } from '@/models/user/user-enums';
 
 const SignUpCard = () => {
   const router = useRouter();

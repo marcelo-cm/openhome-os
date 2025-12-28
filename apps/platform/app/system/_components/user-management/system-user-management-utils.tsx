@@ -2,15 +2,15 @@ import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
+import { deleteUser } from '@openhome-os/core/models/user/user-actions';
+import { UserRole } from '@openhome-os/core/models/user/user-enums';
+import { TUser } from '@openhome-os/core/models/user/user-types';
 import { Badge } from '@openhome-os/ui/badge';
 import { Button } from '@openhome-os/ui/button';
 import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { deleteUser } from '@/models/user/user-actions';
-import { UserRole } from '@/models/user/user-enums';
-import { TUser } from '@/models/user/user-types';
 import { titleCase } from '@/utils/text-formatting-utils';
 
 import SystemUserCreationDialog from './system-user-creation-dialog';

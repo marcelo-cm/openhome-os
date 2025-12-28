@@ -2,6 +2,12 @@
 
 import { useState } from 'react';
 
+import {
+  createOrganization,
+  updateOrganization,
+} from '@openhome-os/core/models/organization/organization-actions';
+import { OrganizationTier } from '@openhome-os/core/models/organization/organization-enums';
+import { TOrganization } from '@openhome-os/core/models/organization/organization-types';
 import { Button } from '@openhome-os/ui/button';
 import {
   Dialog,
@@ -26,13 +32,6 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-
-import {
-  createOrganization,
-  updateOrganization,
-} from '@/models/organization/organization-actions';
-import { OrganizationTier } from '@/models/organization/organization-enums';
-import { TOrganization } from '@/models/organization/organization-types';
 
 interface SystemOrganizationCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;

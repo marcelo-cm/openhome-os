@@ -139,7 +139,7 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000  # Update for production
 If you haven't already, create a `middleware.ts` file at the root of your project:
 
 ```typescript
-import { updateSession } from '@/lib/supabase/middleware';
+import { updateSession } from '@/supabase/middleware';
 
 export async function middleware(request: NextRequest) {
   return await updateSession(request);

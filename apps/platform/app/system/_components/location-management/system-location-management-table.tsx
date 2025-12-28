@@ -2,9 +2,8 @@
 
 import { useMemo } from 'react';
 
+import useLocationsQuery from '@openhome-os/core/models/location/hooks/use-locations-query';
 import AppDataTable from '@openhome-os/particles/app-data-table';
-
-import useLocationsQuery from '@/models/location/hooks/use-locations-query';
 
 import { createLocationManagementColumns } from './system-location-management-utils';
 

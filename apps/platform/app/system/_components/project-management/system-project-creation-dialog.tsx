@@ -2,6 +2,12 @@
 
 import { useState } from 'react';
 
+import useOrganizationsQuery from '@openhome-os/core/models/organization/hooks/use-organizations-query';
+import {
+  createProject,
+  updateProject,
+} from '@openhome-os/core/models/project/project-actions';
+import { TProject } from '@openhome-os/core/models/project/project-types';
 import { Button } from '@openhome-os/ui/button';
 import {
   Dialog,
@@ -26,10 +32,6 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-import useOrganizationsQuery from '@/models/organization/hooks/use-organizations-query';
-
-import { createProject, updateProject } from '@/models/project/project-actions';
-import { TProject } from '@/models/project/project-types';
 
 interface SystemProjectCreationDialogProps extends RemoteTriggerProps {
   onSuccess?: () => void;

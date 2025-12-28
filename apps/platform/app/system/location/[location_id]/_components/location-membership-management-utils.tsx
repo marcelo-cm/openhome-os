@@ -1,10 +1,11 @@
+import { TLocationMembershipHydrated } from '@openhome-os/core/models/location/location-types';
 import { Badge } from '@openhome-os/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { TLocationMembershipHydrated } from '@/models/location/location-types';
-import { RbacRole } from '@/permissions/rbac-enums';
 import { titleCase } from '@/utils/text-formatting-utils';
+
+import { RbacRole } from '../../../../../../../packages/core/src/permissions/rbac-enums';
 
 export const createLocationMembershipColumns =
   (): ColumnDef<TLocationMembershipHydrated>[] => {

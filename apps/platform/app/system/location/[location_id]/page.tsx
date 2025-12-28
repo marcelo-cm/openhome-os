@@ -1,4 +1,4 @@
-import { getLocation } from '@/models/location/location-actions';
+import { getLocation } from '@openhome-os/core/models/location/location-actions';
 
 import LocationView from './_layers/location-view';
 

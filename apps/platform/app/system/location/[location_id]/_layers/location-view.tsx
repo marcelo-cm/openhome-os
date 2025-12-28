@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 
 import { PlusIcon } from 'lucide-react';
 
+import { TLocation } from '@openhome-os/core/models/location/location-types';
 import { Button } from '@openhome-os/ui/button';
 import {
   Card,
@@ -11,8 +12,6 @@ import {
 } from '@openhome-os/ui/card';
 import { DialogTrigger } from '@openhome-os/ui/dialog';
 import { Frame, FramePanel } from '@openhome-os/ui/frame';
-
-import { TLocation } from '@/models/location/location-types';
 
 import LocationMembershipCreationDialog from '../_components/location-membership-creation-dialog';
 import LocationMembershipManagementTable from '../_components/location-membership-management-table';

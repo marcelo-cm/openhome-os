@@ -1,0 +1,8 @@
+{
+  "name": "@openhome-os/jest-config",
+  "private": true,
+  "type": "commonjs",
+  "exports": {
+    ".": "./index.cjs"
+  }
+}

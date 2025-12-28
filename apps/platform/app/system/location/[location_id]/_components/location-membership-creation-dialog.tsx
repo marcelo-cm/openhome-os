@@ -2,6 +2,11 @@
 
 import { useState } from 'react';
 
+import {
+  addAdminToLocation,
+  addMemberToLocation,
+} from '@openhome-os/core/models/location/location-actions';
+import useUsersQuery from '@openhome-os/core/models/user/hooks/use-users';
 import { Button } from '@openhome-os/ui/button';
 import {
   Dialog,
@@ -26,13 +31,8 @@ import {
   RemoteTriggerProps,
   useRemoteTrigger,
 } from '@/hooks/use-remote-trigger';
-import useUsersQuery from '@/models/user/hooks/use-users';
 
-import {
-  addAdminToLocation,
-  addMemberToLocation,
-} from '@/models/location/location-actions';
-import { RbacRole } from '@/permissions/rbac-enums';
+import { RbacRole } from '../../../../../../../packages/core/src/permissions/rbac-enums';
 
 interface LocationMembershipCreationDialogProps extends RemoteTriggerProps {
   locationId: string;

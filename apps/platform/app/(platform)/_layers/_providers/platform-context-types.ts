@@ -1,9 +1,8 @@
 import type {
   TOrganization,
   TOrganizationMembership,
-} from '@/models/organization/organization-types';
-
-import type { TUser } from '../../../../models/user/user-types';
+} from '@openhome-os/core/models/organization/organization-types';
+import type { TUser } from '@openhome-os/core/models/user/user-types';
 
 /**
  * Platform authentication context - guaranteed to be present for all routes under /(platform)

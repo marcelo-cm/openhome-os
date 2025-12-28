@@ -2,9 +2,8 @@
 
 import { useMemo } from 'react';
 
+import useUsers from '@openhome-os/core/models/user/hooks/use-users';
 import AppDataTable from '@openhome-os/particles/app-data-table';
-
-import useUsers from '@/models/user/hooks/use-users';
 
 import { createUserManagementColumns } from './system-user-management-utils';
 

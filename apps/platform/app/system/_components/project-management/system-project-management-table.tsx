@@ -2,9 +2,8 @@
 
 import { useMemo } from 'react';
 
+import useProjects from '@openhome-os/core/models/project/hooks/use-projects-query';
 import AppDataTable from '@openhome-os/particles/app-data-table';
-
-import useProjects from '@/models/project/hooks/use-projects-query';
 
 import { createProjectManagementColumns } from './system-project-management-utils';
 

@@ -2,9 +2,8 @@
 
 import { useMemo } from 'react';
 
+import useOrganizationsQuery from '@openhome-os/core/models/organization/hooks/use-organizations-query';
 import AppDataTable from '@openhome-os/particles/app-data-table';
-
-import useOrganizationsQuery from '@/models/organization/hooks/use-organizations-query';
 
 import { createOrganizationManagementColumns } from './system-organization-management-utils';
 

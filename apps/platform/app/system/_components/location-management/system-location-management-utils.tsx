@@ -2,12 +2,11 @@ import { Fragment, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
+import { TLocation } from '@openhome-os/core/models/location/location-types';
 import { Button } from '@openhome-os/ui/button';
 import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
-
-import { TLocation } from '@/models/location/location-types';
 
 import SystemLocationCreationDialog from './system-location-creation-dialog';
 

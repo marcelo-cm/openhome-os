@@ -2,13 +2,12 @@
 
 import { cache } from 'react';
 
+import OrganizationService from '@openhome-os/core/models/organization/organization-service';
+import UserService from '@openhome-os/core/models/user/user-service';
+import PermissionService from '@openhome-os/core/permissions/permission-service';
+import { createClient } from '@openhome-os/core/supabase/server';
 import { redirect } from 'next/navigation';
 
-import { createClient } from '@/lib/supabase/server';
-import PermissionService from '@/permissions/permission-service';
-
-import OrganizationService from '../../../../models/organization/organization-service';
-import UserService from '../../../../models/user/user-service';
 import type { PlatformAuthContext } from './platform-context-types';
 
 /**

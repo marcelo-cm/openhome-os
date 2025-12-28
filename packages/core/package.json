@@ -23,7 +23,6 @@
     "@faker-js/faker": "^9.9.0",
     "drizzle-orm": "^0.39.3",
     "drizzle-zod": "^0.7.1",
-    "next": "16.1.0",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "zod": "^3.25.76",

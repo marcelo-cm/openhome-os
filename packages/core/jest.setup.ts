@@ -8,16 +8,17 @@ global.TextDecoder = TextDecoder;
 // @ts-expect-error - TransformStream is not defined in the global scope
 global.TransformStream = TransformStream;
 
-jest.mock('next/navigation', () => ({
-  redirect: jest.fn(),
-  useRouter() {
-    return {
-      push: jest.fn(),
-      replace: jest.fn(),
-      refresh: jest.fn(),
-    };
-  },
-  useSearchParams() {
-    return new URLSearchParams();
-  },
-}));
+// This is only here for reference for when we need to mock the next/navigation module
+// jest.mock('next/navigation', () => ({
+//   redirect: jest.fn(),
+//   useRouter() {
+//     return {
+//       push: jest.fn(),
+//       replace: jest.fn(),
+//       refresh: jest.fn(),
+//     };
+//   },
+//   useSearchParams() {
+//     return new URLSearchParams();
+//   },
+// }));

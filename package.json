@@ -15,20 +15,21 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "prettier": "^3.6.2",
-    "turbo": "^2.5.8",
-    "typescript": "5.9.2",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "husky": "^8.0.3",
-    "next": "^16.1.0"
+    "prettier": "^3.8.1",
+    "turbo": "^2.8.10",
+    "typescript": "catalog:"
   },
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@9.15.4",
   "engines": {
     "node": ">=18"
   },
   "pnpm": {
     "overrides": {
-      "@types/react": "19.2.2",
-      "@types/react-dom": "19.2.2"
+      "@types/react": "$@types/react",
+      "@types/react-dom": "$@types/react-dom"
     }
   }
 }

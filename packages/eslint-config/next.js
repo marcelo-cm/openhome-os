@@ -2,9 +2,9 @@ import js from '@eslint/js';
 import pluginNext from '@next/eslint-plugin-next';
 import tanstackQuery from '@tanstack/eslint-plugin-query';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import oxlint from 'eslint-plugin-oxlint';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
-import unusedImports from 'eslint-plugin-unused-imports';
 import { globalIgnores } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
@@ -50,7 +50,6 @@ export const nextJsConfig = [
     plugins: {
       'react-hooks': pluginReactHooks,
       'typescript-eslint': tseslint,
-      'unused-imports': unusedImports,
       '@tanstack/query': tanstackQuery,
     },
     settings: { react: { version: 'detect' } },
@@ -58,13 +57,12 @@ export const nextJsConfig = [
       ...pluginReactHooks.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
       ...tanstackQuery.configs['flat/recommended'].rules,
-      'unused-imports/no-unused-imports': 'error',
-      'unused-imports/no-unused-vars': 'error',
       // React scope no longer necessary with new JSX transform.
       'react/react-in-jsx-scope': 'off',
       // Disable image optimization warnings
       '@next/next/no-img-element': 'off',
     },
   },
-  // TanStack Query rules
+  // Must be last — disables ESLint rules already covered by oxlint
+  ...oxlint.configs['flat/recommended'],
 ];

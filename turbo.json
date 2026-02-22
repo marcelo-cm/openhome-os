@@ -11,16 +11,7 @@
         ".env.production",
         ".env"
       ],
-      "outputs": [".next/**", "!.next/cache/**"],
-      "env": [
-        "DATABASE_URL",
-        "SUPABASE_DATABASE_PASSWORD",
-        "NEXT_PUBLIC_SUPABASE_URL",
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-        "SUPABASE_SERVICE_ROLE_KEY",
-        "SUPABASE_BUCKET",
-        "SUPABASE_PROFILE_PICTURES_BUCKET"
-      ]
+      "outputs": [".next/**", "!.next/cache/**"]
     },
     "dev": {
       "cache": false,
@@ -31,27 +22,17 @@
         ".env.local",
         ".env.development",
         ".env"
-      ],
-      "env": [
-        "DATABASE_URL",
-        "SUPABASE_DATABASE_PASSWORD",
-        "NEXT_PUBLIC_SUPABASE_URL",
-        "NEXT_PUBLIC_SUPABASE_ANON_KEY",
-        "SUPABASE_SERVICE_ROLE_KEY",
-        "SUPABASE_BUCKET",
-        "SUPABASE_PROFILE_PICTURES_BUCKET"
       ]
     },
-    "lint": {
-      "dependsOn": ["^lint"]
+    "dev:fresh": {
+      "cache": false,
+      "persistent": true
     },
+    "lint": {},
     "lint:fix": {
-      "dependsOn": ["^lint:fix"],
       "cache": false
     },
-    "type-check": {
-      "dependsOn": ["^type-check"]
-    },
+    "type-check": {},
     "test": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"]

@@ -8,10 +8,12 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
 
   if (code) {
+    console.log('Code provided - exchanging code for session');
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
+      console.log('Error exchanging code:', error);
       console.error('[OAuth Callback] Error exchanging code:', error);
       return NextResponse.redirect(`${origin}/auth?error=${error.message}`);
     }
@@ -22,6 +24,7 @@ export async function GET(request: Request) {
     } = await supabase.auth.getUser();
 
     if (user) {
+      console.log('User found - syncing user with database');
       try {
         // Sync OAuth user with database and create organization, project, and memberships
         await syncOAuthUserWithSetup({
@@ -52,9 +55,13 @@ export async function GET(request: Request) {
       }
     }
 
+    console.log('Successful authentication - redirecting to home');
+
     // Successful authentication - redirect to home
     return NextResponse.redirect(`${origin}/home`);
   }
+
+  console.log('No code provided - redirecting to auth page');
 
   // No code provided - redirect to auth page
   return NextResponse.redirect(`${origin}/auth`);

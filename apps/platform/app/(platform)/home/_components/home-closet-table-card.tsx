@@ -11,11 +11,10 @@ const HomeClosetTableCard = () => {
     <Card variant={'ring'} className="w-full">
       <CardHeader>
         <Link href="/closet">
-          <CardTitle>Your Closet</CardTitle>
+          <CardTitle>Your Items</CardTitle>
         </Link>
         <CardDescription>
-          This is a list of your clothing items. You can manage your items, and
-          more.
+          This is a list of your items. You can manage your items, and more.
         </CardDescription>
       </CardHeader>
     </Card>

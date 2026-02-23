@@ -8,9 +8,14 @@ if (!process.env.DATABASE_URL) {
 }
 
 export default defineConfig({
-  out: './drizzle',
-  schema: ['./db/db-schema.ts', './db/enums.ts'],
+  out: '../../packages/core/src/drizzle',
+  schema: [
+    '../../packages/core/src/db/db-schema.ts',
+    '../../packages/core/src/db/enums.ts',
+  ],
   dialect: 'postgresql',
+  schemaFilter: ['public'],
+  extensionsFilters: ['postgis'],
   dbCredentials: {
     url: process.env.DATABASE_URL!,
   },

@@ -21,7 +21,7 @@ import { ReviewFormStep } from './review-form-step';
 
 type UploadStep = 'upload' | 'analyzing' | 'review';
 
-interface ClothingItemData {
+interface ItemFormData {
   photos: File[];
   aiAnalysis?: {
     brand?: string;
@@ -47,7 +47,7 @@ export function AddItemDialog({
 }: RemoteTriggerProps) {
   const [isOpen, handleOpenChange] = useRemoteTrigger({ open, onOpenChange });
   const [currentStep, setCurrentStep] = useState<UploadStep>('upload');
-  const [itemData, setItemData] = useState<ClothingItemData>({ photos: [] });
+  const [itemData, setItemData] = useState<ItemFormData>({ photos: [] });
 
   const handlePhotosSelected = (files: File[]) => {
     setItemData({ ...itemData, photos: files });
@@ -74,8 +74,8 @@ export function AddItemDialog({
     }, 3000);
   };
 
-  const handleSave = (data: ClothingItemData) => {
-    console.log('Saving clothing item:', data);
+  const handleSave = (data: ItemFormData) => {
+    console.log('Saving item:', data);
     // TODO: Implement actual save logic with API call
     handleOpenChange(false);
     resetDialog();
@@ -99,13 +99,13 @@ export function AddItemDialog({
       <DialogPopup className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            {currentStep === 'upload' && 'Add Clothing Item'}
+            {currentStep === 'upload' && 'Add Item'}
             {currentStep === 'analyzing' && 'Analyzing Your Item...'}
             {currentStep === 'review' && 'Review & Complete'}
           </DialogTitle>
           <DialogDescription>
             {currentStep === 'upload' &&
-              'Upload photo(s) of your clothing item to get started'}
+              'Upload photo(s) of your item to get started'}
             {currentStep === 'analyzing' &&
               "AI is analyzing your item's details"}
             {currentStep === 'review' &&

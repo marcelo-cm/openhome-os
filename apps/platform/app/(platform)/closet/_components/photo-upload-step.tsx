@@ -102,7 +102,7 @@ export function PhotoUploadStep({ onPhotosSelected }: PhotoUploadStepProps) {
               Drop photos here or click to browse
             </p>
             <p className="text-muted-foreground mt-1 text-sm">
-              Upload one or multiple photos of your clothing item
+              Upload one or multiple photos of your item
             </p>
           </div>
           <input

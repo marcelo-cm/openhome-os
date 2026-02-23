@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from '@openhome-os/ui/select';
 
-interface ClothingItemData {
+interface ItemFormData {
   photos: File[];
   aiAnalysis?: {
     brand?: string;
@@ -37,8 +37,8 @@ interface ClothingItemData {
 }
 
 interface ReviewFormStepProps {
-  itemData: ClothingItemData;
-  onSave: (data: ClothingItemData) => void;
+  itemData: ItemFormData;
+  onSave: (data: ItemFormData) => void;
   onCancel: () => void;
 }
 
@@ -53,7 +53,7 @@ export function ReviewFormStep({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const data: ClothingItemData = {
+    const data: ItemFormData = {
       ...itemData,
       name: formData.get('name') as string,
       locationId: formData.get('location') as string,

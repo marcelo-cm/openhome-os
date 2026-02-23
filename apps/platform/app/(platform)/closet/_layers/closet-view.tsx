@@ -11,7 +11,7 @@ const ClosetView = () => {
   return (
     <div className="flex w-full max-w-6xl flex-col gap-6 p-6">
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">My Closet</h1>
+        <h1 className="text-3xl font-bold">My Items</h1>
         <Suspense>
           <AddItemDialog>
             <DialogTrigger
@@ -27,7 +27,7 @@ const ClosetView = () => {
       </div>
 
       <div className="text-muted-foreground">
-        Your clothing items will appear here. Start by adding your first item!
+        Your items will appear here. Start by adding your first one!
       </div>
     </div>
   );

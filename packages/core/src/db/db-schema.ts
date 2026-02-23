@@ -1,15 +1,23 @@
 import { DrizzleBaseModel } from '@openhome-os/core/models/base/base-types';
 import {
-  ClothingItemStatus,
-  ClothingPrivacy,
-} from '@openhome-os/core/models/clothing-item/clothing-item-enums';
+  ItemPrivacy,
+  ItemStatus,
+} from '@openhome-os/core/models/item/item-enums';
 import { OrganizationTier } from '@openhome-os/core/models/organization/organization-enums';
 import { UserRole } from '@openhome-os/core/models/user/user-enums';
-import { date, jsonb, numeric, pgTable, text } from 'drizzle-orm/pg-core';
+import {
+  date,
+  integer,
+  jsonb,
+  numeric,
+  pgTable,
+  text,
+} from 'drizzle-orm/pg-core';
 
 import {
-  ClothingItemStatusEnum,
-  ClothingPrivacyEnum,
+  ItemCategoryEnum,
+  ItemPrivacyEnum,
+  ItemStatusEnum,
   OrganizationTierEnum,
   RbacRoleEnum,
   UserRoleEnum,
@@ -131,37 +139,95 @@ export const locationMemberships = pgTable('location_memberships', {
 });
 
 /**
- * Clothing resource - a single clothing item.
+ * Base item table — every physical item the user owns.
+ * Category-specific attributes live in extension tables (CTI pattern).
  *
- * - Associated to a location (clothing items on a location is a closet)
+ * FK: principal_id → users.id (item owner)
+ * FK: location_id → locations.id (current location)
+ * Discriminator: category determines which extension table holds details.
  */
-export const clothingItems = pgTable('clothing_items', {
+export const items = pgTable('items', {
   ...DrizzleBaseModel,
+  category: ItemCategoryEnum('category').notNull(),
   principal_id: text('principal_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-
-  name: text('name').notNull(),
-  description: text('description'),
-  size: text('size'),
-  base_color: text('base_color'),
-  care_instructions: text('care_instructions'),
-  brand: text('brand'),
-  notes: text('notes'),
-  ai_metadata: jsonb('ai_metadata'),
-
-  purchase_price: numeric('purchase_price', { precision: 8, scale: 2 }),
-  purchase_date: date('purchase_date'),
-
   location_id: text('location_id')
     .notNull()
     .references(() => locations.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  description: text('description'),
+  brand: text('brand'),
+  base_color: text('base_color'),
+  notes: text('notes'),
+  purchase_price: numeric('purchase_price', { precision: 8, scale: 2 }),
+  purchase_date: date('purchase_date'),
+  status: ItemStatusEnum('status').notNull().default(ItemStatus.ACTIVE),
+  privacy: ItemPrivacyEnum('privacy').notNull().default(ItemPrivacy.PRIVATE),
+});
 
-  privacy: ClothingPrivacyEnum('privacy')
-    .notNull()
-    .default(ClothingPrivacy.PRIVATE),
+/**
+ * Clothing-specific details (1:1 with items WHERE category = 'clothing').
+ *
+ * PK/FK: item_id → items.id (also serves as the primary key, enforcing 1:1)
+ */
+export const clothingDetails = pgTable('clothing_details', {
+  item_id: text('item_id')
+    .primaryKey()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  size: text('size'),
+  material: text('material'),
+  care_instructions: text('care_instructions'),
+});
 
-  status: ClothingItemStatusEnum('status')
-    .notNull()
-    .default(ClothingItemStatus.DRAFT),
+/**
+ * Device-specific details (1:1 with items WHERE category = 'device').
+ *
+ * PK/FK: item_id → items.id
+ */
+export const deviceDetails = pgTable('device_details', {
+  item_id: text('item_id')
+    .primaryKey()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  serial_number: text('serial_number'),
+  model_number: text('model_number'),
+  warranty_expiration: date('warranty_expiration'),
+});
+
+/**
+ * Home item-specific details (1:1 with items WHERE category = 'home').
+ *
+ * PK/FK: item_id → items.id
+ */
+export const homeItemDetails = pgTable('home_item_details', {
+  item_id: text('item_id')
+    .primaryKey()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  model_number: text('model_number'),
+  warranty_expiration: date('warranty_expiration'),
+});
+
+/**
+ * Furniture-specific details (1:1 with items WHERE category = 'furniture').
+ *
+ * PK/FK: item_id → items.id
+ */
+export const furnitureDetails = pgTable('furniture_details', {
+  item_id: text('item_id')
+    .primaryKey()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  dimensions: jsonb('dimensions'),
+});
+
+/**
+ * Personal item-specific details (1:1 with items WHERE category = 'personal').
+ *
+ * PK/FK: item_id → items.id
+ */
+export const personalItemDetails = pgTable('personal_item_details', {
+  item_id: text('item_id')
+    .primaryKey()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  material: text('material'),
+  replacement_cycle_days: integer('replacement_cycle_days'),
 });

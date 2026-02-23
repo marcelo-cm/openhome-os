@@ -20,8 +20,8 @@
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",
     "@tanstack/react-query": "catalog:",
-    "drizzle-orm": "^0.39.3",
-    "drizzle-zod": "^0.7.1",
+    "drizzle-orm": "^0.45.1",
+    "drizzle-zod": "^0.8.3",
     "postgres": "^3.4.8",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -31,13 +31,13 @@
     "@faker-js/faker": "catalog:",
     "@openhome-os/eslint-config": "workspace:*",
     "@openhome-os/typescript-config": "workspace:*",
-    "next": "catalog:",
     "@swc/jest": "catalog:",
     "@types/jest": "catalog:",
     "@types/node": "catalog:",
     "eslint": "catalog:",
     "jest": "catalog:",
     "jest-environment-jsdom": "catalog:",
+    "next": "catalog:",
     "typescript": "catalog:"
   }
 }

@@ -22,7 +22,7 @@ function createJestConfig({ rootDir }) {
         },
       ],
     },
-    transformIgnorePatterns: ['/node_modules/'],
+    transformIgnorePatterns: [],
   };
 }
 

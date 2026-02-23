@@ -5,6 +5,7 @@ import {
   deviceDetails,
   furnitureDetails,
   homeItemDetails,
+  itemImages,
   items,
   locationMemberships,
   locations,
@@ -97,7 +98,7 @@ export const locationMembershipsRelations = relations(
   }),
 );
 
-export const itemsRelations = relations(items, ({ one }) => ({
+export const itemsRelations = relations(items, ({ one, many }) => ({
   owner: one(users, {
     fields: [items.principal_id],
     references: [users.id],
@@ -111,6 +112,7 @@ export const itemsRelations = relations(items, ({ one }) => ({
   homeItemDetails: one(homeItemDetails),
   furnitureDetails: one(furnitureDetails),
   personalItemDetails: one(personalItemDetails),
+  images: many(itemImages),
 }));
 
 export const clothingDetailsRelations = relations(
@@ -159,3 +161,10 @@ export const personalItemDetailsRelations = relations(
     }),
   }),
 );
+
+export const itemImagesRelations = relations(itemImages, ({ one }) => ({
+  item: one(items, {
+    fields: [itemImages.item_id],
+    references: [items.id],
+  }),
+}));

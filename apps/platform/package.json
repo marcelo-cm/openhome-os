@@ -25,6 +25,7 @@
     "@openhome-os/ui": "workspace:*",
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",
+    "@tanstack/react-form": "^1.28.3",
     "@tanstack/react-query": "catalog:",
     "@tanstack/react-table": "catalog:",
     "@vercel/functions": "^2.2.13",

@@ -6,6 +6,7 @@ import {
 import { OrganizationTier } from '@openhome-os/core/models/organization/organization-enums';
 import { UserRole } from '@openhome-os/core/models/user/user-enums';
 import {
+  boolean,
   date,
   integer,
   jsonb,
@@ -230,4 +231,20 @@ export const personalItemDetails = pgTable('personal_item_details', {
     .references(() => items.id, { onDelete: 'cascade' }),
   material: text('material'),
   replacement_cycle_days: integer('replacement_cycle_days'),
+});
+
+/**
+ * Images attached to items (1:N with items).
+ *
+ * FK: item_id → items.id
+ * Cascade: deleting an item removes all its images.
+ */
+export const itemImages = pgTable('item_images', {
+  ...DrizzleBaseModel,
+  item_id: text('item_id')
+    .notNull()
+    .references(() => items.id, { onDelete: 'cascade' }),
+  url: text('url').notNull(),
+  storage_path: text('storage_path').notNull(),
+  display_order: integer('display_order').notNull().default(0),
 });

@@ -1,20 +1,22 @@
 'use client';
 
-import HomeClosetTableCard from './_components/home-closet-table-card';
+import { ItemCategory } from '@openhome-os/core/models/item/item-enums';
+
+import HomeCategoryCard from './_components/home-category-card';
+import { HOME_CATEGORY_CONFIG } from './_components/home-constants';
 import HomeHeader from './_components/home-header';
-import HomeLocationsCard from './_components/home-locations-card';
-import HomeRecentlyViewedCard from './_components/home-recently-viewed-card';
-import HomeSummaryCard from './_components/home-summary-card';
 
 const HomePage = () => {
   return (
     <section className="flex w-full flex-col items-center">
       <div className="flex w-full max-w-3xl flex-col gap-8">
         <HomeHeader />
-        <HomeRecentlyViewedCard />
-        <HomeClosetTableCard />
-        <HomeLocationsCard />
-        <HomeSummaryCard />
+        {Object.values(ItemCategory).map((category) => (
+          <HomeCategoryCard
+            key={category}
+            {...HOME_CATEGORY_CONFIG[category]}
+          />
+        ))}
       </div>
     </section>
   );

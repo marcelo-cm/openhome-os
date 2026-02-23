@@ -1,9 +1,9 @@
 export enum ItemCategory {
-  CLOTHING = 'clothing',
-  DEVICE = 'device',
-  HOME = 'home',
-  FURNITURE = 'furniture',
   PERSONAL = 'personal',
+  CLOTHING = 'clothing',
+  HOME = 'home',
+  DEVICE = 'device',
+  FURNITURE = 'furniture',
 }
 
 export enum ItemStatus {

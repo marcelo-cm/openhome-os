@@ -9,13 +9,13 @@ import type { z } from 'zod';
 
 type ImagesFields = z.infer<typeof ImagesStepSchema>;
 
-interface ImagesStepProps<TFormData extends ImagesFields> {
+interface ItemRegistrationImagesStepProps<TFormData extends ImagesFields> {
   form: WizardForm<TFormData>;
 }
 
-export function ImagesStep<TFormData extends ImagesFields>({
+export function ItemRegistrationImagesStep<TFormData extends ImagesFields>({
   form,
-}: ImagesStepProps<TFormData>) {
+}: ItemRegistrationImagesStepProps<TFormData>) {
   return (
     <div className="flex flex-col gap-4">
       <form.Field name="images">

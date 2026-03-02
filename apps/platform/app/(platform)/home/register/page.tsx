@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 
-import { registerPersonalItem } from '@openhome-os/core/models/item/item-registration-actions';
+import { registerHomeItem } from '@openhome-os/core/models/item/item-registration-actions';
 import { WizardProvider } from '@openhome-os/core/wizard/wizard-context';
 import WizardDevTool from '@openhome-os/core/wizard/wizard-dev-tool';
 import type {
@@ -20,23 +20,23 @@ import {
   buildImageFormData,
   toOptionalString,
 } from '../../_components/item-registration-wizard/item-registration-utils';
-import { PersonalDetailsStep } from './_components/personal-item-registration-details-step';
-import type { PersonalFormValues } from './_constants/personal-registration-constants';
+import { HomeItemRegistrationDetailsStep } from './_components/home-item-registration-details-step';
+import type { HomeFormValues } from './_constants/home-registration-constants';
 import {
-  PERSONAL_DEFAULT_VALUES,
-  PERSONAL_REGISTRATION_SCHEMA,
-  PERSONAL_REGISTRATION_STEPS,
-} from './_constants/personal-registration-constants';
+  HOME_DEFAULT_VALUES,
+  HOME_REGISTRATION_SCHEMA,
+  HOME_REGISTRATION_STEPS,
+} from './_constants/home-registration-constants';
 
 function renderStepContent(
   stepId: string,
-  form: WizardForm<PersonalFormValues>,
+  form: WizardForm<HomeFormValues>,
 ): ReactNode {
   switch (stepId) {
     case 'basic-info':
       return <ItemRegistrationBasicInfoStep form={form} />;
-    case 'personal-details':
-      return <PersonalDetailsStep form={form} />;
+    case 'home-details':
+      return <HomeItemRegistrationDetailsStep form={form} />;
     case 'settings':
       return <ItemRegistrationSettingsStep form={form} />;
     case 'images':
@@ -46,16 +46,16 @@ function renderStepContent(
   }
 }
 
-export default function PersonalRegisterPage() {
+export default function HomeRegisterPage() {
   const form = useForm({
-    defaultValues: PERSONAL_DEFAULT_VALUES,
+    defaultValues: HOME_DEFAULT_VALUES,
     validators: {
-      onChange: PERSONAL_REGISTRATION_SCHEMA,
+      onChange: HOME_REGISTRATION_SCHEMA,
     },
-    onSubmit: async ({ value }: { value: PersonalFormValues }) => {
+    onSubmit: async ({ value }: { value: HomeFormValues }) => {
       const images = value.images ?? [];
 
-      await registerPersonalItem(
+      await registerHomeItem(
         {
           item: {
             name: value.name,
@@ -70,8 +70,8 @@ export default function PersonalRegisterPage() {
             privacy: value.privacy,
           },
           details: {
-            material: toOptionalString(value.material),
-            replacement_cycle_days: value.replacement_cycle_days,
+            model_number: toOptionalString(value.model_number),
+            warranty_expiration: toOptionalString(value.warranty_expiration),
           },
         },
         buildImageFormData(images),
@@ -79,7 +79,7 @@ export default function PersonalRegisterPage() {
     },
   });
 
-  const steps: WizardStepConfig[] = PERSONAL_REGISTRATION_STEPS.map((step) => ({
+  const steps: WizardStepConfig[] = HOME_REGISTRATION_STEPS.map((step) => ({
     ...step,
     content: renderStepContent(step.id, form),
   }));

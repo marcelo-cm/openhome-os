@@ -1,8 +1,8 @@
 import {
   BasicInfoStepSchema,
+  ClothingDetailsStepSchema,
+  ClothingItemRegistrationSchema,
   ImagesStepSchema,
-  PersonalDetailsStepSchema,
-  PersonalItemRegistrationSchema,
   SettingsStepSchema,
 } from '@openhome-os/core/models/item/item-registration-schemas';
 import type { WizardStepConfig } from '@openhome-os/core/wizard/wizard-types';
@@ -12,30 +12,26 @@ import {
   type BaseItemRegistrationFormValues,
 } from '../../../_components/item-registration-wizard/item-registration-types';
 
-export const PERSONAL_REGISTRATION_STEPS: Omit<WizardStepConfig, 'content'>[] =
+export const CLOTHING_REGISTRATION_STEPS: Omit<WizardStepConfig, 'content'>[] =
   [
     { id: 'basic-info', label: 'Basic Info', schema: BasicInfoStepSchema },
     {
-      id: 'personal-details',
+      id: 'clothing-details',
       label: 'Details',
-      schema: PersonalDetailsStepSchema,
+      schema: ClothingDetailsStepSchema,
     },
     { id: 'settings', label: 'Settings', schema: SettingsStepSchema },
     { id: 'images', label: 'Images', schema: ImagesStepSchema },
   ];
 
-/**
- * Mirrors the Standard Schema input type of PersonalItemRegistrationSchema.
- * Required fields match z.string().min(1). Optional fields (?) match z.optional().
- * Fields with z.default() are optional at input time.
- */
-export interface PersonalFormValues extends BaseItemRegistrationFormValues {
+export interface ClothingFormValues extends BaseItemRegistrationFormValues {
+  size?: string;
   material?: string;
-  replacement_cycle_days?: number;
+  care_instructions?: string;
 }
 
-export const PERSONAL_DEFAULT_VALUES: PersonalFormValues = {
+export const CLOTHING_DEFAULT_VALUES: ClothingFormValues = {
   ...BASE_ITEM_REGISTRATION_DEFAULT_VALUES,
 };
 
-export { PersonalItemRegistrationSchema as PERSONAL_REGISTRATION_SCHEMA };
+export { ClothingItemRegistrationSchema as CLOTHING_REGISTRATION_SCHEMA };

@@ -12,8 +12,7 @@ import {
 import { SettingsStepSchema } from '@openhome-os/core/models/item/item-registration-schemas';
 import useLocationsQuery from '@openhome-os/core/models/location/hooks/use-locations-query';
 import type { WizardForm } from '@openhome-os/core/wizard/wizard-types';
-import AppFieldLabel from '@openhome-os/particles/app-field-label';
-import { Field, FieldError } from '@openhome-os/ui/field';
+import { Field, FieldError, FieldLabel } from '@openhome-os/ui/field';
 import {
   Select,
   SelectItem,
@@ -26,16 +25,20 @@ import type { z } from 'zod';
 
 type SettingsFields = z.infer<typeof SettingsStepSchema>;
 
-interface SettingsStepProps<TFormData extends SettingsFields> {
+interface ItemRegistrationSettingsStepProps<TFormData extends SettingsFields> {
   form: WizardForm<TFormData>;
 }
 
 const STATUS_OPTIONS = Object.values(ItemStatus);
 const PRIVACY_OPTIONS = Object.values(ItemPrivacy);
 
-export function SettingsStep<TFormData extends SettingsFields>({
+function OptionalLabel() {
+  return <span className="text-muted-foreground text-xs">Optional</span>;
+}
+
+export function ItemRegistrationSettingsStep<TFormData extends SettingsFields>({
   form,
-}: SettingsStepProps<TFormData>) {
+}: ItemRegistrationSettingsStepProps<TFormData>) {
   const { data: locations = [] } = useLocationsQuery({
     queryKey: ['locations'],
   });
@@ -45,12 +48,12 @@ export function SettingsStep<TFormData extends SettingsFields>({
       <form.Field name="location_id">
         {(field: AnyFieldApi) => (
           <Field invalid={isFieldInvalid(field)}>
-            <AppFieldLabel>Location</AppFieldLabel>
+            <FieldLabel>Location</FieldLabel>
             <Select
               value={field.state.value ?? ''}
-              onValueChange={(val: string) => field.handleChange(val)}
+              onValueChange={(value: string) => field.handleChange(value)}
             >
-              <SelectTrigger className={'bg-transparent'}>
+              <SelectTrigger className="bg-transparent">
                 <SelectValue />
               </SelectTrigger>
               <SelectPopup>
@@ -70,12 +73,14 @@ export function SettingsStep<TFormData extends SettingsFields>({
         <form.Field name="status">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <AppFieldLabel optional>Status</AppFieldLabel>
+              <FieldLabel>
+                Status <OptionalLabel />
+              </FieldLabel>
               <Select
                 value={field.state.value ?? ItemStatus.ACTIVE}
-                onValueChange={(val: string) => field.handleChange(val)}
+                onValueChange={(value: string) => field.handleChange(value)}
               >
-                <SelectTrigger className={'bg-transparent'}>
+                <SelectTrigger className="bg-transparent">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectPopup>
@@ -86,6 +91,7 @@ export function SettingsStep<TFormData extends SettingsFields>({
                   ))}
                 </SelectPopup>
               </Select>
+              <FieldError>{getFieldErrors(field)}</FieldError>
             </Field>
           )}
         </form.Field>
@@ -93,12 +99,14 @@ export function SettingsStep<TFormData extends SettingsFields>({
         <form.Field name="privacy">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <AppFieldLabel optional>Privacy</AppFieldLabel>
+              <FieldLabel>
+                Privacy <OptionalLabel />
+              </FieldLabel>
               <Select
                 value={field.state.value ?? ItemPrivacy.PRIVATE}
-                onValueChange={(val: string) => field.handleChange(val)}
+                onValueChange={(value: string) => field.handleChange(value)}
               >
-                <SelectTrigger className={'bg-transparent'}>
+                <SelectTrigger className="bg-transparent">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectPopup>
@@ -109,6 +117,7 @@ export function SettingsStep<TFormData extends SettingsFields>({
                   ))}
                 </SelectPopup>
               </Select>
+              <FieldError>{getFieldErrors(field)}</FieldError>
             </Field>
           )}
         </form.Field>

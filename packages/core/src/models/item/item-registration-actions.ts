@@ -1,14 +1,14 @@
 'use server';
 
 import { db } from '@openhome-os/core/db/db';
-import type {
-  TCreateItem,
-  TItem,
-} from '@openhome-os/core/models/item/item-types';
 import type { TCreateClothingDetail } from '@openhome-os/core/models/clothing-detail/clothing-detail-types';
 import type { TCreateDeviceDetail } from '@openhome-os/core/models/device-detail/device-detail-types';
 import type { TCreateFurnitureDetail } from '@openhome-os/core/models/furniture-detail/furniture-detail-types';
 import type { TCreateHomeItemDetail } from '@openhome-os/core/models/home-item-detail/home-item-detail-types';
+import type {
+  TCreateItem,
+  TItem,
+} from '@openhome-os/core/models/item/item-types';
 import type { TCreatePersonalItemDetail } from '@openhome-os/core/models/personal-item-detail/personal-item-detail-types';
 import { getCurrentUser } from '@openhome-os/core/models/user/user-actions';
 import StorageService from '@openhome-os/core/supabase/storage';
@@ -72,14 +72,14 @@ async function attachImagesToItem({
   });
 }
 
-interface RegisterItemWithImagesOptions<TRegisteredItem extends { id: string }> {
+interface RegisterItemWithImagesOptions<TRegisteredItem extends TItem> {
   actionName: string;
   errorMessage: string;
   imageFormData?: FormData;
   createItem: (principalId: string) => Promise<TRegisteredItem>;
 }
 
-async function registerItemWithImages<TRegisteredItem extends { id: string }>({
+async function registerItemWithImages<TRegisteredItem extends TItem>({
   actionName,
   errorMessage,
   imageFormData,
@@ -91,7 +91,7 @@ async function registerItemWithImages<TRegisteredItem extends { id: string }>({
   try {
     const result = await createItem(user.id);
     await attachImagesToItem({ itemId: result.id, imageFormData });
-    return result as TItem;
+    return result;
   } catch (error) {
     console.error(`[${actionName}]`, error);
     throw new Error(errorMessage);

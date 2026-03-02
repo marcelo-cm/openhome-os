@@ -9,7 +9,6 @@ import {
   ItemPrivacy,
   ItemStatus,
 } from '@openhome-os/core/models/item/item-enums';
-import { SettingsStepSchema } from '@openhome-os/core/models/item/item-registration-schemas';
 import useLocationsQuery from '@openhome-os/core/models/location/hooks/use-locations-query';
 import type { WizardForm } from '@openhome-os/core/wizard/wizard-types';
 import { Field, FieldError, FieldLabel } from '@openhome-os/ui/field';
@@ -21,9 +20,12 @@ import {
   SelectValue,
 } from '@openhome-os/ui/select';
 import type { AnyFieldApi } from '@tanstack/react-form';
-import type { z } from 'zod';
 
-type SettingsFields = z.infer<typeof SettingsStepSchema>;
+interface SettingsFields {
+  location_id: string;
+  status?: ItemStatus;
+  privacy?: ItemPrivacy;
+}
 
 interface ItemRegistrationSettingsStepProps<TFormData extends SettingsFields> {
   form: WizardForm<TFormData>;

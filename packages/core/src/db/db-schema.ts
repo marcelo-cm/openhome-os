@@ -6,7 +6,6 @@ import {
 import { OrganizationTier } from '@openhome-os/core/models/organization/organization-enums';
 import { UserRole } from '@openhome-os/core/models/user/user-enums';
 import {
-  boolean,
   date,
   integer,
   jsonb,

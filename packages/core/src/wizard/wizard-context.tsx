@@ -16,6 +16,7 @@ import type {
   WizardStepConfig,
 } from './wizard-types';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const WizardContext = createContext<WizardContextValue<any> | null>(null);
 
 interface WizardProviderProps<TFormData> {

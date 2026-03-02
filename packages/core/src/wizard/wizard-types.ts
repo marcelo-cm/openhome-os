@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { ReactNode } from 'react';
 
 import type { ReactFormExtendedApi } from '@tanstack/react-form';
@@ -10,10 +11,9 @@ import type { z } from 'zod';
  * - `WizardForm<PersonalFormValues>` -- typed form data
  * - `WizardForm` -- unparameterized, accepts any form (for shared components)
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 export type WizardForm<TFormData = any> = ReactFormExtendedApi<
   TFormData,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any,
   any,
   any,
@@ -30,7 +30,7 @@ export type WizardForm<TFormData = any> = ReactFormExtendedApi<
 export interface WizardStepConfig {
   id: string;
   label: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   schema: z.ZodObject<any>;
   content: ReactNode;
 }

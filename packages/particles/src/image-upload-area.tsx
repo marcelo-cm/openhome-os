@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react';
 
-import { ImagePlus, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 import { cn } from './util/cn';
 
@@ -71,9 +71,8 @@ export function ImageUploadArea({
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
-          className="border-input text-muted-foreground hover:border-primary/50 hover:text-foreground flex min-h-[120px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed transition-colors"
+          className="border-input text-muted-foreground hover:border-muted-foreground/32 hover:text-foreground flex min-h-[120px] cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border border-dashed transition-colors"
         >
-          <ImagePlus className="size-8 opacity-60" />
           <span className="text-sm">Click or drag images to upload</span>
           <span className="text-muted-foreground text-xs">
             {files.length} of {maxFiles} images
@@ -108,7 +107,7 @@ export function ImageUploadArea({
               <button
                 type="button"
                 onClick={() => handleRemove(i)}
-                className="bg-background/80 text-foreground absolute top-1 right-1 rounded-full p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
+                className="bg-background/80 text-foreground absolute right-1 top-1 rounded-full p-0.5 opacity-0 transition-opacity group-hover:opacity-100"
               >
                 <X className="size-3.5" />
               </button>

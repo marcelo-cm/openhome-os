@@ -14,7 +14,7 @@ export const BasicInfoStepSchema = z.object({
 
 export const PersonalDetailsStepSchema = z.object({
   material: z.string().optional(),
-  replacement_cycle_days: z.number().int().positive(),
+  replacement_cycle_days: z.number().int().positive().optional(),
 });
 
 export const SettingsStepSchema = z.object({

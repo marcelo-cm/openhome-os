@@ -16,7 +16,7 @@ import PersonalItemRegistrationContent from './_components/personal-item-registr
 import PersonalItemRegistrationControl from './_components/personal-item-registration-control';
 import { PersonalDetailsStep } from './_components/personal-item-registration-details-step';
 import { ImagesStep } from './_components/personal-item-registration-images-step';
-import { SettingsStep } from './_components/settings-step';
+import { SettingsStep } from './_components/personal-item-registration-settings-step';
 import type { PersonalFormValues } from './_constants/personal-registration-constants';
 import {
   PERSONAL_DEFAULT_VALUES,

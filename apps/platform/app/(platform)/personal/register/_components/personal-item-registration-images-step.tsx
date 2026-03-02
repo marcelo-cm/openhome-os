@@ -18,13 +18,6 @@ export function ImagesStep<TFormData extends ImagesFields>({
 }: ImagesStepProps<TFormData>) {
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <h2 className="text-foreground text-lg font-medium">Images</h2>
-        <p className="text-muted-foreground text-sm">
-          Add up to {ITEM_CONSTANTS.MAX_IMAGES} photos of your item.
-        </p>
-      </div>
-
       <form.Field name="images">
         {(field: AnyFieldApi) => (
           <ImageUploadArea

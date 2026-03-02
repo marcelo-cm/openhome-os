@@ -12,7 +12,8 @@ import {
 import { SettingsStepSchema } from '@openhome-os/core/models/item/item-registration-schemas';
 import useLocationsQuery from '@openhome-os/core/models/location/hooks/use-locations-query';
 import type { WizardForm } from '@openhome-os/core/wizard/wizard-types';
-import { Field, FieldError, FieldLabel } from '@openhome-os/ui/field';
+import AppFieldLabel from '@openhome-os/particles/app-field-label';
+import { Field, FieldError } from '@openhome-os/ui/field';
 import {
   Select,
   SelectItem,
@@ -44,13 +45,13 @@ export function SettingsStep<TFormData extends SettingsFields>({
       <form.Field name="location_id">
         {(field: AnyFieldApi) => (
           <Field invalid={isFieldInvalid(field)}>
-            <FieldLabel>Location *</FieldLabel>
+            <AppFieldLabel>Location</AppFieldLabel>
             <Select
               value={field.state.value ?? ''}
               onValueChange={(val: string) => field.handleChange(val)}
             >
-              <SelectTrigger>
-                <SelectValue>Select a location</SelectValue>
+              <SelectTrigger className={'bg-transparent'}>
+                <SelectValue />
               </SelectTrigger>
               <SelectPopup>
                 {locations.map((location) => (
@@ -69,12 +70,12 @@ export function SettingsStep<TFormData extends SettingsFields>({
         <form.Field name="status">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <FieldLabel>Status</FieldLabel>
+              <AppFieldLabel optional>Status</AppFieldLabel>
               <Select
                 value={field.state.value ?? ItemStatus.ACTIVE}
                 onValueChange={(val: string) => field.handleChange(val)}
               >
-                <SelectTrigger>
+                <SelectTrigger className={'bg-transparent'}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectPopup>
@@ -92,12 +93,12 @@ export function SettingsStep<TFormData extends SettingsFields>({
         <form.Field name="privacy">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <FieldLabel>Privacy</FieldLabel>
+              <AppFieldLabel optional>Privacy</AppFieldLabel>
               <Select
                 value={field.state.value ?? ItemPrivacy.PRIVATE}
                 onValueChange={(val: string) => field.handleChange(val)}
               >
-                <SelectTrigger>
+                <SelectTrigger className={'bg-transparent'}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectPopup>

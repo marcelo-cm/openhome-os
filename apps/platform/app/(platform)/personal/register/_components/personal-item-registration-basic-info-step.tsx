@@ -3,7 +3,8 @@
 import { isFieldInvalid } from '@openhome-os/core/helpers/tanstack/forms/utils';
 import { BasicInfoStepSchema } from '@openhome-os/core/models/item/item-registration-schemas';
 import type { WizardForm } from '@openhome-os/core/wizard/wizard-types';
-import { Field, FieldControl, FieldLabel } from '@openhome-os/ui/field';
+import AppFieldLabel from '@openhome-os/particles/app-field-label';
+import { Field, FieldControl } from '@openhome-os/ui/field';
 import { Textarea } from '@openhome-os/ui/textarea';
 import type { AnyFieldApi } from '@tanstack/react-form';
 import type { z } from 'zod';
@@ -22,7 +23,7 @@ export function BasicInfoStep<TFormData extends BasicInfoFields>({
       <form.Field name="name">
         {(field: AnyFieldApi) => (
           <Field invalid={isFieldInvalid(field)}>
-            <FieldLabel>Name</FieldLabel>
+            <AppFieldLabel>Name</AppFieldLabel>
             <FieldControl
               value={field.state.value}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -38,7 +39,7 @@ export function BasicInfoStep<TFormData extends BasicInfoFields>({
       <form.Field name="description">
         {(field: AnyFieldApi) => (
           <Field invalid={isFieldInvalid(field)}>
-            <FieldLabel>Description</FieldLabel>
+            <AppFieldLabel>Description</AppFieldLabel>
             <FieldControl
               render={
                 <Textarea
@@ -58,7 +59,7 @@ export function BasicInfoStep<TFormData extends BasicInfoFields>({
         <form.Field name="brand">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <FieldLabel>Brand</FieldLabel>
+              <AppFieldLabel>Brand</AppFieldLabel>
               <FieldControl
                 value={field.state.value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -74,9 +75,9 @@ export function BasicInfoStep<TFormData extends BasicInfoFields>({
         <form.Field name="base_color">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <FieldLabel>Color</FieldLabel>
+              <AppFieldLabel optional>Color</AppFieldLabel>
               <FieldControl
-                value={field.state.value}
+                value={field.state.value ?? ''}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   field.handleChange(e.target.value)
                 }
@@ -91,11 +92,11 @@ export function BasicInfoStep<TFormData extends BasicInfoFields>({
       <form.Field name="notes">
         {(field: AnyFieldApi) => (
           <Field invalid={isFieldInvalid(field)}>
-            <FieldLabel>Notes</FieldLabel>
+            <AppFieldLabel optional>Notes</AppFieldLabel>
             <FieldControl
               render={
                 <Textarea
-                  value={field.state.value}
+                  value={field.state.value ?? ''}
                   onChange={(e) => field.handleChange(e.target.value)}
                   onBlur={field.handleBlur}
                   placeholder="Any additional notes"
@@ -112,12 +113,12 @@ export function BasicInfoStep<TFormData extends BasicInfoFields>({
         <form.Field name="purchase_price">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <FieldLabel>Purchase Price</FieldLabel>
+              <AppFieldLabel optional>Purchase Price</AppFieldLabel>
               <FieldControl
                 type="number"
                 step="0.01"
                 min="0"
-                value={field.state.value}
+                value={field.state.value ?? ''}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   field.handleChange(e.target.value)
                 }
@@ -131,10 +132,10 @@ export function BasicInfoStep<TFormData extends BasicInfoFields>({
         <form.Field name="purchase_date">
           {(field: AnyFieldApi) => (
             <Field invalid={isFieldInvalid(field)}>
-              <FieldLabel>Purchase Date</FieldLabel>
+              <AppFieldLabel optional>Purchase Date</AppFieldLabel>
               <FieldControl
                 type="date"
-                value={field.state.value}
+                value={field.state.value ?? ''}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                   field.handleChange(e.target.value)
                 }

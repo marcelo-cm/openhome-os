@@ -1,5 +1,7 @@
 'use client';
 
+import type { ChangeEvent } from 'react';
+
 import {
   getFieldErrors,
   isFieldInvalid,
@@ -14,8 +16,10 @@ import {
 } from '@openhome-os/ui/field';
 import type { AnyFieldApi } from '@tanstack/react-form';
 
+import type { PersonalFormValues } from '../_constants/personal-registration-constants';
+
 interface PersonalDetailsStepProps {
-  form: WizardForm;
+  form: WizardForm<PersonalFormValues>;
 }
 
 export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
@@ -27,8 +31,8 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
             <FieldLabel>Material</FieldLabel>
             <FieldControl
               value={field.state.value ?? ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                field.handleChange(e.target.value)
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                field.handleChange(event.target.value)
               }
               onBlur={field.handleBlur}
               placeholder="e.g. Leather, Plastic, Metal"
@@ -47,8 +51,8 @@ export function PersonalDetailsStep({ form }: PersonalDetailsStepProps) {
               min="1"
               step="1"
               value={field.state.value ?? ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                const val = e.target.value;
+              onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                const val = event.target.value;
                 field.handleChange(val === '' ? undefined : Number(val));
               }}
               onBlur={field.handleBlur}

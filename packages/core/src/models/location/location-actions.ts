@@ -31,7 +31,7 @@ export async function createLocation({
 // Read (Get All)
 export async function getLocations(): Promise<TLocation[]> {
   try {
-    const locations = await LocationService.getAllLocation();
+    const locations = await LocationService.getAllLocations();
 
     return locations;
   } catch (error) {

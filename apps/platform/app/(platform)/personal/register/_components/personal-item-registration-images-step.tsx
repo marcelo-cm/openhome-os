@@ -1,0 +1,39 @@
+'use client';
+
+import { ITEM_CONSTANTS } from '@openhome-os/core/models/item/item-constants';
+import { ImagesStepSchema } from '@openhome-os/core/models/item/item-registration-schemas';
+import type { WizardForm } from '@openhome-os/core/wizard/wizard-types';
+import { ImageUploadArea } from '@openhome-os/particles/image-upload-area';
+import type { AnyFieldApi } from '@tanstack/react-form';
+import type { z } from 'zod';
+
+type ImagesFields = z.infer<typeof ImagesStepSchema>;
+
+interface ImagesStepProps<TFormData extends ImagesFields> {
+  form: WizardForm<TFormData>;
+}
+
+export function ImagesStep<TFormData extends ImagesFields>({
+  form,
+}: ImagesStepProps<TFormData>) {
+  return (
+    <div className="flex flex-col gap-4">
+      <div>
+        <h2 className="text-foreground text-lg font-medium">Images</h2>
+        <p className="text-muted-foreground text-sm">
+          Add up to {ITEM_CONSTANTS.MAX_IMAGES} photos of your item.
+        </p>
+      </div>
+
+      <form.Field name="images">
+        {(field: AnyFieldApi) => (
+          <ImageUploadArea
+            files={field.state.value ?? []}
+            onFilesChange={(files: File[]) => field.handleChange(files)}
+            maxFiles={ITEM_CONSTANTS.MAX_IMAGES}
+          />
+        )}
+      </form.Field>
+    </div>
+  );
+}

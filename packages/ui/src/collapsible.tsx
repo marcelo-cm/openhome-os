@@ -15,7 +15,7 @@ function CollapsibleTrigger({
   return (
     <CollapsiblePrimitive.Trigger
       data-slot="collapsible-trigger"
-      className={cn('cursor-pointer', className)}
+      className={cn('group/collapsible-trigger cursor-pointer', className)}
       {...props}
     />
   );
@@ -29,7 +29,7 @@ function CollapsiblePanel({
     <CollapsiblePrimitive.Panel
       data-slot="collapsible-panel"
       className={cn(
-        'h-(--collapsible-panel-height) data-ending-style:h-0 data-starting-style:h-0 overflow-hidden transition-[height] duration-200',
+        'h-(--collapsible-panel-height) overflow-hidden transition-[height] duration-200 data-ending-style:h-0 data-starting-style:h-0',
         className,
       )}
       {...props}

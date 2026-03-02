@@ -54,7 +54,7 @@ const LocationService = {
    * @description Get all locations
    * @returns All locations
    */
-  getAllLocation: supportsTransaction(
+  getAllLocations: supportsTransaction(
     async ({ db }: { db: Database }): Promise<TLocation[]> => {
       return db.query.locations.findMany();
     },

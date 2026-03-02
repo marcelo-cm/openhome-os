@@ -2,6 +2,7 @@ import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
+import { string } from '@openhome-os/core/formatters';
 import { OrganizationTier } from '@openhome-os/core/models/organization/organization-enums';
 import { TOrganization } from '@openhome-os/core/models/organization/organization-types';
 import { Badge } from '@openhome-os/ui/badge';
@@ -10,7 +11,6 @@ import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { titleCase } from '@/utils/text-formatting-utils';
 
 import SystemOrganizationCreationDialog from './system-organization-creation-dialog';
 
@@ -54,7 +54,7 @@ export const createOrganizationManagementColumns =
                 className={cn(colour, 'size-1.5 rounded-full')}
                 aria-hidden="true"
               />
-              {titleCase(tier)}
+              {string.titleCase(tier)}
             </Badge>
           );
         },

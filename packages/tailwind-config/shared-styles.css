@@ -6,6 +6,7 @@
 
 @source '../ui/src/**/*.{ts,tsx}';
 @source '../particles/src/**/*.{ts,tsx}';
+@source '../core/src/**/*.{ts,tsx}';
 
 @theme inline {
   --color-destructive-foreground: var(--destructive-foreground);

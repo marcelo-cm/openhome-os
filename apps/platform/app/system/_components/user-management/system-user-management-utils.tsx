@@ -2,6 +2,7 @@ import { Fragment, Suspense, useState } from 'react';
 
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
+import { string } from '@openhome-os/core/formatters';
 import { deleteUser } from '@openhome-os/core/models/user/user-actions';
 import { UserRole } from '@openhome-os/core/models/user/user-enums';
 import { TUser } from '@openhome-os/core/models/user/user-types';
@@ -11,7 +12,6 @@ import { Menu, MenuItem, MenuPopup, MenuTrigger } from '@openhome-os/ui/menu';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { titleCase } from '@/utils/text-formatting-utils';
 
 import SystemUserCreationDialog from './system-user-creation-dialog';
 
@@ -47,7 +47,7 @@ export const createUserManagementColumns = (): ColumnDef<TUser>[] => {
               className={cn(colour, 'size-1.5 rounded-full')}
               aria-hidden="true"
             />
-            {titleCase(role)}
+            {string.titleCase(role)}
           </Badge>
         );
       },

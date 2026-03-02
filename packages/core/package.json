@@ -13,12 +13,22 @@
     "./db/*": "./src/db/*.ts",
     "./models/*": "./src/models/*.ts",
     "./permissions/*": "./src/permissions/*.ts",
-    "./supabase/*": "./src/supabase/*.ts"
+    "./supabase/*": "./src/supabase/*.ts",
+    "./formatters": "./src/formatters/index.ts",
+    "./formatters/*": "./src/formatters/*.ts",
+    "./helpers/tanstack/forms/*": "./src/helpers/tanstack/forms/*.ts",
+    "./wizard/wizard-context": "./src/wizard/wizard-context.tsx",
+    "./wizard/wizard-shell": "./src/wizard/wizard-shell.tsx",
+    "./wizard/wizard-dev-tool": "./src/wizard/wizard-dev-tool.tsx",
+    "./wizard/wizard-types": "./src/wizard/wizard-types.ts"
   },
   "dependencies": {
+    "@hugeicons-pro/core-solid-rounded": "^3.3.0",
+    "@hugeicons/react": "^1.1.5",
     "@openhome-os/ui": "workspace:*",
     "@supabase/ssr": "catalog:",
     "@supabase/supabase-js": "catalog:",
+    "@tanstack/react-form": "catalog:",
     "@tanstack/react-query": "catalog:",
     "drizzle-orm": "^0.45.1",
     "drizzle-zod": "^0.8.3",

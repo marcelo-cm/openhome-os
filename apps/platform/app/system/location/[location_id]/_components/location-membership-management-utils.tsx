@@ -1,9 +1,9 @@
+import { string } from '@openhome-os/core/formatters';
 import { TLocationMembershipHydrated } from '@openhome-os/core/models/location/location-types';
 import { Badge } from '@openhome-os/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 
 import { cn } from '@/lib/utils';
-import { titleCase } from '@/utils/text-formatting-utils';
 
 import { RbacRole } from '../../../../../../../packages/core/src/permissions/rbac-enums';
 
@@ -40,7 +40,7 @@ export const createLocationMembershipColumns =
                 className={cn(colour, 'size-1.5 rounded-full')}
                 aria-hidden="true"
               />
-              {titleCase(role)}
+              {string.titleCase(role)}
             </Badge>
           );
         },

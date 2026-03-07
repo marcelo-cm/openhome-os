@@ -30,9 +30,9 @@ function OptionalLabel() {
   return <span className="text-muted-foreground text-xs">Optional</span>;
 }
 
-export function ItemRegistrationBasicInfoStep<TFormData extends BasicInfoFields>({
-  form,
-}: ItemRegistrationBasicInfoStepProps<TFormData>) {
+export function ItemRegistrationBasicInfoStep<
+  TFormData extends BasicInfoFields,
+>({ form }: ItemRegistrationBasicInfoStepProps<TFormData>) {
   return (
     <div className="flex flex-col gap-4">
       <form.Field name="name">

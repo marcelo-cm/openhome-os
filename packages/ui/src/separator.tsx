@@ -12,7 +12,7 @@ function Separator({
       data-slot="separator"
       orientation={orientation}
       className={cn(
-        "bg-border data-[orientation=vertical]:not-[[class^='h-']]:not-[[class*='_h-']]:self-stretch shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px",
+        "bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:w-px data-[orientation=vertical]:not-[[class^='h-']]:not-[[class*='_h-']]:self-stretch",
         className,
       )}
       {...props}

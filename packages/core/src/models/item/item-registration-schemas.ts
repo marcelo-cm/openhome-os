@@ -151,7 +151,9 @@ export type TClothingItemRegistration = z.infer<
   typeof ClothingItemRegistrationSchema
 >;
 
-export type TDeviceItemRegistration = z.infer<typeof DeviceItemRegistrationSchema>;
+export type TDeviceItemRegistration = z.infer<
+  typeof DeviceItemRegistrationSchema
+>;
 
 export type THomeItemRegistration = z.infer<typeof HomeItemRegistrationSchema>;
 

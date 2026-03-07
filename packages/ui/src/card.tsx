@@ -5,12 +5,12 @@ import { VariantProps, cva } from 'class-variance-authority';
 import { cn } from './util/cn';
 
 const cardVariants = cva(
-  'bg-card text-card-foreground shadow-xs relative flex flex-col gap-6 rounded-2xl border bg-clip-padding py-6 before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:bg-clip-border dark:before:shadow-[0_-1px_--theme(--color-white/8%)]',
+  'bg-card text-card-foreground relative flex flex-col gap-6 rounded-2xl border bg-clip-padding py-6 shadow-xs before:pointer-events-none before:absolute before:inset-0 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_--theme(--color-black/4%)] dark:bg-clip-border dark:before:shadow-[0_-1px_--theme(--color-white/8%)]',
   {
     variants: {
       variant: {
         default: '',
-        ring: 'bg-muted/50 after:border-border/50 dark:after:bg-background/72 after:-z-1 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_2px_1px_--theme(--color-black/4%)] after:pointer-events-none after:absolute after:-inset-[5px] after:rounded-[calc(var(--radius-2xl)+4px)] after:border after:bg-clip-padding',
+        ring: 'bg-muted/50 after:border-border/50 dark:after:bg-background/72 before:rounded-[calc(var(--radius-2xl)-1px)] before:shadow-[0_1px_2px_1px_--theme(--color-black/4%)] after:pointer-events-none after:absolute after:-inset-[5px] after:-z-1 after:rounded-[calc(var(--radius-2xl)+4px)] after:border after:bg-clip-padding',
       },
     },
   },
@@ -35,7 +35,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-header"
       className={cn(
-        '@container/card-header has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6 grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6',
+        '@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6',
         className,
       )}
       {...props}
@@ -47,7 +47,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      className={cn('text-lg font-semibold leading-none', className)}
+      className={cn('text-lg leading-none font-semibold', className)}
       {...props}
     />
   );
@@ -90,7 +90,7 @@ function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-footer"
-      className={cn('[.border-t]:pt-6 flex items-center px-6', className)}
+      className={cn('flex items-center px-6 [.border-t]:pt-6', className)}
       {...props}
     />
   );

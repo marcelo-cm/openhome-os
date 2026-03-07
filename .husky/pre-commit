@@ -22,11 +22,11 @@ if [ -z "${STAGED}" ]; then
   echo -e "${YELLOW}No staged files. Skipping format/type-check.${NC}"
 else
   # ---------- Format only staged files ----------
-  PRETTIER_FILES="$(echo "${STAGED}" | grep -E '\.(ts|tsx|css|md|mdx)$' || true)"
-  if [ -n "${PRETTIER_FILES}" ]; then
-    echo -e "${YELLOW}Formatting staged files with Prettier...${NC}"
-    echo "${PRETTIER_FILES}" | xargs -r pnpm exec prettier --write
-    echo "${PRETTIER_FILES}" | xargs -r git add
+  OXFMT_FILES="$(echo "${STAGED}" | grep -E '\.(ts|tsx|js|jsx|json|jsonc|json5|css|scss|less|md|mdx|yml|yaml|html)$' || true)"
+  if [ -n "${OXFMT_FILES}" ]; then
+    echo -e "${YELLOW}Formatting staged files with Oxfmt...${NC}"
+    echo "${OXFMT_FILES}" | xargs -r pnpm exec oxfmt --no-error-on-unmatched-pattern --write
+    echo "${OXFMT_FILES}" | xargs -r git add
   fi
 
   # ---------- Type-check ----------

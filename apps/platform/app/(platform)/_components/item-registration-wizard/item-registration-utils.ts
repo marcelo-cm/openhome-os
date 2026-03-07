@@ -1,4 +1,6 @@
-export function buildImageFormData(images: File[] | undefined): FormData | undefined {
+export function buildImageFormData(
+  images: File[] | undefined,
+): FormData | undefined {
   if (!images || images.length === 0) return undefined;
 
   const formData = new FormData();
@@ -7,7 +9,9 @@ export function buildImageFormData(images: File[] | undefined): FormData | undef
   return formData;
 }
 
-export function toOptionalString(value: string | undefined): string | undefined {
+export function toOptionalString(
+  value: string | undefined,
+): string | undefined {
   const normalized = value?.trim();
   return normalized ? normalized : undefined;
 }

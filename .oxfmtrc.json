@@ -1,8 +1,8 @@
 {
-  "plugins": [
-    "@trivago/prettier-plugin-sort-imports",
-    "prettier-plugin-tailwindcss"
-  ],
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "sortTailwindcss": {
+    "functions": ["clsx", "tw", "cva", "cn"]
+  },
   "singleQuote": true,
   "importOrder": [
     "^react$|^react/(.*)$",
@@ -16,5 +16,16 @@
   "importOrderSortSpecifiers": true,
   "importOrderSeparation": true,
   "importOrderGroupNamespaceSpecifiers": true,
-  "tailwindFunctions": ["clsx", "tw", "cva", "cn"]
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    "coverage",
+    "drizzle",
+    "pnpm-lock.yaml",
+    ".env*"
+  ]
 }

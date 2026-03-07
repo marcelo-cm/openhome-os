@@ -1,7 +1,6 @@
 import js from '@eslint/js';
 import pluginNext from '@next/eslint-plugin-next';
 import tanstackQuery from '@tanstack/eslint-plugin-query';
-import eslintConfigPrettier from 'eslint-config-prettier';
 import oxlint from 'eslint-plugin-oxlint';
 import pluginReact from 'eslint-plugin-react';
 import pluginReactHooks from 'eslint-plugin-react-hooks';
@@ -19,7 +18,6 @@ import { config as baseConfig } from './base.js';
 export const nextJsConfig = [
   ...baseConfig,
   js.configs.recommended,
-  eslintConfigPrettier,
   ...tseslint.configs.recommended,
   globalIgnores([
     // Default ignores of eslint-config-next:

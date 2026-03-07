@@ -3,8 +3,10 @@ import { UseQueryOptions, useQuery } from '@tanstack/react-query';
 import { getLocationMemberships } from '../location-actions';
 import { TLocationMembershipHydrated } from '../location-types';
 
-interface UseLocationMembershipsQueryProps
-  extends Omit<UseQueryOptions<TLocationMembershipHydrated[]>, 'queryFn'> {
+interface UseLocationMembershipsQueryProps extends Omit<
+  UseQueryOptions<TLocationMembershipHydrated[]>,
+  'queryFn'
+> {
   locationId: string;
 }
 

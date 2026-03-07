@@ -19,7 +19,7 @@ This Turborepo includes the following packages/apps:
 - `docs`: a [Next.js](https://nextjs.org/) app
 - `web`: another [Next.js](https://nextjs.org/) app
 - `@openhome-os/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@openhome-os/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@openhome-os/eslint-config`: shared `eslint` configurations for the monorepo
 - `@openhome-os/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
@@ -30,7 +30,7 @@ This Turborepo has some additional tools already setup for you:
 
 - [TypeScript](https://www.typescriptlang.org/) for static type checking
 - [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- [Oxfmt](https://oxc.rs/docs/guide/usage/formatter.html) for code formatting
 
 ### Build
 

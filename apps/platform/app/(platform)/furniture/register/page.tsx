@@ -95,10 +95,12 @@ export default function FurnitureRegisterPage() {
     },
   });
 
-  const steps: WizardStepConfig[] = FURNITURE_REGISTRATION_STEPS.map((step) => ({
-    ...step,
-    content: renderStepContent(step.id, form),
-  }));
+  const steps: WizardStepConfig[] = FURNITURE_REGISTRATION_STEPS.map(
+    (step) => ({
+      ...step,
+      content: renderStepContent(step.id, form),
+    }),
+  );
 
   return (
     <WizardProvider steps={steps} form={form}>
